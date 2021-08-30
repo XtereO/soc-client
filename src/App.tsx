@@ -1,25 +1,37 @@
 import React from 'react';
-import logo from './logo.svg';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { HashRouter } from 'react-router-dom';
 import './App.css';
+import { Body } from './UI/Body/Body';
+import { Header } from './UI/Header/Header';
 
 function App() {
+
+  //true - pc, false - phone
+  let [mode, setMode] = useState(true)
+  const changeMode = () =>{
+    if(window.innerWidth>760){
+      setMode(true)
+    }else{
+      setMode(false)
+    }
+  }
+
+
+  useEffect(()=>{
+    changeMode()
+    window.addEventListener('resize',changeMode)
+  },[])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <HashRouter>
+    <div>
+      <Header/>      
     </div>
+    <div className="mt-3">
+      <Body mode={mode}/>
+    </div>
+    </HashRouter>
   );
 }
 
