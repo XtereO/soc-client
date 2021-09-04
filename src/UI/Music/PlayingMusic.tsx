@@ -9,9 +9,6 @@ type PropsType = {
 
 export const PlayingMusic: React.FC<PropsType> = (props) => {
 
-    //first page - music player, second is info this music
-    let [page, setPage] = useState(1)
-
     const bg = {
         background: `url(https://донэллиот.рф/wp-content/uploads/2020/05/283.-2048x1280.jpg) no-repeat cover`,
         backgroundSize: '100% 100%'

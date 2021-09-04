@@ -11,8 +11,8 @@ export const Header:React.FC<PropsType> = (props) => {
 
     const headerLinks = [
         {title: 'Home', link: '/home'},
-        {title: 'Followers', link: '/followers'},
-        {title: 'Subscribes', link: '/subscribes'},
+        {title: 'Musics', link:'/musics'},
+        {title: 'Playlists', link:'/playlists'},
         {title: 'People', link: '/people'},
         {title: 'Chats', link: '/chats'}
     ]

@@ -7,16 +7,16 @@
     display: flex;
     justify-content: center;
 }
-.Header__Input{
+.Input{
     border-radius: 200px;
     border: 0.5px silver solid;
     transition: all 1s linear;
 }
-.Header__Input_hover:hover{
+.Input_hover:hover{
     border: 1.5px #D80179 dashed;
     transition: all 1s linear
 }
-.Header__Input_focus:focus{
+.Input_focus:focus{
     outline: none;
     border: 1.7px #D80179 solid;
     transition: all 1s linear;
@@ -45,18 +45,18 @@
     background-color: rgb(242, 242, 242); 
 }
 
-.Header__Select{
-    border-top-left-radius: 15px;
+.Select{
+	border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     border: 0.5px solid silver;
     outline: none;
     transition: 1s all linear;
 }
-.Header__Select_focus:focus{
+.Select_focus:focus{
     border: 1px solid #D80179;
     transition: 1s all linear;
 }
-.Header__Select_hover:hover{
+.Select_hover:hover{
     border: 0.75px dashed #D80179;
     transition: 0.5s all linear;
 }
@@ -83,5 +83,69 @@
 .Body__SwitchButton_active:active{
     box-shadow: 3px 3px 3px 3px black;
 }
+.Plus{
+	color: white;
+	font-size: 1.3em;
+	background-color: #00FF00;
+	border-radius: 20000px;
+	transition: 1s all linear;
+}
+.Plus_hover:hover{
+	background-color: #00E800;
+	box-shadow: 1px 1px 1px black;
+	transition: 0.5s all linear;
+}
+.Plus_active:active{
+	background-color: #00CA00;
+	box-shadow: 1px 1px 1px 1px black;
+	transition: 0.3s all linear;
+}
+
+.Playlist__Musics{
+    overflow-y: scroll;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    border: 1px solid rgb(134, 129, 129);
+    height: 500px;
+    background-color: rgb(246, 240, 240);
+}
+
+.ChatItem{
+    box-shadow: 0.5px 0.5px 0.5px 0.5px black;
+    padding: 2em;
+    border: 1px solid rgb(184, 182, 182);
+    transition: 1s all linear;
+}
+.ChatItem_hover:hover{
+    box-shadow: 1px 1px 1px 1px black;
+    transition: 1s all linear;
+}
+.ChatItem_active:active{
+    box-shadow: 1.5px 1.5px 1.5px 1.5px black;
+    transition: 1s all linear;
+}
+.RoundImage{
+    border-radius: 20000px;
+}
+.Home__Link{
+    transition: 1s all linear;
+}
+.Home__Link_hover:hover{
+    background-color: rgb(231, 229, 229);
+    transition: 0.5s all linear;
+}
+.Home__Link_active:active{
+    background-color: rgb(160, 158, 158);
+    transition: 0.3s all linear;
+}
+.Hint{
+    font-size: 0.9em;
+    color:rgb(219, 218, 218)
+}
 
 
+::selection{
+    background-color: rgb(250, 128, 128);
+    color: white;
+    border-radius: 20px;
+}
