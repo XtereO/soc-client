@@ -11,7 +11,7 @@ type PropsType={
 
 }
 
-export const People:React.FC<PropsType>=(props)=>{
+const People:React.FC<PropsType>=(props)=>{
     
     let [page,changePage]=useState(1)
     
@@ -32,3 +32,5 @@ export const People:React.FC<PropsType>=(props)=>{
         </div>
     </div>
 }
+
+export default People

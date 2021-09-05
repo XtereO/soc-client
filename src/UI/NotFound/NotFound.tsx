@@ -7,8 +7,10 @@ type PropsType={
 
 }
 
-export const NotFound:React.FC<PropsType>=(props)=>{
+const NotFound:React.FC<PropsType>=(props)=>{
     return<div>
         <img className="w-100" src={src} />
     </div>
 }
+
+export default NotFound

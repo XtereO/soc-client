@@ -9,7 +9,7 @@ type PropsType={
 }
 
 
-export const Playlist:React.FC<PropsType>=(props)=>{
+const Playlist:React.FC<PropsType>=(props)=>{
     return<div>
         <div>
             <div className="row">
@@ -44,3 +44,5 @@ export const Playlist:React.FC<PropsType>=(props)=>{
         </div>
     </div>
 }
+
+export default Playlist

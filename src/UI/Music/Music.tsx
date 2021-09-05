@@ -8,7 +8,7 @@ import { Reviews } from "./Reviews"
 type PropsType = {
 }
 
-export const Music:React.FC<PropsType> = (props)=>{
+const Music:React.FC<PropsType> = (props)=>{
     return<div> 
     <PlayingMusic/>
     <div className="mt-2">
@@ -23,3 +23,5 @@ export const Music:React.FC<PropsType> = (props)=>{
     </div>
 </div>
 }
+
+export default Music

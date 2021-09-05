@@ -30,10 +30,10 @@ function App() {
     <div>
       <Header/>      
     </div>
-    <div className="mt-3">
+    <div className="mt-3" style={{marginBottom:100}}>
       <Body mode={mode}/>
     </div>
-    <div style={{width:'100%',position:'absolute',bottom:0}}>
+    <div style={{width:'100%',position:'fixed',bottom:0}}>
       <Footer />
     </div>
     </div>

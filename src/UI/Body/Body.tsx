@@ -1,22 +1,32 @@
 import React from "react"
 import { Route, Switch } from "react-router-dom"
 
-import { Music } from "../Music/Music"
-import { Musics } from "../Musics/Musics"
-import { People } from "../People/People"
-import { Playlist } from "../Playlist/Playlist"
-import { Playlists } from "../Playlists/Playlists"
-import { Chat } from "../Chat/Chat";
-import { Home } from "../Home/Home"
-import { Subscribers } from "../Subscribers/Subscribers";
-import { Followers } from "../Followers/Followers";
-import { NotFound } from "../NotFound/NotFound"
 import { WithSuspense } from "../HOC/WithSuspense"
+import { WithAuth } from "../HOC/WithAuth";
+import { StartPage } from "../StartPage/StartPage";
 
 //@ts-ignore
-const Chats = React.lazy(()=>import("../Chats/Chats"))
-
-
+const Playlists = React.lazy(() => import('../Playlists/Playlists'))
+//@ts-ignore
+const Playlist = React.lazy(() => import('../Playlist/Playlist'))
+//@ts-ignore
+const People = React.lazy(() => import('../People/People'))
+//@ts-ignore
+const Musics = React.lazy(() => import('../Musics/Musics'))
+//@ts-ignore
+const Music = React.lazy(() => import('../Music/Music'))
+//@ts-ignore
+const Home = React.lazy(() => import('../Home/Home'))
+//@ts-ignore
+const Chat = React.lazy(() => import('../Chat/Chat'))
+//@ts-ignore
+const Chats = React.lazy(() => import("../Chats/Chats"))
+//@ts-ignore
+const NotFound = React.lazy(() => import('../NotFound/NotFound'))
+//@ts-ignore
+const Followers = React.lazy(() => import('../Followers/Followers'))
+//@ts-ignore
+const Subscribers = React.lazy(() => import('../Subscribers/Subscribers'))
 
 type PropsType = {
     //true - pc, false - phone
@@ -24,19 +34,69 @@ type PropsType = {
 }
 
 export const Body: React.FC<PropsType> = ({ mode }) => {
+
+    const routes = [
+        {
+            path: '/playlists',
+            route: Playlists
+        }, {
+            path: '/playlist/:playlistId?',
+            route: Playlist
+        }, {
+            path: '/people',
+            route: People
+        }, {
+            path: '/musics',
+            route: Musics
+        }, {
+            path: '/music/:musicId?',
+            route: Music
+        }, {
+            path: '/home/:userId?',
+            route: Home
+        }, {
+            route: Chat,
+            path: '/chat/:chatId?'
+        }, {
+            route: Chats,
+            path: '/chats'
+        }, {
+            route: Followers,
+            path: '/followers/:userId?'
+        }, {
+            route: Subscribers,
+            path: '/subscribers/:userId?'
+        }, {
+            route: NotFound,
+            path: '*'
+        }
+    ]
+    const routesJsx = routes.map(r => {
+        const Component = r.route
+        let Render: any;
+        if (r.path === '/musics' || r.path === '/playlists') {
+            Render = <WithAuth>
+                <WithSuspense>
+                    <Component mode={mode} />
+                </WithSuspense>
+            </WithAuth>
+        } else {
+            Render = <WithAuth>
+                <WithSuspense>
+                {/* @ts-ignore */}
+                    <Component />
+                </WithSuspense>
+            </WithAuth>
+        }
+        return <Route
+            render={() => Render}
+            path={r.path} />
+    })
+
     return <div className="container">
         <Switch>
-            <Route path="/music/:musicId?" render={() => <Music />} />
-            <Route path="/musics" render={() => <Musics mode={mode} />} />
-            <Route path="/people" render={() => <People />} />
-            <Route path="/playlists" render={() => <Playlists mode={mode} />} />
-            <Route path="/playlist/:playlistId?" render={() => <Playlist />} />
-            <Route path="/chats" render={() => <WithSuspense><Chats/></WithSuspense>} />
-            <Route path="/chat/:chatId?" render={() => <Chat />} />
-            <Route path="/home/:userId?" render={() => <Home />} />
-            <Route path='/subscribers/:userId?' render={() => <Subscribers />} />
-            <Route path='/followers/:userId?' render={() => <Followers />} />
-            <Route path='*' render={() => <NotFound />} />
+            <Route path='/start' render={()=><StartPage/>} />
+            {routesJsx}
         </Switch>
     </div>
 }

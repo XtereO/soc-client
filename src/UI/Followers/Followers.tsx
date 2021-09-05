@@ -11,7 +11,7 @@ type PropsType={
 
 }
 
-export const Followers:React.FC<PropsType>=(props)=>{
+const Followers:React.FC<PropsType>=(props)=>{
     
     let [page,changePage]=useState(1)
     
@@ -33,4 +33,4 @@ export const Followers:React.FC<PropsType>=(props)=>{
     </div>
 }
 
-
+export default Followers

@@ -7,7 +7,7 @@ import { Review } from "../Music/Bricks/Review"
 
 type PropsType = {}
 
-export const Home: React.FC<PropsType> = (props) => {
+const Home: React.FC<PropsType> = (props) => {
 
     let [isEditMode, setMode] = useState(false)
     const history = useHistory()
@@ -68,3 +68,5 @@ export const Home: React.FC<PropsType> = (props) => {
         </div>
     </div>
 }
+
+export default Home

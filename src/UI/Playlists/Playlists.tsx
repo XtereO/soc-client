@@ -11,7 +11,7 @@ type PropsType = {
     mode: boolean
 }
 
-export const Playlists: React.FC<PropsType> = ({ mode }) => {
+const Playlists: React.FC<PropsType> = ({ mode }) => {
 
     const filters = {
         firstShow: [
@@ -70,3 +70,5 @@ export const Playlists: React.FC<PropsType> = ({ mode }) => {
         }
     </div>
 }
+
+export default Playlists

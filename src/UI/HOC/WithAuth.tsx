@@ -1,20 +1,21 @@
 import { useSelector } from "react-redux";
-import { Redirect } from "react-router";
+import { Redirect, useHistory } from "react-router-dom";
 import { JsxElement } from "typescript";
 import { authSelector } from "../../BLL/Selectors/authSelector";
 
 
 
 
-type PropsType={
-    Component: any //JSX element
+type PropsType={ //JSX element
 }
 
-export const withAuth:React.FC<PropsType>=({Component})=>{
+export const WithAuth:React.FC<PropsType>=(props)=>{
     const isAuth = useSelector(authSelector)
+    const history = useHistory()
     if(isAuth){
-        return<Component />
+        return <div>{props.children}</div>
     }else{
+        history.push('/start')
         return <Redirect to='/start'/>
     }
 }

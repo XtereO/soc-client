@@ -6,7 +6,7 @@ type PropsType={
 
 }
 
-export const Chat:React.FC<PropsType> = (props)=>{
+const Chat:React.FC<PropsType> = (props)=>{
     return<div>
         <div className="justify-content-end">
             Title dialog
@@ -27,3 +27,5 @@ export const Chat:React.FC<PropsType> = (props)=>{
         </div>
     </div>
 }
+
+export default Chat
