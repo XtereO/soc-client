@@ -1,8 +1,9 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import { NavLink, useHistory } from "react-router-dom"
 import { Review } from "../Music/Bricks/Review"
-
-
+import { profileSelector } from "../../BLL/Selectors/profileSelector";
+import { setProfileAsync, setReviewsAsync } from "../../BLL/Reducers/profileReducer";
 
 
 type PropsType = {}
@@ -11,10 +12,20 @@ const Home: React.FC<PropsType> = (props) => {
 
     let [isEditMode, setMode] = useState(false)
     const history = useHistory()
+    const dispatch = useDispatch()
+    let profile = useSelector(profileSelector)
+    
+
+    useEffect(()=>{
+        const userId = history.location.pathname.slice(6,)
+        dispatch(setProfileAsync(userId ? userId : ''))
+        //@ts-ignore
+        dispatch(setReviewsAsync(userId ? userId : profile.userId))
+    },[])
 
     return <div>
         <div>
-            @ShortT
+            {profile.shortNickname}
         </div>
         <div className="row">
             <div className="col-md-4">
@@ -24,10 +35,10 @@ const Home: React.FC<PropsType> = (props) => {
             </div>
             <div className="col-md-8">
                 <div className="card p-4">
-                    First name: Hola
+                    First name: {profile.firstName}
                 </div>
                 <div className="card p-4">
-                    Second name: Kola
+                    Second name: {profile.secondName}
                 </div>
                 <div
                     onDoubleClick={() => setMode(prev => !prev)}
@@ -42,19 +53,19 @@ const Home: React.FC<PropsType> = (props) => {
                         </textarea>
                         :
                         <div>
-                            About me: I create this site
+                            About me: {profile.aboutMe}
                         </div>
                     }
                 </div>
                 <div 
                 onClick={()=>history.push('/followers/id')}
                 className="card Home__Link Home__Link_hover Home__Link_active p-4">
-                    Followers: 34     
+                    Followers: {profile.followers}     
                 </div>
                 <div 
                 onClick={()=>history.push('/subscribers/id')}
                 className="card Home__Link Home__Link_hover Home__Link_active p-4">
-                    Subscribes: 34     
+                    Subscribes: {profile.subscribers}
                 </div>
             </div>
         </div>

@@ -1,3 +1,4 @@
+import { debug } from "console";
 import { takeEvery, call, put } from "redux-saga/effects";
 import { confirmCode, login, registrate, ResultCodeType } from "../../DAL/api";
 import { LoginRequestType, RegistrateRequestType, ShowToastType } from "../../Types/auth";
@@ -12,6 +13,7 @@ type ResultCodeWithTokenType = {
 }
 function* loginWorker(action: (LoginType & LoginRequestType & ShowToastType)) {
     try {
+        debugger
         yield put(setInit(true))
         const data: ResultCodeWithTokenType = yield call(login, action.email, action.password)
         if (data.success && data.token) {

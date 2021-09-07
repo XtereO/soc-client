@@ -1,13 +1,17 @@
 import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 import './App.css';
+import { setProfileAsync } from './BLL/Reducers/profileReducer';
 import { Body } from './UI/Body/Body';
 import { Footer } from './UI/Footer/Footer';
 import { Header } from './UI/Header/Header';
 
 function App() {
+
+  const dispatch = useDispatch()
 
   //true - pc, false - phone
   let [mode, setMode] = useState(true)
@@ -23,6 +27,10 @@ function App() {
   useEffect(()=>{
     changeMode()
     window.addEventListener('resize',changeMode)
+    
+    return()=>{
+      window.removeEventListener('resize',changeMode)
+    }
   },[])
   return (
     <HashRouter>
