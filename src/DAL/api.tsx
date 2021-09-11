@@ -1,10 +1,11 @@
 import axios from "axios";
+import { backendURL } from "../Consts";
 import { RegistrateRequestType } from "../Types/auth";
-import { ProfileType, ReviewType } from "../Types/profile";
+import { NamesType, ProfileType, ReviewType } from "../Types/profile";
 
 
 const instance = axios.create({
-    baseURL:'http://localhost:5000/api/',
+    baseURL:`${backendURL}api/`,
     headers:{
         Authorization:localStorage.getItem('token')
     }
@@ -66,6 +67,39 @@ export const getReviews=(idWhoNeedIt:string,page=1,
     showNewFirst=true,size=6,
     reviewFor:('MusicOrPlaylist' | 'User')='User')=>{
     return instance.get<GetReviewType>(`review?idWhoNeedIt=${idWhoNeedIt}&page=${page}&showNewFirst=${showNewFirst}&size=${size}&reviewFor=${reviewFor}`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+export const setAboutMe=(aboutMe:string)=>{
+    return instance.put<ResultCodeType>('profile/updateAboutMe',
+    {aboutMe})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+export const setNames=(req:NamesType)=>{
+    return instance.put('profile/updateDates',
+    {...req})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+export type SetAvatarType={
+    avatar: string
+}
+export const setAvatar=(file: any)=>{
+    let formData = new FormData()
+    formData.append("image",file)
+    
+    return instance.put<ResultCodeType & SetAvatarType>('profile/updateAvatar',
+        formData,
+        {headers:{
+            "Content-Type":'multipart/form-data'
+        }})
+        .then(res=>res.data)
+        .catch(e=>e.response.data)
+}
+export const setPasswords = (password: string, passwordRepeat: string)=>{
+    return instance.put<ResultCodeType>('profile/updatePassword',
+    {password, passwordRepeat})
     .then(res=>res.data)
     .catch(e=>e.response.data)
 }

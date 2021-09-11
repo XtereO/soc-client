@@ -142,6 +142,7 @@
     font-size: 0.9em;
     color:rgb(219, 218, 218)
 }
+.flex{display: flex;}
 
 
 ::selection{

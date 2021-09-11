@@ -16,7 +16,7 @@ export const Header:React.FC<PropsType> = (props) => {
     let auth = useSelector(authSelector)
     useEffect(()=>{
         if(auth){
-            dispatch(setProfileAsync(''))
+            dispatch(setProfileAsync('',true))
         }
     },[auth])
 

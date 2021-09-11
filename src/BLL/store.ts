@@ -10,12 +10,14 @@ const rootReducer = combineReducers({
     auth: authReducer,
     profile: profileReducer
 })
+//@ts-ignore
+const composeEnhancers=window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 type RootReducerType = typeof rootReducer
 export type AppStateType = ReturnType<RootReducerType>
 
 const sagaMiddleware = createSagaMiddleware()
 
-export const store = createStore(rootReducer, applyMiddleware(sagaMiddleware))
+export const store = createStore(rootReducer, composeEnhancers(applyMiddleware(sagaMiddleware)))
 
 function* rootSaga(){
     yield all([
@@ -24,3 +26,6 @@ function* rootSaga(){
     ])
 }
 sagaMiddleware.run(rootSaga)
+
+//@ts-ignore
+window.store=store

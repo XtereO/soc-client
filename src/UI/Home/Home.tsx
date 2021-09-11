@@ -1,70 +1,120 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { NavLink, useHistory } from "react-router-dom"
+import { useHistory } from "react-router-dom"
 import { Review } from "../Music/Bricks/Review"
-import { profileSelector } from "../../BLL/Selectors/profileSelector";
-import { setProfileAsync, setReviewsAsync } from "../../BLL/Reducers/profileReducer";
-
+import { myProfileSelector, profileSelector } from "../../BLL/Selectors/profileSelector";
+import { SetAboutMeAsync, setInit, setMessage, setProfileAsync, setReviewsAsync } from "../../BLL/Reducers/profileReducer";
+//@ts-ignore
+import defaultAvatar from '../../Media/default_avatar.jpg'
+import { EditModal } from "./EditModal";
+import { MyToast } from "../Bricks/MyToast";
+import { backendURL } from "../../Consts";
 
 type PropsType = {}
 
 const Home: React.FC<PropsType> = (props) => {
 
+    //==========For=toasts==============================
+    let [showNames, setShowNames] = useState(false)
+    let [showAvatar, setShowAvatar] = useState(false)
+    let [showPassword, setShowPassword] = useState(false)
+    //==================================================
+
+
+    let [showModal, setShowModal] = useState(false)
     let [isEditMode, setMode] = useState(false)
+    let onCloseModal=()=>{
+        dispatch(setMessage(null))
+        dispatch(setInit(false))
+        setShowModal(false)
+    }
+
+
     const history = useHistory()
     const dispatch = useDispatch()
     let profile = useSelector(profileSelector)
-    
+    let myProfile = useSelector(myProfileSelector)
 
-    useEffect(()=>{
+    useEffect(() => {
         const userId = history.location.pathname.slice(6,)
-        dispatch(setProfileAsync(userId ? userId : ''))
+        dispatch(setProfileAsync(userId ? userId : '', false))
         //@ts-ignore
-        dispatch(setReviewsAsync(userId ? userId : profile.userId))
-    },[])
+        dispatch(setReviewsAsync(userId ? userId : ''))
+    }, [history.location.pathname])
+
+    const handlerOpenTextArea = () => {
+        setMode(true)
+    }
+    const handlerCloseTextArea = (e: any) => {
+        dispatch(SetAboutMeAsync(e.target.value))
+        setMode(false)
+    }
 
     return <div>
-        <div>
-            {profile.shortNickname}
+        <div className="row mb-2">
+            <div className="col-6">
+                @{profile.shortNickname}
+            </div>
+            {
+                myProfile.userId === profile.userId &&
+                <div style={{ display: 'flex' }}
+                    className="col-6 justify-content-end">
+                    <button
+                        className="btn btn-outline-primary"
+                        onClick={() => setShowModal(true)}
+                    >
+                        Edit
+                    </button>
+                </div>}
         </div>
         <div className="row">
             <div className="col-md-4">
                 <img
-                    src="https://ru-static.z-dn.net/files/db3/5bdb9e8a453d9353a37b338941278006.jpg"
+                    src={profile.avatar ? backendURL+profile.avatar :
+                        defaultAvatar}
                     className="RoundImage w-100" />
             </div>
             <div className="col-md-8">
-                <div className="card p-4">
-                    First name: {profile.firstName}
+                <div
+                    className="card p-4" >
+                    <div>First name: {profile.firstName}</div>
                 </div>
-                <div className="card p-4">
+                <div
+                    className="card p-4" >
                     Second name: {profile.secondName}
                 </div>
                 <div
-                    onDoubleClick={() => setMode(prev => !prev)}
-                    style={{overflowY:'scroll'}}
+                    onClick={
+                        myProfile.userId === profile.userId ?
+                            (isEditMode ? handlerCloseTextArea :
+                                handlerOpenTextArea)
+                            :
+                            () => { }
+                    }
+                    style={{ overflowY: 'scroll' }}
                     className="card Home__Link Home__Link_hover p-4" >
                     {isEditMode ?
                         <textarea
-                            onBlur={() => setMode(false)}
+                            onBlur={handlerCloseTextArea}
                             autoFocus={true}
                             className="form-control">
-                            I create this site
+                            {profile.aboutMe}
                         </textarea>
                         :
                         <div>
-                            About me: {profile.aboutMe}
+                            About me: {profile.userId === myProfile.userId ?
+                                myProfile.aboutMe : profile.aboutMe}
                         </div>
                     }
                 </div>
-                <div 
-                onClick={()=>history.push('/followers/id')}
-                className="card Home__Link Home__Link_hover Home__Link_active p-4">
-                    Followers: {profile.followers}     
+                <div
+                    onClick={() => history.push('/followers/id')}
+                    className="card Home__Link Home__Link_hover Home__Link_active p-4">
+                    Followers: {profile.followers}
                 </div>
-                <div 
-                onClick={()=>history.push('/subscribers/id')}
-                className="card Home__Link Home__Link_hover Home__Link_active p-4">
+                <div
+                    onClick={() => history.push('/subscribers/id')}
+                    className="card Home__Link Home__Link_hover Home__Link_active p-4">
                     Subscribes: {profile.subscribers}
                 </div>
             </div>
@@ -72,10 +122,40 @@ const Home: React.FC<PropsType> = (props) => {
         <div className="mt-4">
             <h5>Reviews:</h5>
             <div className="row">
-                {[].map(m=><div className="col-md-6">
+                {[].map(m => <div className="col-md-6">
                     <Review {...m} />
                 </div>)}
             </div>
+        </div>
+        <EditModal
+            showNamesToast={() => setShowNames(true)}
+            showPasswordToast={() => setShowPassword(true)}
+            showAvatarToast={() => setShowAvatar(true)}
+            show={showModal} onClose={onCloseModal}
+        />
+        <div 
+        className="justify-content-end"
+        style={{ display:'flex',
+        position: 'fixed', width: '82%',
+         bottom: 60 }}>
+        <div>
+            <MyToast
+                description={"Names change successfull"}
+                onClose={() => setShowNames(false)}
+                show={showNames} />
+        </div>
+        <div>
+            <MyToast
+                description={"Avatar change successfull"}
+                onClose={() => setShowAvatar(false)}
+                show={showAvatar} />
+        </div>
+        <div>
+            <MyToast
+                description={"Password change successfull"}
+                onClose={() => setShowPassword(false)}
+                show={showPassword} />
+        </div>
         </div>
     </div>
 }

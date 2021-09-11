@@ -1,8 +1,10 @@
+import React from "react"
 
 
 
 type PropsType={
     onChange?: (e:React.ChangeEvent<HTMLInputElement>)=>void
+    onBlur?: (e:React.ChangeEvent<HTMLInputElement>)=>void
     placeholder?: string
     style?: any
     value?: string | number

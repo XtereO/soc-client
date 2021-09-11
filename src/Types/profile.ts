@@ -19,9 +19,15 @@ export type ReviewType={
 export type ProfileType={
     shortNickname: string
     userId: string|null
+    avatar: string | null
     firstName: string
     secondName: string
     aboutMe: string
     followers: number
     subscribers: number
+}
+export type NamesType={
+    shortNickname?: string 
+    firstName?: string  
+    secondName?: string 
 }
