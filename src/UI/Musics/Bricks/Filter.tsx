@@ -1,4 +1,6 @@
+import { Field } from "formik"
 import React from "react"
+import { MyInput } from "../../Bricks/MyInput"
 import { MySelect } from "../../Bricks/MySelect"
 
 
@@ -16,6 +18,26 @@ export const Filter: React.FC<PropsType> = ({filters}) => {
     return <div>
         <h4 className="Center">Filters</h4>
         <div>
+            <div className="mt-4 row">
+                <div className="col-6 Center">
+                    <label htmlFor="MySaved">
+                        Only my saved:
+                    </label>
+                </div>
+                <div className="col-6 Center">
+                    <MyInput type="checkbox" id="MySaved"/>
+                </div>
+            </div>
+            <div className="mt-4 row">
+                <div className="col-6 Center">
+                    <label htmlFor="MyCreated">
+                        Only my created:
+                    </label>
+                </div>
+                <div className="col-6 Center">
+                    <MyInput type="checkbox" id="MyCreated"/>
+                </div>
+            </div>
             <div className="mt-4 row">
                 <div className="col-6 Center">
                     First show:

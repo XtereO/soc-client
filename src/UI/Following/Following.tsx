@@ -5,8 +5,8 @@ import { SearchButton } from "../Bricks/SearchButton";
 import { useState } from "react";
 import { PeopleItem, PeopleItemType } from "../People/PeopleItem";
 import { useDispatch, useSelector } from "react-redux";
-import { followersSelector,pageSelector,countSelector, initSelector } from "../../BLL/Selectors/followersSelector";
-import { setFollowersAsync } from "../../BLL/Reducers/followersReducer";
+import { followingSelector,pageSelector,countSelector, initSelector } from "../../BLL/Selectors/followingSelector";
+import { setFollowersAsync } from "../../BLL/Reducers/followingReducer";
 import { useHistory } from "react-router";
 
 
@@ -14,13 +14,13 @@ type PropsType={
 
 }
 
-const Followers:React.FC<PropsType>=(props)=>{
+const Following:React.FC<PropsType>=(props)=>{
     
     const dispatch = useDispatch()
     const history = useHistory()
 
     let isInit = useSelector(initSelector)
-    let followers = useSelector(followersSelector)
+    let following = useSelector(followingSelector)
     let count = useSelector(countSelector)
     let page = useSelector(pageSelector)
     
@@ -30,13 +30,13 @@ const Followers:React.FC<PropsType>=(props)=>{
         setTitle(e.target.value)
     }
     const handleSubmit=()=>{
-        history.push(`/followers?title=${title}&page=${1}`)
-        setPath(`/followers?title=${title}&page=${1}`)
+        history.push(`/following?title=${title}&page=${1}`)
+        setPath(`/following?title=${title}&page=${1}`)
     }
 
     let changePage=(choosenPage:number)=>{
-        history.push(`/followers?title=${title}&page=${choosenPage}`)
-        setPath(`/followers?title=${title}&page=${choosenPage}`)
+        history.push(`/following?title=${title}&page=${choosenPage}`)
+        setPath(`/following?title=${title}&page=${choosenPage}`)
     }
 
     useEffect(()=>{
@@ -60,7 +60,7 @@ const Followers:React.FC<PropsType>=(props)=>{
             <SearchButton onClick={handleSubmit} />
         </div>
         <div className="">
-            {followers.map((p:PeopleItemType)=>
+            {following.map((p:PeopleItemType)=>
             <div className="mt-2" >
                 <PeopleItem {...p} isInit={isInit} />
             </div>)}
@@ -75,4 +75,4 @@ const Followers:React.FC<PropsType>=(props)=>{
     </div>
 }
 
-export default Followers
+export default Following

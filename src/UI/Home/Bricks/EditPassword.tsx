@@ -43,7 +43,7 @@ export const EditPassword:React.FC<PropsType>=({showToast})=>{
                         Change Passwords
                     </h4>
                     <div className="col-md-6 Center">
-                        Password    
+                        New password    
                     </div>
                     <div className="col-md-6">
                         <MyInput  
@@ -58,7 +58,7 @@ export const EditPassword:React.FC<PropsType>=({showToast})=>{
                 </div>
                 <div className="row mt-2">
                     <div className="col-md-6 Center">
-                        Repeat password
+                        Repeat new password
                     </div>
                     <div className="col-md-6">
                         <MyInput 

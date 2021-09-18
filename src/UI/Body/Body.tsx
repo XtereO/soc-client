@@ -26,7 +26,7 @@ const NotFound = React.lazy(() => import('../NotFound/NotFound'))
 //@ts-ignore
 const Followers = React.lazy(() => import('../Followers/Followers'))
 //@ts-ignore
-const Subscribers = React.lazy(() => import('../Subscribers/Subscribers'))
+const Following = React.lazy(() => import('../Following/Following'))
 
 type PropsType = {
     //true - pc, false - phone
@@ -64,8 +64,8 @@ export const Body: React.FC<PropsType> = ({ mode }) => {
             route: Followers,
             path: '/followers/:userId?'
         }, {
-            route: Subscribers,
-            path: '/subscribers/:userId?'
+            route: Following,
+            path: '/following/:userId?'
         }, {
             route: NotFound,
             path: '*'

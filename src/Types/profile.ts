@@ -16,7 +16,7 @@ export type ReviewType={
     titleMusicOrPlaylist: string
     date: string
 }
-export type ProfileType={
+export type ProfileDetailType={
     shortNickname: string
     userId: string|null
     avatar: string | null
@@ -24,7 +24,17 @@ export type ProfileType={
     secondName: string
     aboutMe: string
     followers: number
-    subscribers: number
+    following: number
+    isFollow: boolean | null // null - my profile
+}
+export type ProfileType={
+    shortNickname: string
+    userId: string|null
+    avatar: string | null
+    firstName: string
+    secondName: string
+    aboutMe: string
+    isFollow: boolean
 }
 export type NamesType={
     shortNickname?: string 

@@ -2,13 +2,25 @@ import { createStore, combineReducers,applyMiddleware  } from "redux";
 import createSagaMiddleware  from "redux-saga";
 import { all } from "redux-saga/effects";
 import { authReducer } from "./Reducers/authReducer";
+import { peopleReducer } from "./Reducers/peopleReducer";
 import { profileReducer } from "./Reducers/profileReducer";
 import { authWatcher } from "./Sagas/authWatcher";
 import { profileWatcher } from "./Sagas/profileWatcher";
+import { peopleWatcher } from "./Sagas/peopleWatcher";
+import { followersWatcher } from "./Sagas/followersWatcher";
+import { followingWatcher } from "./Sagas/followingWatcher";
+import { followersReducer } from "./Reducers/followersReducer";
+import { followingReducer } from "./Reducers/followingReducer";
+import { musicReducer } from "./Reducers/musicReducer";
+import { musicWatcher } from "./Sagas/musicWatcher";
 
 const rootReducer = combineReducers({
     auth: authReducer,
-    profile: profileReducer
+    profile: profileReducer,
+    people: peopleReducer,
+    followers: followersReducer,
+    following: followingReducer,
+    music: musicReducer
 })
 //@ts-ignore
 const composeEnhancers=window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -22,7 +34,11 @@ export const store = createStore(rootReducer, composeEnhancers(applyMiddleware(s
 function* rootSaga(){
     yield all([
         authWatcher(),
-        profileWatcher()
+        profileWatcher(),
+        peopleWatcher(),
+        followersWatcher(),
+        followingWatcher(),
+        musicWatcher()
     ])
 }
 sagaMiddleware.run(rootSaga)

@@ -1,7 +1,10 @@
 import axios from "axios";
+import { type } from "os";
+import { title } from "process";
 import { backendURL } from "../Consts";
 import { RegistrateRequestType } from "../Types/auth";
-import { NamesType, ProfileType, ReviewType } from "../Types/profile";
+import { GenreType } from "../Types/music";
+import { NamesType, ProfileDetailType, ProfileType, ReviewType } from "../Types/profile";
 
 
 const instance = axios.create({
@@ -50,7 +53,7 @@ export const confirmCode=(getter:string, textMessage:string)=>{
 =========================================================
 */
 export type GetProfileType={
-    user: ProfileType
+    user: ProfileDetailType
     success: boolean
 }
 export const getProfile=(userId?:string)=>{
@@ -100,6 +103,86 @@ export const setAvatar=(file: any)=>{
 export const setPasswords = (password: string, passwordRepeat: string)=>{
     return instance.put<ResultCodeType>('profile/updatePassword',
     {password, passwordRepeat})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+/*
+====================================================
+=====================People=========================
+====================================================
+*/
+export type GetPeopleType={
+    users: ProfileType[]
+    count: number
+    success: boolean
+    message?: string
+}
+export const getPeople=(page=1,size=10,title?:string)=>{
+    return instance.get<GetPeopleType>(`users/getUsers?page=${page}&size=${size}&title=${title ? title : ''}`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+export const follow=(userId:string)=>{
+    return instance.post<ResultCodeType>(`profile/follow/${userId}`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+export const unfollow=(userId:string)=>{
+    return instance.delete<ResultCodeType>(`profile/follow/${userId}`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+export const getFollowers=(page=1,size=10,title?:string)=>{
+    return instance.get<GetPeopleType>(`users/followers?page=${page}&size=${size}&title=${title ? title : ''}`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+export const getFollowing=(page=1,size=10,title?:string)=>{
+    return instance.get<GetPeopleType>(`users/following?page=${page}&size=${size}&title=${title ? title : ''}`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+/*
+=================================================
+==================MUSIC=BLOCK====================
+=================================================
+*/
+export type AddMusicRequestType={
+    success: boolean
+    musicId?: string
+    message?: string
+}
+export const addMusic=(title: string, author: string, genre: GenreType)=>{
+    return instance.post<AddMusicRequestType>(`audio/music`,
+    {title, author, genre})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+export const setImgMusic=(img:any,musicId:string)=>{
+    let formData = new FormData()
+    formData.append('image',img)
+    
+    return instance.put<ResultCodeType>(`audio/imusic/${musicId}`,
+    formData,{
+        headers:{
+        'Content-Type':'multipart/form-data'
+        }
+    })
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+export const setMP3Music=(mp3:any,musicId:string)=>{
+    let formData=new FormData()
+    formData.append('music',mp3)
+    
+    return instance.put<ResultCodeType>(`audio/musicmp3/${musicId}`,
+    formData,{
+        headers:{
+            'Content-Type':'multipart/form-data'
+        }
+    })
     .then(res=>res.data)
     .catch(e=>e.response.data)
 }

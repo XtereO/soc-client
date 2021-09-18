@@ -8,17 +8,19 @@ import { MusicItem, MusicItemType } from "./MusicItem"
 
 
 type PropsType = {
-
+    handleOpenAddMenu?:()=>void
 }
 
-export const Search: React.FC<PropsType> = (props) => {
+export const Search: React.FC<PropsType> = ({handleOpenAddMenu}) => {
     return <div>
         <div className="">
             <div className="d-flex">
                 <MyInput style={{ width: '100%' }} />
                 <SearchButton style={{ borderRadius: 20000 }} />
-                <Plus style={{ width: 50 }} />
-            </div>
+                <Plus 
+                onClick={handleOpenAddMenu ? handleOpenAddMenu : ()=>{}}
+                style={{ width: 50 }} />
+            </div> 
         </div>
     </div>
 }

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from "react-router-dom"
-import { Review } from "../Music/Bricks/Review"
+import { Pagination } from "../Bricks/Pagination";
 import { myProfileSelector, profileSelector } from "../../BLL/Selectors/profileSelector";
 import { SetAboutMeAsync, setInit, setMessage, setProfileAsync, setReviewsAsync } from "../../BLL/Reducers/profileReducer";
-//@ts-ignore
-import defaultAvatar from '../../Media/default_avatar.jpg'
 import { EditModal } from "./EditModal";
 import { MyToast } from "../Bricks/MyToast";
 import { backendURL } from "../../Consts";
+import { reviewsSelector, countSelector, pageSelector } from '../../BLL/Selectors/profileSelector' 
+//@ts-ignore
+import defaultAvatar from '../../Media/default_avatar.jpg'
+import { Reviews } from "../Music/Reviews";
 
 type PropsType = {}
 
@@ -20,7 +22,10 @@ const Home: React.FC<PropsType> = (props) => {
     let [showPassword, setShowPassword] = useState(false)
     //==================================================
 
-
+    let reviews = useSelector(reviewsSelector)
+    let count = useSelector(countSelector)
+    let page = useSelector(pageSelector)
+    
     let [showModal, setShowModal] = useState(false)
     let [isEditMode, setMode] = useState(false)
     let onCloseModal=()=>{
@@ -39,7 +44,7 @@ const Home: React.FC<PropsType> = (props) => {
         const userId = history.location.pathname.slice(6,)
         dispatch(setProfileAsync(userId ? userId : '', false))
         //@ts-ignore
-        dispatch(setReviewsAsync(userId ? userId : ''))
+        dispatch(setReviewsAsync(userId ? userId : myProfile.userId))
     }, [history.location.pathname])
 
     const handlerOpenTextArea = () => {
@@ -48,6 +53,9 @@ const Home: React.FC<PropsType> = (props) => {
     const handlerCloseTextArea = (e: any) => {
         dispatch(SetAboutMeAsync(e.target.value))
         setMode(false)
+    }
+    const handlerPageChange=(page:number)=>{
+        dispatch(setReviewsAsync(profile.userId as string,page))
     }
 
     return <div>
@@ -108,24 +116,35 @@ const Home: React.FC<PropsType> = (props) => {
                     }
                 </div>
                 <div
-                    onClick={() => history.push('/followers/id')}
+                    onClick={() => history.push(`/followers/${history.location.pathname.slice(6,)}`)}
                     className="card Home__Link Home__Link_hover Home__Link_active p-4">
                     Followers: {profile.followers}
                 </div>
                 <div
-                    onClick={() => history.push('/subscribers/id')}
+                    onClick={() => history.push(`/following/${history.location.pathname.slice(6,)}`)}
                     className="card Home__Link Home__Link_hover Home__Link_active p-4">
-                    Subscribes: {profile.subscribers}
+                    Following: {profile.following}
                 </div>
             </div>
         </div>
         <div className="mt-4">
-            <h5>Reviews:</h5>
-            <div className="row">
-                {[].map(m => <div className="col-md-6">
-                    <Review {...m} />
-                </div>)}
+            <div  className="w-100 row">
+                <div className="col-6">
+                    <h5>Reviews:</h5>
+                </div>
+                <div className="col-6 d-flex justify-content-end">
+                    <Pagination 
+                    page={page}
+                    portionSize={6}
+                    count={count}
+                    pageChange={handlerPageChange}
+                    />
+                </div>
             </div>
+            {count >0 &&  <Reviews reviews={reviews} />}
+            {count===0 && <div className="w-100 Center mt-4">
+                This user dont leave a reviews yet 
+            </div>}
         </div>
         <EditModal
             showNamesToast={() => setShowNames(true)}
@@ -161,3 +180,4 @@ const Home: React.FC<PropsType> = (props) => {
 }
 
 export default Home
+

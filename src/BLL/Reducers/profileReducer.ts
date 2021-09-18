@@ -1,4 +1,4 @@
-import { NamesType, ProfileType, ReviewType } from "../../Types/profile"
+import { NamesType, ProfileDetailType, ProfileType, ReviewType } from "../../Types/profile"
 
 const SET_PROFILE: "profileReducer/SET_PROFILE" = "profileReducer/SET_PROFILE"
 const SET_REVIEWS: "profileReducer/SET_REVIEWS" = "profileReducer/SET_REVIEWS"
@@ -26,8 +26,9 @@ const initialState = {
         secondName: '',
         aboutMe: '',
         followers: 0,
-        subscribers: 0
-    } as ProfileType,
+        following: 0,
+        isFollow: null
+    } as ProfileDetailType,
     myProfile: {
         shortNickname: '',
         avatar: null,
@@ -36,8 +37,9 @@ const initialState = {
         secondName: '',
         aboutMe: '',
         followers: 0,
-        subscribers: 0
-    } as ProfileType,
+        following: 0,
+        isFollow: null 
+    } as ProfileDetailType,
     reviews: [] as ReviewType[],
     page: 1 as number,
     count: 0 as number,
@@ -257,11 +259,12 @@ type SetProfileType = {
     firstName: string
     secondName: string
     aboutMe: string
+    following: number
     followers: number
-    subscribers: number
+    isFollow: boolean | null
     isMyProfile: boolean
 }
-export const setProfile = (req: ProfileType, isMyProfile: boolean): SetProfileType => {
+export const setProfile = (req: ProfileDetailType, isMyProfile: boolean): SetProfileType => {
     return {
         ...req,
         type: SET_PROFILE,

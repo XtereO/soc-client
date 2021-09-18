@@ -11,6 +11,7 @@ type PropsType={
     required?: boolean
     type?: string
     name?: string
+    id?: string
 }
 
 export const MyInput:React.FC<PropsType>=(props)=>{

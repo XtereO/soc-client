@@ -1,4 +1,5 @@
-import { Review, ReviewType } from "./Bricks/Review"
+import { ReviewType } from "../../Types/profile"
+import { Review } from "./Bricks/Review"
 
 
 
@@ -9,7 +10,7 @@ type PropsType={
 
 export const Reviews:React.FC<PropsType>=({reviews})=>{
     
-    const reviewsJSX = reviews.map(r=><div className="col-md-6">
+    const reviewsJSX = reviews.map(r=><div className="col-md-6 mt-1">
         <Review {...r} />
         </div>) 
     

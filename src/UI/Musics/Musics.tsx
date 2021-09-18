@@ -1,15 +1,12 @@
 import React from "react"
-import { Pagination } from "../Bricks/Pagination"
-import { MyInput } from "../Bricks/MyInput"
-import { Plus } from "../Bricks/Plus"
-import { SearchButton } from "../Bricks/SearchButton"
 import { Filter } from "./Bricks/Filter"
-import { MusicItem, MusicItemType } from "./Bricks/MusicItem"
 import { useState } from "react"
 import { Search } from "./Bricks/Search"
 import { Content } from "./Bricks/Content";
 import { SettingButton } from "../Bricks/SettingButton";
-
+import { AddMusicMenu } from "./Bricks/AddMusicMenu"
+import { MyToast } from "../Bricks/MyToast"
+ 
 
 
 type PropsType = {
@@ -17,6 +14,25 @@ type PropsType = {
 }
 
 const Musics: React.FC<PropsType> = ({ mode }) => {
+
+    let [showMenuAddMusic, setShowMenuAddMusic] = useState(false)
+    const handleCloseAddMenu=()=>{
+        setShowMenuAddMusic(false)
+    }
+    const handleOpenAddMenu=()=>{
+        setShowMenuAddMusic(true)
+    }
+
+    //For toast 
+    let [showAddSuccessfullToast, setShowAddSuccessfullToast] = useState(false)
+    const handleOpenAddToast=()=>{
+        setShowAddSuccessfullToast(true)
+        handleCloseAddMenu()
+    }
+    const handleCloseAddToast=()=>{
+        setShowAddSuccessfullToast(false)
+    }
+
 
     const filters = {
         firstShow: [
@@ -45,7 +61,8 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
             mode ?
                 <div className="row" >
                     <div className="col-8" style={{ borderRight: '1px solid blue' }}>
-                        <Search />
+                        <Search 
+                        handleOpenAddMenu={handleOpenAddMenu} />
                         <Content
                             items={[]}
                             page={page} pageChange={pageChange} />
@@ -59,7 +76,9 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
                         <div>
                             <div className="row">
                                 <div className="col-9">
-                                <Search />
+                                <Search 
+                                handleOpenAddMenu={handleOpenAddMenu}
+                                 />
                                 </div>
                                 <div className="col-3">
                                     <SettingButton 
@@ -83,6 +102,19 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
                         }
                 </div>
         }
+        <AddMusicMenu
+        showToast={handleOpenAddToast}
+        handleClose={handleCloseAddMenu}
+        show={showMenuAddMusic}
+        />
+        <div 
+        className="justify-content-end"
+        style={{position:'fixed',bottom: 60}}>
+        <MyToast 
+        onClose={handleCloseAddToast}
+        description={"Music add successfull"}
+        show={showAddSuccessfullToast}  />
+        </div>
     </div>
 }
 

@@ -143,6 +143,11 @@
     color:rgb(219, 218, 218)
 }
 .flex{display: flex;}
+.MyCard{
+    border: silver 1px solid;
+    border-radius: 30px;
+    padding: 20px;
+}
 
 
 ::selection{

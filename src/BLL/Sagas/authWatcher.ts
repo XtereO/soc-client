@@ -13,7 +13,6 @@ type ResultCodeWithTokenType = {
 }
 function* loginWorker(action: (LoginType & LoginRequestType & ShowToastType)) {
     try {
-        debugger
         yield put(setInit(true))
         const data: ResultCodeWithTokenType = yield call(login, action.email, action.password)
         if (data.success && data.token) {
@@ -22,6 +21,7 @@ function* loginWorker(action: (LoginType & LoginRequestType & ShowToastType)) {
             yield put(setAuth(true))
             yield put(setInit(false))
             yield action.showToast()
+            yield window.location.reload()
         } else {
             yield put(setInit(false))
             yield put(setMessage(data.message ? data.message : 'Some error occured'))
