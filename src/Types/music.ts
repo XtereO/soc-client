@@ -1,8 +1,9 @@
 import { ProfileType } from "./profile";
 
 
-export type GenreType='Rep' | 'Hip-hop' | `Rock'n'roll` | 'Metall' | 'Other' 
+export type GenreType='All' | 'Rep' | 'Hip-hop' | `Rock'n'roll` | 'Metall' | 'Other' 
 export type MusicType={
+    musicId: string
     owner: ProfileType
     title: string
     musicSrc: string | null
