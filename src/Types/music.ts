@@ -14,3 +14,14 @@ export type MusicType={
     date: string
     genre: GenreType
 }
+
+export type FilterGetMusicType={
+    page: number 
+    size: number
+    title: string
+    searchBy: 'author' | 'title'
+    genre: GenreType
+    onlyMySaved: boolean
+    onlyMyCreated: boolean
+    firstShow: 'new' | 'old' | 'most rated'
+}

@@ -1,7 +1,7 @@
 import { Formik } from "formik"
 import { Modal } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
-import { addMusic } from "../../../BLL/Reducers/musicReducer"
+import { addMusic } from "../../../BLL/Reducers/musicsReducer"
 import { GenreType } from "../../../Types/music"
 import { MyInput } from "../../Bricks/MyInput"
 import { MySelect } from "../../Bricks/MySelect"

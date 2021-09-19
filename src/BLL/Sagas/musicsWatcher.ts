@@ -1,7 +1,6 @@
-import { AddMusicType, ADD_MUSIC, setInit, setMessage } from "../Reducers/musicReducer";
-import { addMusic, AddMusicRequestType, setImgMusic, setMP3Music,ResultCodeType } from "../../DAL/api";
+import { AddMusicType, ADD_MUSIC, setInit, setMessage, setCount, setFilters, SetMusicsAsyncType, setMusicsState, SET_MUSICS_ASYNC } from "../Reducers/musicsReducer";
+import { addMusic, AddMusicRequestType, setImgMusic, setMP3Music,ResultCodeType, GetMusicsType, getMudics } from "../../DAL/api";
 import { call, put, takeLatest } from "@redux-saga/core/effects";
-
 
 
 
@@ -32,10 +31,31 @@ function* addMusicWorker(action: AddMusicType) {
         yield put(setMessage(e.message))
     }
 }
+function* setMusicsWorker(action: SetMusicsAsyncType){
+    try{
+        debugger
+        yield put(setInit(true))
+        const data:GetMusicsType = yield call(getMudics, action.filters)
+        if(data.message && (!data.success)){
+            yield put(setInit(false))
+            yield put(setMessage(data.message))
+        }else{
+            yield put(setInit(false))
+            yield put(setMessage(null))
+            yield put(setMusicsState(data.musics))
+            yield put(setFilters(action.filters))
+            yield put(setCount(data.count))
+        }
+    }catch(e){
+        yield put(setInit(false))
+        yield put(setMessage(e.message))
+    }
+}
 
 
 
 
-export function* musicWatcher() {
+export function* musicsWatcher() {
     yield takeLatest(ADD_MUSIC, addMusicWorker)
+    yield takeLatest(SET_MUSICS_ASYNC, setMusicsWorker)
 }

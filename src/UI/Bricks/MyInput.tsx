@@ -8,6 +8,7 @@ type PropsType={
     placeholder?: string
     style?: any
     value?: string | number
+    defaultChecked?: boolean | undefined
     required?: boolean
     type?: string
     name?: string

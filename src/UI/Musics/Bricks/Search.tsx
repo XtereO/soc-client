@@ -8,15 +8,28 @@ import { MusicItem, MusicItemType } from "./MusicItem"
 
 
 type PropsType = {
-    handleOpenAddMenu?:()=>void
+    handleSubmit? :()=>void
+    handleChange?: (e:React.ChangeEvent<HTMLInputElement>)=>void
+    value?: string
+    handleOpenAddMenu?: ()=>void
 }
 
-export const Search: React.FC<PropsType> = ({handleOpenAddMenu}) => {
+export const Search: React.FC<PropsType> = ({
+    handleOpenAddMenu,
+    handleChange,
+    handleSubmit,
+    value
+    }) => {
     return <div>
         <div className="">
             <div className="d-flex">
-                <MyInput style={{ width: '100%' }} />
-                <SearchButton style={{ borderRadius: 20000 }} />
+                <MyInput  
+                onChange={handleChange}
+                value={value}
+                style={{ width: '100%' }} />
+                <SearchButton 
+                onClick={handleSubmit}
+                style={{ borderRadius: 20000 }} />
                 <Plus 
                 onClick={handleOpenAddMenu ? handleOpenAddMenu : ()=>{}}
                 style={{ width: 50 }} />

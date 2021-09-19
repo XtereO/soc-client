@@ -13,7 +13,7 @@ type PropsType = {
 
 const Playlists: React.FC<PropsType> = ({ mode }) => {
 
-    const filters = {
+    const allFilters = {
         firstShow: [
             'new',
             'most rated',
@@ -36,7 +36,7 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
                             page={page} pageChange={pageChange} />
                     </div>
                     <div className="col-4">
-                        <Filter filters={filters} />
+                        Filter
                     </div>
                 </div> :
                 <div>
@@ -56,7 +56,7 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
                         </div>
                         :
                         <div>
-                            <Filter filters={filters} />
+                            Filter
                             <div className="w-100 Center mt-4">
                             <button 
                             onClick={()=>setSearchMode(true)}

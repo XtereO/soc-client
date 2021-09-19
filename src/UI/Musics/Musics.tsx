@@ -6,6 +6,11 @@ import { Content } from "./Bricks/Content";
 import { SettingButton } from "../Bricks/SettingButton";
 import { AddMusicMenu } from "./Bricks/AddMusicMenu"
 import { MyToast } from "../Bricks/MyToast"
+import { useDispatch, useSelector } from "react-redux";
+import { setFilters, setMusicsAsync } from "../../BLL/Reducers/musicsReducer";
+import { countSelector, filtersSelector, initSelector } from "../../BLL/Selectors/musicSelector";
+import { Loader } from "../Bricks/Loader";
+import { GenreType } from "../../Types/music";
  
 
 
@@ -15,6 +20,16 @@ type PropsType = {
 
 const Musics: React.FC<PropsType> = ({ mode }) => {
 
+    const dispatch = useDispatch()
+    const filters = useSelector(filtersSelector)
+
+    //For search component
+    const handleChangeTitle=(e:React.ChangeEvent<HTMLInputElement>)=>{
+        dispatch(setFilters({...filters,title: e.target.value}))
+    }
+    const handleSubmitSearch=()=>{
+        dispatch(setMusicsAsync({...filters,page: 1}))
+    }
     let [showMenuAddMusic, setShowMenuAddMusic] = useState(false)
     const handleCloseAddMenu=()=>{
         setShowMenuAddMusic(false)
@@ -34,7 +49,7 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
     }
 
 
-    const filters = {
+    const allFilters = {
         firstShow: [
             'new',
             'most rated',
@@ -45,16 +60,33 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
             'author'
         ],
         genre: [
-            'rocknroll',
-            'metall',
-            'rep',
-            'other'
+            `Rock'n'roll`,
+            'Metall',
+            'Rep',
+            'Other',
+            'All',
+            'Hip-hop'
         ]
     }
+    const handleChangeFilters=(firstShow:'new' | 'old' | 'most rated',onlyMySaved:boolean,onlyMyCreated:boolean,searchBy:'title' | 'author' | undefined,genre:GenreType | undefined)=>{
+        //@ts-ignore
+        dispatch(setMusicsAsync({
+            firstShow,
+            searchBy: searchBy ? searchBy : 'title',
+            onlyMyCreated,
+            onlyMySaved,
+            genre: genre ? genre : 'All',
+            page:1,
+            size:10,title:filters.title
+        }))
+    }
 
-    let [page, pageChange] = useState(1)
     let [isSearchMode, setSearchMode] = useState(true)
-
+    const handlePageChange =(page: number)=>{
+        dispatch(setMusicsAsync({...filters,page: page}))
+    }
+    const count = useSelector(countSelector)
+    const isInit = useSelector(initSelector)
 
     return <div>
         {
@@ -62,13 +94,22 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
                 <div className="row" >
                     <div className="col-8" style={{ borderRight: '1px solid blue' }}>
                         <Search 
+                        value={filters.title}
+                        handleSubmit={handleSubmitSearch}
+                        handleChange={handleChangeTitle}
                         handleOpenAddMenu={handleOpenAddMenu} />
-                        <Content
+                        {isInit ? 
+                            <Loader/> :
+                            <Content
                             items={[]}
-                            page={page} pageChange={pageChange} />
+                            count={count}
+                            page={filters.page} pageChange={handlePageChange} />}
                     </div>
                     <div className="col-4">
-                        <Filter filters={filters} />
+                        <Filter 
+                        onSubmit={handleChangeFilters}
+                        filters={filters}
+                        allFilters={allFilters} />
                     </div>
                 </div> :
                 <div>
@@ -77,6 +118,9 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
                             <div className="row">
                                 <div className="col-9">
                                 <Search 
+                                value={filters.title}
+                                handleChange={handleChangeTitle}
+                                handleSubmit={handleSubmitSearch}
                                 handleOpenAddMenu={handleOpenAddMenu}
                                  />
                                 </div>
@@ -85,12 +129,18 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
                                     onClick={()=>setSearchMode(false)} />
                                 </div>
                             </div>
-                            <Content items={[]}
-                                page={page} pageChange={pageChange} />
+                            {isInit ? 
+                            <Loader/> :
+                            <Content
+                            items={[]}
+                            count={count}
+                            page={filters.page} pageChange={handlePageChange} />}
                         </div>
                         :
                         <div>
-                            <Filter filters={filters} />
+                            <Filter 
+                            onSubmit={handleChangeFilters}
+                            filters={filters} allFilters={allFilters} />
                             <div className="w-100 Center mt-4">
                             <button 
                             onClick={()=>setSearchMode(true)}

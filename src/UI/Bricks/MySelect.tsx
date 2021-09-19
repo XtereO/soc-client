@@ -6,6 +6,7 @@ type PropsType={
     style?: any
     name?: string
     value?: string
+    id?: string
     onChange?: (e:React.ChangeEvent<HTMLSelectElement>)=>void
 }
 

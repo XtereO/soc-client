@@ -14,6 +14,6 @@ export const messageSelector=(state:AppStateType)=>{
 export const countSelector=(state:AppStateType)=>{
     return state.music.count
 }
-export const pageSelector=(state:AppStateType)=>{
-    return state.music.page
+export const filtersSelector=(state:AppStateType)=>{
+    return state.music.filters
 }

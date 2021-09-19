@@ -3,7 +3,7 @@ import { type } from "os";
 import { title } from "process";
 import { backendURL } from "../Consts";
 import { RegistrateRequestType } from "../Types/auth";
-import { GenreType, MusicType } from "../Types/music";
+import { FilterGetMusicType, GenreType, MusicType } from "../Types/music";
 import { NamesType, ProfileDetailType, ProfileType, ReviewType } from "../Types/profile";
 
 
@@ -194,14 +194,15 @@ export type GetMusicsType={
     count: number
     musics: MusicType[]
 } 
-export const getMudics=(genre: GenreType,page=1,title=null as null | string, author=null as null | string,size=10)=>{
-    if(title){
-        return instance.get<GetMusicsType>(`audio/music?genre=${genre}&page=${page}&size=${size}$title=${title}`)
-        .then(res=>res.data)
-        .catch(e=>e.response.data)
-    }else{
-        return instance.get<GetMusicsType>(`audio/music?genre=${genre}&page=${page}&size=${size}$author=${author}`)
-        .then(res=>res.data)
-        .catch(e=>e.response.data)
-    }
+export const getMudics=({
+        page,size,
+        title,searchBy,
+        genre,onlyMyCreated,
+        onlyMySaved,firstShow
+    }:FilterGetMusicType)=>{
+    // Please dont touch string(s)!!!
+    let s = `audio/music?page=${page}&size=${size}&title=${title}&searchBy=${searchBy}&genre=${genre}&onlyMyCreated=${onlyMyCreated}&onlyMySaved=${onlyMySaved}&firstShow=${firstShow}`
+    return instance.get<GetMusicsType>(s)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
 }
