@@ -49,7 +49,7 @@ const People:React.FC<PropsType>=(props)=>{
             dispatch(setPeopleAsync())
         }else{
             dispatch(setPeopleAsync((title ? title : '' ),(+page)))
-        }
+        } 
     },[path])
     
     return<div>

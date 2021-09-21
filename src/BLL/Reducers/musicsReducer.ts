@@ -1,17 +1,29 @@
 
+import { stat } from "fs";
+import { backendURL } from "../../Consts";
 import { FilterGetMusicType, GenreType, MusicType } from "../../Types/music";
 
 
 export const ADD_MUSIC:'musicReducer/ADD_MUSIC'='musicReducer/ADD_MUSIC'
 export const SET_MUSICS_ASYNC:'musicReducer/SET_MUSIC_ASYNC'='musicReducer/SET_MUSIC_ASYNC'
+const SET_ACTIVE_MUSIC:'musicReducer/SET_ACTIVE_MUSIC'='musicReducer/SET_ACTIVE_MUSIC'
 const SET_COUNT:'musicReducer/SET_COUNT'='musicReducer/SET_COUNT'
 const SET_FILTERS:'musicReducer/SET_FILTERS'='musicReducer/SET_FILTERS'
 const SET_MUSICS_STATE:'musicReducer/SET_MUSIC_STATE'='musicReducer/SET_MUSIC_STATE'
 const SET_INIT:'musicReducer/SET_INIT'='musicReducer/SET_INIT'
 const SET_MESSAGE:'musicReducer/SET_MESSAGE'='musicReducer/SET_MESSAGE'
+const SET_PLAYING_MUSIC:'musicReducer/SET_PLAYING_MUSIC_TYPE'='musicReducer/SET_PLAYING_MUSIC_TYPE'
+const SET_PLAYED_MUSIC_INTERVAL:'musicReducer/SET_PLAYED_MUSIC_INTERVAL'='musicReducer/SET_PLAYED_MUSIC_INTERVAL'
 
 
 const initialState={
+    activeMusic: null as null | HTMLAudioElement,
+    activeMusicSettings:{
+        duration: 0 as number,
+        playedInterval: 0 as number,
+        isMusicPlay: false as boolean
+    },
+    activeMusicDetails: null as MusicType | null,
     musics: [] as MusicType[],
     count: 0 as number,
     isInit: false as boolean,
@@ -31,12 +43,48 @@ const initialState={
 type InitialStateType = typeof initialState
 
 type ActionType = (
-    SetInitType | SetMessageType
+    SetInitType | SetMessageType | SetActiveMusicType
     | SetCountType | SetFiltersType | SetMusicsStateType
+    | SetPlayingMusicType | SetPlayedMusicIntervalType
     )
 
 export const musicsReducer = (state=initialState,action:ActionType):InitialStateType=>{
     switch(action.type){
+        case SET_PLAYED_MUSIC_INTERVAL:
+            //@ts-ignore
+            state.activeMusic.currentTime=(action.playedInterval ? action.playedInterval : ++state.activeMusicSettings.playedInterval)
+            return{
+                ...state,
+                activeMusicSettings:{
+                    ...state.activeMusicSettings,
+                    playedInterval: (action.playedInterval ? action.playedInterval : state.activeMusicSettings.playedInterval)
+                }
+            }
+        case SET_PLAYING_MUSIC:
+            if(action.isPlaying){
+                state.activeMusic?.play()    
+            }else{
+                state.activeMusic?.pause()
+            }
+            return{...state,
+                activeMusicSettings:{
+                    ...state.activeMusicSettings,
+                    isMusicPlay: action.isPlaying
+                }
+            }
+        case SET_ACTIVE_MUSIC:
+            
+            action.audioHTML.play()
+            return{
+                ...state,
+                activeMusicSettings:{
+                    playedInterval: 0,
+                    duration: action.audioHTML.duration,
+                    isMusicPlay: true
+                },
+                activeMusic: action.audioHTML,
+                activeMusicDetails: {...action.activeMusic}
+            }
         case SET_INIT:
             return{
                 ...state,
@@ -63,6 +111,40 @@ export const musicsReducer = (state=initialState,action:ActionType):InitialState
                 filters: {...action.filters}
             }
         default: return state
+    }
+}
+
+type SetPlayedMusicIntervalType={
+    type: typeof SET_PLAYED_MUSIC_INTERVAL,
+    playedInterval?: number
+}
+export const setPlayedMusicInterval=(playedInterval?:number):SetPlayedMusicIntervalType=>{
+    return{
+        type: SET_PLAYED_MUSIC_INTERVAL,
+        playedInterval
+    }
+}
+
+type SetPlayingMusicType={
+    type: typeof SET_PLAYING_MUSIC
+    isPlaying: boolean
+}
+export const setPlayingMusic=(isPlaying:boolean):SetPlayingMusicType=>{
+    return {
+        type: SET_PLAYING_MUSIC,
+        isPlaying
+    }
+}
+
+type SetActiveMusicType={
+    type: typeof SET_ACTIVE_MUSIC
+    activeMusic: MusicType
+    audioHTML: HTMLAudioElement
+}
+export const setActiveMusic=(activeMusic:MusicType,audioHTML: HTMLAudioElement):SetActiveMusicType=>{
+    return{
+        type: SET_ACTIVE_MUSIC,
+        activeMusic, audioHTML
     }
 }
 

@@ -33,7 +33,6 @@ function* addMusicWorker(action: AddMusicType) {
 }
 function* setMusicsWorker(action: SetMusicsAsyncType){
     try{
-        debugger
         yield put(setInit(true))
         const data:GetMusicsType = yield call(getMudics, action.filters)
         if(data.message && (!data.success)){

@@ -7,7 +7,7 @@ import { MusicItem, MusicItemType } from "./MusicItem";
 
 
 type PropsType={
-    items: MusicItemType[]
+    items: any //JSX elements
     page: number
     pageChange: (page: number)=>void
     count?: number
@@ -16,7 +16,7 @@ type PropsType={
 export const Content:React.FC<PropsType>=({items,page,count,pageChange})=>{
     return<div>
     <div>
-        {items.map((m: MusicItemType) => <MusicItem {...m} />)}
+        {items}
     </div>
     <div className="Center" style={{}}>
         <Pagination

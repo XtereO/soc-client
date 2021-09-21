@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Filter } from "./Bricks/Filter"
 import { useState } from "react"
 import { Search } from "./Bricks/Search"
@@ -7,10 +7,11 @@ import { SettingButton } from "../Bricks/SettingButton";
 import { AddMusicMenu } from "./Bricks/AddMusicMenu"
 import { MyToast } from "../Bricks/MyToast"
 import { useDispatch, useSelector } from "react-redux";
-import { setFilters, setMusicsAsync } from "../../BLL/Reducers/musicsReducer";
-import { countSelector, filtersSelector, initSelector } from "../../BLL/Selectors/musicSelector";
+import { setFilters, setMusicsAsync, setPlayedMusicInterval } from "../../BLL/Reducers/musicsReducer";
+import { activeMusicDetailsSelector, activeMusicSettingsSelector, countSelector, filtersSelector, initSelector, musicsSelector } from "../../BLL/Selectors/musicSelector";
 import { Loader } from "../Bricks/Loader";
 import { GenreType } from "../../Types/music";
+import { MusicItem } from "./Bricks/MusicItem";
  
 
 
@@ -22,6 +23,12 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
 
     const dispatch = useDispatch()
     const filters = useSelector(filtersSelector)
+    const musics = useSelector(musicsSelector)
+    const MusicsJSX = musics.map(m=><MusicItem {...m} />)
+
+    useEffect(()=>{
+        dispatch(setMusicsAsync({...filters}))
+    },[])
 
     //For search component
     const handleChangeTitle=(e:React.ChangeEvent<HTMLInputElement>)=>{
@@ -101,7 +108,7 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
                         {isInit ? 
                             <Loader/> :
                             <Content
-                            items={[]}
+                            items={MusicsJSX}
                             count={count}
                             page={filters.page} pageChange={handlePageChange} />}
                     </div>
@@ -132,7 +139,7 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
                             {isInit ? 
                             <Loader/> :
                             <Content
-                            items={[]}
+                            items={MusicsJSX}
                             count={count}
                             page={filters.page} pageChange={handlePageChange} />}
                         </div>
