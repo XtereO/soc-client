@@ -3,6 +3,10 @@
     width: 30px;
     border-radius: 20000px;
 }
+.Avatar:hover{
+    transition: all 1s linear;
+    filter: grayscale(0.5)
+}
 .Center{
     display: flex;
     justify-content: center;
@@ -149,6 +153,12 @@
     padding: 20px;
 }
 
+.btn-outline-warning:active{
+    color: white  !important;
+}
+.btn-outline-warning:hover{
+    color: white !important;
+}
 
 ::selection{
     background-color: rgb(250, 128, 128);

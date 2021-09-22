@@ -1,4 +1,4 @@
-import { ProfileType } from "./profile";
+import { ProfileType, ReviewType } from "./profile";
 
 
 export type GenreType='All' | 'Rep' | 'Hip-hop' | `Rock'n'roll` | 'Metall' | 'Other' 
@@ -13,6 +13,8 @@ export type MusicType={
     countRated: number//How many people rated this music
     date: string
     genre: GenreType
+    isSaved: boolean
+    myReview: null | ReviewType
 }
 
 export type FilterGetMusicType={

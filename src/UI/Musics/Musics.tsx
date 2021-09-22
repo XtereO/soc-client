@@ -46,7 +46,7 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
         const onlyMyCreated = url.get('onlyMyCreated')
         const genre = url.get('genre')
         const firstShow = url.get('firstShow') === 'most%20rated' ? 'most rated' : url.get('firstShow')
-        debugger
+        
         if(!(page && size && searchBy && onlyMyCreated && onlyMySaved && genre && firstShow)){
             setPath(`/musics?title=${filters.title}&searchBy=${filters.searchBy}&size=${filters.size}&page=${filters.page}&onlyMySaved=${filters.onlyMySaved}&onlyMyCreated=${filters.onlyMyCreated}&genre=${filters.genre}&firstShow=${filters.firstShow}`)
         }else{
