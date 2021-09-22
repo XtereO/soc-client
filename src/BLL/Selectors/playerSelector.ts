@@ -7,7 +7,7 @@ export const activeMusicDetailsSelector=(state:AppStateType)=>{
 export const activeMusicSettingsSelector=(state:AppStateType)=>{
     return state.player.activeMusicSettings
 }
-export const isInitSelector=(state:AppStateType)=>{
+export const initSelector=(state:AppStateType)=>{
     return state.player.isInit
 }
 export const musicsSelector=(state:AppStateType)=>{

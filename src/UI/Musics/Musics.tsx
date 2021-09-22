@@ -7,11 +7,13 @@ import { SettingButton } from "../Bricks/SettingButton";
 import { AddMusicMenu } from "./Bricks/AddMusicMenu"
 import { MyToast } from "../Bricks/MyToast"
 import { useDispatch, useSelector } from "react-redux";
-import { setFilters, setMusicsAsync, setPlayedMusicInterval } from "../../BLL/Reducers/musicsReducer";
-import { activeMusicDetailsSelector, activeMusicSettingsSelector, countSelector, filtersSelector, initSelector, musicsSelector } from "../../BLL/Selectors/musicSelector";
+import { setFilters, setMusicsAsync,  } from "../../BLL/Reducers/musicsReducer";
+import { countSelector, filtersSelector, initSelector, musicsSelector } from "../../BLL/Selectors/musicSelector";
 import { Loader } from "../Bricks/Loader";
-import { GenreType } from "../../Types/music";
+import { FilterGetMusicType, GenreType } from "../../Types/music";
 import { MusicItem } from "./Bricks/MusicItem";
+import { setActiveMusic, setMusics } from "../../BLL/Reducers/playerReducer";
+import { useHistory } from "react-router";
  
 
 
@@ -22,20 +24,57 @@ type PropsType = {
 const Musics: React.FC<PropsType> = ({ mode }) => {
 
     const dispatch = useDispatch()
+    const history = useHistory()
+    let [path, setPath] = useState('')
     const filters = useSelector(filtersSelector)
+
     const musics = useSelector(musicsSelector)
-    const MusicsJSX = musics.map(m=><MusicItem {...m} />)
+    const MusicsJSX = musics.map(m=><MusicItem 
+        onPlayMusic={()=>dispatch(setMusics(musics))} {...m} />)
 
     useEffect(()=>{
         dispatch(setMusicsAsync({...filters}))
     },[])
+   
+    useEffect(()=>{
+        const url = new URLSearchParams(history.location.search)
+        const page = url.get('page')
+        const title = url.get('title')
+        const size = url.get('size')
+        const searchBy = url.get('searchBy')
+        const onlyMySaved = url.get('onlyMySaved')
+        const onlyMyCreated = url.get('onlyMyCreated')
+        const genre = url.get('genre')
+        const firstShow = url.get('firstShow') === 'most%20rated' ? 'most rated' : url.get('firstShow')
+        debugger
+        if(!(page && size && searchBy && onlyMyCreated && onlyMySaved && genre && firstShow)){
+            setPath(`/musics?title=${filters.title}&searchBy=${filters.searchBy}&size=${filters.size}&page=${filters.page}&onlyMySaved=${filters.onlyMySaved}&onlyMyCreated=${filters.onlyMyCreated}&genre=${filters.genre}&firstShow=${filters.firstShow}`)
+        }else{
+            const newFilter = {
+                page: (+page),
+                size: (+size),
+                title: title ? title : '',
+                searchBy: searchBy as 'title' | 'author',
+                onlyMySaved: onlyMySaved==='true' ? true : false,
+                onlyMyCreated: onlyMyCreated==='true' ? true : false,
+                genre: genre as GenreType,
+                firstShow: firstShow as 'new' | 'old' | 'most rated'
+            }
+            dispatch(setFilters(newFilter))
+            dispatch(setMusicsAsync(newFilter))
+        }
+
+        
+    },[path])
 
     //For search component
     const handleChangeTitle=(e:React.ChangeEvent<HTMLInputElement>)=>{
-        dispatch(setFilters({...filters,title: e.target.value}))
+        dispatch(setFilters({...filters,title:e.target.value}))
     }
     const handleSubmitSearch=()=>{
-        dispatch(setMusicsAsync({...filters,page: 1}))
+        const newPath=`/musics?title=${filters.title}&searchBy=${filters.searchBy}&size=${filters.size}&page=${1}&onlyMySaved=${filters.onlyMySaved}&onlyMyCreated=${filters.onlyMyCreated}&genre=${filters.genre}&firstShow=${filters.firstShow}`
+        history.push(newPath)
+        setPath(newPath)
     }
     let [showMenuAddMusic, setShowMenuAddMusic] = useState(false)
     const handleCloseAddMenu=()=>{
@@ -76,21 +115,16 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
         ]
     }
     const handleChangeFilters=(firstShow:'new' | 'old' | 'most rated',onlyMySaved:boolean,onlyMyCreated:boolean,searchBy:'title' | 'author' | undefined,genre:GenreType | undefined)=>{
-        //@ts-ignore
-        dispatch(setMusicsAsync({
-            firstShow,
-            searchBy: searchBy ? searchBy : 'title',
-            onlyMyCreated,
-            onlyMySaved,
-            genre: genre ? genre : 'All',
-            page:1,
-            size:10,title:filters.title
-        }))
+        const newPath=`/musics?title=${filters.title}&searchBy=${searchBy}&size=${filters.size}&page=${1}&onlyMySaved=${onlyMySaved}&onlyMyCreated=${onlyMyCreated}&genre=${genre}&firstShow=${firstShow}`
+        history.push(newPath)
+        setPath(newPath)
     }
 
     let [isSearchMode, setSearchMode] = useState(true)
     const handlePageChange =(page: number)=>{
-        dispatch(setMusicsAsync({...filters,page: page}))
+        const newPath=`/musics?title=${filters.title}&searchBy=${filters.searchBy}&size=${filters.size}&page=${page}&onlyMySaved=${filters.onlyMySaved}&onlyMyCreated=${filters.onlyMyCreated}&genre=${filters.genre}&firstShow=${filters.firstShow}`
+        history.push(newPath)
+        setPath(newPath)
     }
     const count = useSelector(countSelector)
     const isInit = useSelector(initSelector)

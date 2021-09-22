@@ -20,7 +20,7 @@ const initialState={
     activeMusicDetails: null as MusicType | null,
     musics: [] as MusicType[],
     isInit: false as boolean,
-    mode: 'Usual' as ModeType
+    mode: 'Repeat' as ModeType
 }
 
 type InitialStateType = typeof initialState
@@ -34,6 +34,11 @@ type ActionType = (
 
 export const playerReducer = (state=initialState,action:ActionType):InitialStateType=>{
     switch(action.type){
+        case SET_MUSICS:
+            return{
+                ...state,
+                musics:[...action.musics]
+            }
         case SET_MODE:
             return{
                 ...state,
@@ -42,6 +47,7 @@ export const playerReducer = (state=initialState,action:ActionType):InitialState
         case SET_PLAYED_MUSIC_INTERVAL:
             //@ts-ignore
             state.activeMusic.currentTime=(action.playedInterval ? action.playedInterval : ++state.activeMusicSettings.playedInterval)
+            
             return{
                 ...state,
                 activeMusicSettings:{
@@ -62,7 +68,7 @@ export const playerReducer = (state=initialState,action:ActionType):InitialState
                 }
             }
         case SET_ACTIVE_MUSIC:
-            
+            state.activeMusic?.pause()
             action.audioHTML.play()
             return{
                 ...state,

@@ -1,15 +1,15 @@
-import { useEffect } from "react"
+import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { NavLink } from "react-router-dom"
-import { setActiveMusic, setInit, setPlayedMusicInterval, setPlayingMusic } from "../../../BLL/Reducers/musicsReducer"
-import { activeMusicDetailsSelector, activeMusicSettingsSelector, initSelector  } from "../../../BLL/Selectors/musicSelector"
+import { setActiveMusic, setPlayedMusicInterval, setPlayingMusic } from "../../../BLL/Reducers/playerReducer"
+import { activeMusicDetailsSelector, activeMusicSettingsSelector  } from "../../../BLL/Selectors/playerSelector"
 import { backendURL } from "../../../Consts"
 import { MusicType } from "../../../Types/music"
 
 
 
 
-export type MusicItemType = MusicType
+export type MusicItemType = MusicType & {onPlayMusic:()=>void}
 
 export const MusicItem: React.FC<MusicItemType> = (props) => {
 
@@ -27,7 +27,7 @@ export const MusicItem: React.FC<MusicItemType> = (props) => {
         </div>
         <div className="col-10">
             <h4>{props.title} - {props.author}</h4>
-            <div className='d-flex'>
+            <div className='d-flex '>
                 <div>
                     {((!activeMusicDetails) || 
                     (props.musicId!==activeMusicDetails.musicId ||
@@ -38,6 +38,7 @@ export const MusicItem: React.FC<MusicItemType> = (props) => {
                         if(activeMusicDetails && (props.musicId===activeMusicDetails.musicId)){
                             dispatch(setPlayingMusic(true))
                         }else{
+                            props.onPlayMusic()
                             const audio = new Audio(backendURL+props.musicSrc)
                             audio.addEventListener('loadedmetadata',(e)=>{
                                 dispatch(setActiveMusic(props,audio))
@@ -68,29 +69,53 @@ export const MusicItem: React.FC<MusicItemType> = (props) => {
                 </div>
                 <div
                     style={{ position: 'relative' }}
-                    className="mt-3 px-4 w-100">
-                    <div style={{
+                    className="w-100 mt-3 px-4">
+                    {props.musicId===activeMusicDetails?.musicId && 
+                    <div 
+                    onClick={(e)=>{
+                        if(props.musicId===activeMusicDetails?.musicId){
+                            //@ts-ignore
+                            const coordinate:{width:number,left:number,x: number} = e.target.offsetParent.getBoundingClientRect()
+                            const px=24
+                            dispatch(setPlayedMusicInterval(((e.clientX-coordinate.x-px)/(coordinate.width-(2*px)))*activeMusicSettings.duration))
+                        }
+                    }}
+                    style={{
                         width: 
                         `${activeMusicSettings.playedInterval/activeMusicSettings.duration*100}%`,
                         height: '3px', backgroundColor: 'pink'
                     }}>
-                    </div>
-                    <div style={{
+                    </div>}
+                    <div 
+                    onClick={(e)=>{
+                        if(props.musicId===activeMusicDetails?.musicId){
+                            //@ts-ignore
+                            const coordinate:{width:number,left:number,x: number} = e.target.offsetParent.getBoundingClientRect()
+                            const px=24
+                            dispatch(setPlayedMusicInterval(((e.clientX-coordinate.x-px)/(coordinate.width-(2*px)))*activeMusicSettings.duration))
+                        }
+                    }}
+                    style={{
                         position: 'relative',
                         bottom: 3, 
-                        left: `${activeMusicSettings.playedInterval/activeMusicSettings.duration*100}%`,
-                        width: `${(1-(activeMusicSettings.playedInterval/activeMusicSettings.duration))*100}%`,
+                        left: `${
+                            props.musicId===activeMusicDetails?.musicId ? activeMusicSettings.playedInterval/activeMusicSettings.duration*100 : 0}%`,
+                            
+                            width: `${props.musicId===activeMusicDetails?.musicId ? (1-(activeMusicSettings.playedInterval/activeMusicSettings.duration))*100 : 100}%`,
                         height: '3px', backgroundColor: 'gray'
                     }}>
                     </div>
-                    <div style={{
+                    {
+                    props.musicId===activeMusicDetails?.musicId &&
+                    <div 
+                    style={{
                         position: 'relative',
                         bottom: 13, left: `${activeMusicSettings.playedInterval/activeMusicSettings.duration*100}%`,
                         height: 20, width: 20,
                         borderRadius: 20000,
                         backgroundColor: "red"
                     }}>
-                    </div>
+                    </div>}
                 </div>
             </div>
         </div>

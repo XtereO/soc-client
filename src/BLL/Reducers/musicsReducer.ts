@@ -43,48 +43,12 @@ const initialState={
 type InitialStateType = typeof initialState
 
 type ActionType = (
-    SetInitType | SetMessageType | SetActiveMusicType
+    SetInitType | SetMessageType 
     | SetCountType | SetFiltersType | SetMusicsStateType
-    | SetPlayingMusicType | SetPlayedMusicIntervalType
     )
 
 export const musicsReducer = (state=initialState,action:ActionType):InitialStateType=>{
     switch(action.type){
-        case SET_PLAYED_MUSIC_INTERVAL:
-            //@ts-ignore
-            state.activeMusic.currentTime=(action.playedInterval ? action.playedInterval : ++state.activeMusicSettings.playedInterval)
-            return{
-                ...state,
-                activeMusicSettings:{
-                    ...state.activeMusicSettings,
-                    playedInterval: (action.playedInterval ? action.playedInterval : state.activeMusicSettings.playedInterval)
-                }
-            }
-        case SET_PLAYING_MUSIC:
-            if(action.isPlaying){
-                state.activeMusic?.play()    
-            }else{
-                state.activeMusic?.pause()
-            }
-            return{...state,
-                activeMusicSettings:{
-                    ...state.activeMusicSettings,
-                    isMusicPlay: action.isPlaying
-                }
-            }
-        case SET_ACTIVE_MUSIC:
-            
-            action.audioHTML.play()
-            return{
-                ...state,
-                activeMusicSettings:{
-                    playedInterval: 0,
-                    duration: action.audioHTML.duration,
-                    isMusicPlay: true
-                },
-                activeMusic: action.audioHTML,
-                activeMusicDetails: {...action.activeMusic}
-            }
         case SET_INIT:
             return{
                 ...state,
@@ -114,39 +78,6 @@ export const musicsReducer = (state=initialState,action:ActionType):InitialState
     }
 }
 
-type SetPlayedMusicIntervalType={
-    type: typeof SET_PLAYED_MUSIC_INTERVAL,
-    playedInterval?: number
-}
-export const setPlayedMusicInterval=(playedInterval?:number):SetPlayedMusicIntervalType=>{
-    return{
-        type: SET_PLAYED_MUSIC_INTERVAL,
-        playedInterval
-    }
-}
-
-type SetPlayingMusicType={
-    type: typeof SET_PLAYING_MUSIC
-    isPlaying: boolean
-}
-export const setPlayingMusic=(isPlaying:boolean):SetPlayingMusicType=>{
-    return {
-        type: SET_PLAYING_MUSIC,
-        isPlaying
-    }
-}
-
-type SetActiveMusicType={
-    type: typeof SET_ACTIVE_MUSIC
-    activeMusic: MusicType
-    audioHTML: HTMLAudioElement
-}
-export const setActiveMusic=(activeMusic:MusicType,audioHTML: HTMLAudioElement):SetActiveMusicType=>{
-    return{
-        type: SET_ACTIVE_MUSIC,
-        activeMusic, audioHTML
-    }
-}
 
 export type SetMusicsAsyncType={
     type: typeof SET_MUSICS_ASYNC

@@ -17,9 +17,3 @@ export const countSelector=(state:AppStateType)=>{
 export const filtersSelector=(state:AppStateType)=>{
     return state.music.filters
 }
-export const activeMusicDetailsSelector=(state:AppStateType)=>{
-    return state.music.activeMusicDetails
-}
-export const activeMusicSettingsSelector=(state:AppStateType)=>{
-    return state.music.activeMusicSettings
-}

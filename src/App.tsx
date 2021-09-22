@@ -24,19 +24,20 @@ function App() {
   const activeMusicDetails = useSelector(activeMusicDetailsSelector)
 
   useEffect(() => {
-    let timerId = setInterval(() => {
+    let timerId = setTimeout(() => {
+      
       if (isMusicPlay && duration > playedInterval) {
         dispatch(setPlayedMusicInterval())
-      } else if(duration > playedInterval){
+      } else if(duration < playedInterval){
         dispatch(setPlayedMusicInterval(0.1))
-        if (musics.length !== 1) {
+        if (musics.length !== 1 && musicMode!=='Repeat') {
           let newAudio: HTMLAudioElement;
           let newMusic: MusicType;
           switch (musicMode) {
             case 'Usual':
               let currentMusicId = 0
               musics.forEach((m, index) => {
-                if (m.musicId === activeMusicDetails.musicId) {
+                if (m.musicId === activeMusicDetails?.musicId) {
                   currentMusicId = index
                 }
               })
@@ -49,26 +50,29 @@ function App() {
               }
               break
             case 'Shufle':
-              const filterMusics = musics.filter(m => m.musicId !== activeMusicDetails.musicId)
+              const filterMusics = musics.filter(m => m.musicId !== activeMusicDetails?.musicId)
               const randomIndex = Math.round((filterMusics.length - 1) * (Math.random()))
               newMusic = filterMusics[randomIndex]
-              newAudio = new Audio(backendURL+newMusic[randomIndex].musicSrc)
+              newAudio = new Audio(backendURL+newMusic.musicSrc)
               break
           }
           dispatch(setPlayingMusic(false))
+          //@ts-ignore
           newAudio.addEventListener('loadedmetadata', () => {
             dispatch(setActiveMusic(newMusic, newAudio))
           })
+        }else{
+          dispatch(setPlayingMusic(true))
         }
       }
     }, 1000)
     if ((!isMusicPlay)) {
-      clearInterval(timerId)
+      clearTimeout(timerId)
     }
     return () => {
-      clearInterval(timerId)
+      clearTimeout(timerId)
     }
-  }, [isMusicPlay])
+  }, [isMusicPlay,playedInterval])
 
 
   //true - pc, false - phone
