@@ -2,7 +2,7 @@
 
 
 type PropsType={
-    onClick:()=>void
+    onClick?:()=>void
 }
 
 export const SettingButton:React.FC<PropsType>=({onClick})=>{

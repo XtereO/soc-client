@@ -6,14 +6,15 @@ import { FilterGetMusicType, GenreType, MusicType } from "../../Types/music";
 
 export const ADD_MUSIC:'musicReducer/ADD_MUSIC'='musicReducer/ADD_MUSIC'
 export const SET_MUSICS_ASYNC:'musicReducer/SET_MUSIC_ASYNC'='musicReducer/SET_MUSIC_ASYNC'
-const SET_ACTIVE_MUSIC:'musicReducer/SET_ACTIVE_MUSIC'='musicReducer/SET_ACTIVE_MUSIC'
 const SET_COUNT:'musicReducer/SET_COUNT'='musicReducer/SET_COUNT'
 const SET_FILTERS:'musicReducer/SET_FILTERS'='musicReducer/SET_FILTERS'
 const SET_MUSICS_STATE:'musicReducer/SET_MUSIC_STATE'='musicReducer/SET_MUSIC_STATE'
 const SET_INIT:'musicReducer/SET_INIT'='musicReducer/SET_INIT'
 const SET_MESSAGE:'musicReducer/SET_MESSAGE'='musicReducer/SET_MESSAGE'
-const SET_PLAYING_MUSIC:'musicReducer/SET_PLAYING_MUSIC_TYPE'='musicReducer/SET_PLAYING_MUSIC_TYPE'
-const SET_PLAYED_MUSIC_INTERVAL:'musicReducer/SET_PLAYED_MUSIC_INTERVAL'='musicReducer/SET_PLAYED_MUSIC_INTERVAL'
+const SAVE_MUSIC_STATE:'musicReducer/SET_MUSIC_STATE'='musicReducer/SET_MUSIC_STATE'
+const SAVE_MUSIC_ASYNC:'musicReducer/SET_MUSIC_ASYNC'='musicReducer/SET_MUSIC_ASYNC'
+const REMOVE_FROM_SAVED_MUSIC_STATE:'musicReducer/REMOVE_FROM_SAVED_MUSIC_STATE'='musicReducer/REMOVE_FROM_SAVED_MUSIC_STATE'
+const REMOVE_FROM_SAVED_MUSIC_ASYNC:'musicReducer/REMOVE_FROM_SAVED_MUSIC_ASYNC'='musicReducer/REMOVE_FROM_SAVED_MUSIC_ASYNC'
 
 
 const initialState={
@@ -78,6 +79,49 @@ export const musicsReducer = (state=initialState,action:ActionType):InitialState
     }
 }
 
+type SaveMusicStateType={
+    musicId: string
+    type: typeof SAVE_MUSIC_STATE
+}
+export const saveMusicState=(musicId: string):SaveMusicStateType=>{
+    return{
+        musicId,
+        type: SAVE_MUSIC_STATE
+    }
+}
+
+type SaveMusicAsyncType={
+    musicId: string
+    type: typeof SAVE_MUSIC_ASYNC
+}
+export const saveMusicAsync=(musicId:string):SaveMusicAsyncType=>{
+    return{
+        musicId,
+        type: SAVE_MUSIC_ASYNC
+    }
+}
+
+type RemoveFromSavedMusicStateType={
+    musicId: string
+    type: typeof REMOVE_FROM_SAVED_MUSIC_STATE
+}
+export const removeFromSavedMusicState=(musicId:string):RemoveFromSavedMusicStateType=>{
+    return{
+        musicId,
+        type: REMOVE_FROM_SAVED_MUSIC_STATE
+    }
+}
+
+type RemoveFromSavedMusicAsyncType={
+    type: typeof REMOVE_FROM_SAVED_MUSIC_ASYNC
+    musicId: string
+}
+export const removeFromSavedMusicAsync=(musicId:string):RemoveFromSavedMusicAsyncType=>{
+    return{
+        type: REMOVE_FROM_SAVED_MUSIC_ASYNC,
+        musicId
+    }
+}
 
 export type SetMusicsAsyncType={
     type: typeof SET_MUSICS_ASYNC
