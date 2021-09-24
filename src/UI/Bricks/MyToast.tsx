@@ -4,7 +4,7 @@ import { Toast } from "react-bootstrap"
 
 
 type PropsType={
-    description: string
+    description: string | null
     onClose:()=>void
     show: boolean
 }
@@ -19,7 +19,7 @@ export const MyToast:React.FC<PropsType>=({description,...props})=>{
             <small>right now</small>
         </Toast.Header>
         <Toast.Body>
-            {description}
+            {description && description}
         </Toast.Body>
     </Toast>
 }

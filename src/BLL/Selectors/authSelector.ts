@@ -13,3 +13,9 @@ export const codeSelector=(state:AppStateType)=>{
 export const initSelector=(state:AppStateType)=>{
     return state.auth.isInit
 }
+export const isShowToastSelector=(state:AppStateType)=>{
+    return state.auth.isShowToast
+}
+export const toastMessageSelector=(state:AppStateType)=>{
+    return state.auth.toastMessage
+}

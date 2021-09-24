@@ -4,6 +4,10 @@ import { Route, Switch } from "react-router-dom"
 import { WithSuspense } from "../HOC/WithSuspense"
 import { WithAuth } from "../HOC/WithAuth";
 import { StartPage } from "../StartPage/StartPage";
+import { MyToast } from "../Bricks/MyToast";
+import { useDispatch, useSelector } from "react-redux";
+import { isShowToastSelector, toastMessageSelector } from "../../BLL/Selectors/authSelector";
+import { setShowToast } from "../../BLL/Reducers/authReducer";
 
 //@ts-ignore
 const Playlists = React.lazy(() => import('../Playlists/Playlists'))
@@ -35,6 +39,12 @@ type PropsType = {
 
 export const Body: React.FC<PropsType> = ({ mode }) => {
 
+    const isShowToast = useSelector(isShowToastSelector)
+    const toastMessage = useSelector(toastMessageSelector)
+    const dispatch = useDispatch()
+    const onCloseToast=()=>{
+        dispatch(setShowToast(false,null))
+    }
     const routes = [
         {
             path: '/playlists',
@@ -98,5 +108,15 @@ export const Body: React.FC<PropsType> = ({ mode }) => {
             <Route path='/start' render={()=><StartPage/>} />
             {routesJsx}
         </Switch>
+        <div 
+        className="d-flex justify-content-end"
+        style={{position:'fixed',bottom: 60,
+        width:'82%'}}>
+            <MyToast 
+            onClose={onCloseToast}
+            description={toastMessage}
+            show={isShowToast}
+            />
+        </div>
     </div>
 }

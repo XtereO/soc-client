@@ -11,10 +11,12 @@ const SET_FILTERS:'musicReducer/SET_FILTERS'='musicReducer/SET_FILTERS'
 const SET_MUSICS_STATE:'musicReducer/SET_MUSIC_STATE'='musicReducer/SET_MUSIC_STATE'
 const SET_INIT:'musicReducer/SET_INIT'='musicReducer/SET_INIT'
 const SET_MESSAGE:'musicReducer/SET_MESSAGE'='musicReducer/SET_MESSAGE'
-const SAVE_MUSIC_STATE:'musicReducer/SET_MUSIC_STATE'='musicReducer/SET_MUSIC_STATE'
-const SAVE_MUSIC_ASYNC:'musicReducer/SET_MUSIC_ASYNC'='musicReducer/SET_MUSIC_ASYNC'
+const SAVE_MUSIC_STATE:'musicReducer/SAVE_MUSIC_STATE'='musicReducer/SAVE_MUSIC_STATE'
+export const SAVE_MUSIC_ASYNC:'musicReducer/SAVE_MUSIC_ASYNC'='musicReducer/SAVE_MUSIC_ASYNC'
 const REMOVE_FROM_SAVED_MUSIC_STATE:'musicReducer/REMOVE_FROM_SAVED_MUSIC_STATE'='musicReducer/REMOVE_FROM_SAVED_MUSIC_STATE'
-const REMOVE_FROM_SAVED_MUSIC_ASYNC:'musicReducer/REMOVE_FROM_SAVED_MUSIC_ASYNC'='musicReducer/REMOVE_FROM_SAVED_MUSIC_ASYNC'
+export const REMOVE_FROM_SAVED_MUSIC_ASYNC:'musicReducer/REMOVE_FROM_SAVED_MUSIC_ASYNC'='musicReducer/REMOVE_FROM_SAVED_MUSIC_ASYNC'
+const RATE_MUSIC_STATE:'musicReducer/RATE_MUSIC_STATE'='musicReducer/RATE_MUSIC_STATE'
+export const RATE_MUSIC_ASYNC:'musicReducer/RATE_MUSIC_ASYNC'='musicReducer/RATE_MUSIC_ASYNC'
 
 
 const initialState={
@@ -44,12 +46,68 @@ const initialState={
 type InitialStateType = typeof initialState
 
 type ActionType = (
-    SetInitType | SetMessageType 
+    SetInitType | SetMessageType | SaveMusicStateType |
+    RemoveFromSavedMusicStateType | RateMusicStateType 
     | SetCountType | SetFiltersType | SetMusicsStateType
     )
 
 export const musicsReducer = (state=initialState,action:ActionType):InitialStateType=>{
     switch(action.type){
+        case RATE_MUSIC_STATE:
+            return{
+                ...state,
+                //@ts-ignore
+                musics:[
+                    ...state.musics.map(m=>{
+                        if(action.musicId===m.musicId){
+                            return{
+                                ...m,
+                                countRated: m.myReview ? m.countRated : (m.countRated+1) ,
+                                summaryRating: m.myReview ? (m.summaryRating+action.rating-m.myReview.rating) : (m.summaryRating+action.rating),
+                                myReview: {
+                                    idMusicOrPlaylist:m.musicId,
+                                    titleMusicOrPlaylist:m.title,
+                                    rating:action.rating
+                                }
+                            }
+                        }else{
+                            return m
+                        }
+                    })
+                ]
+            }
+        case REMOVE_FROM_SAVED_MUSIC_STATE:
+            return{
+                ...state,
+                musics:[
+                    ...state.musics.map(m=>{
+                        if(action.musicId===m.musicId){
+                            return{
+                                ...m,
+                                isSaved: false
+                            }
+                        }else{
+                            return m
+                        }
+                    })
+                ]
+            }
+        case SAVE_MUSIC_STATE:
+            return{
+                ...state,
+                musics:[
+                 ...state.musics.map(m=>{
+                     if(action.musicId===m.musicId){
+                        return{
+                            ...m,
+                            isSaved: true
+                        }
+                     }else{
+                        return m
+                     }
+                 })   
+                ]
+            }
         case SET_INIT:
             return{
                 ...state,
@@ -79,6 +137,35 @@ export const musicsReducer = (state=initialState,action:ActionType):InitialState
     }
 }
 
+type RateMusicStateType={
+    type: typeof RATE_MUSIC_STATE
+    rating: number
+    musicId: string
+}
+export const rateMusicState=(rating: number, musicId: string):RateMusicStateType=>{
+    return {
+        type: RATE_MUSIC_STATE,
+        rating, musicId
+    }
+}
+
+export type RateMusicAsyncType={
+    type: typeof RATE_MUSIC_ASYNC
+    review?: string
+    rating: number
+    musicId: string
+    musicTitle: string
+    callback:()=>void
+}
+export const rateMusicAsync=(musicId:string,musicTitle:string,rating:number,callback:()=>void,review?:string):RateMusicAsyncType=>{
+    return{
+        musicId,review,
+        musicTitle,rating,
+        callback,
+        type: RATE_MUSIC_ASYNC
+    }
+}
+
 type SaveMusicStateType={
     musicId: string
     type: typeof SAVE_MUSIC_STATE
@@ -90,7 +177,7 @@ export const saveMusicState=(musicId: string):SaveMusicStateType=>{
     }
 }
 
-type SaveMusicAsyncType={
+export type SaveMusicAsyncType={
     musicId: string
     type: typeof SAVE_MUSIC_ASYNC
 }
@@ -101,7 +188,7 @@ export const saveMusicAsync=(musicId:string):SaveMusicAsyncType=>{
     }
 }
 
-type RemoveFromSavedMusicStateType={
+export type RemoveFromSavedMusicStateType={
     musicId: string
     type: typeof REMOVE_FROM_SAVED_MUSIC_STATE
 }

@@ -4,6 +4,7 @@ import { LoginRequestType, RegistrateRequestType, ShowToastType } from "../../Ty
 export const REGISRATE:'authReducer/REGISTRATE'='authReducer/REGISTRATE'
 export const LOGIN:'authReducer/LOGIN'='authReducer/LOGIN'
 export const CONFIRM_CODE:'authReducer/CONFIRM_CODE'='authReducer/CONFIRM_CODE'
+const SET_SHOW_TOAST:'authReducer/SET_SHOW_REDUCER'='authReducer/SET_SHOW_REDUCER'
 const SET_AUTH:'authReducer/SET_AUTH'='authReducer/SET_AUTH'
 const SET_LOCAL_STORAGE:'authReducer/SET_LOCAL_STORAGE'='authReducer/SET_LOCAL_STORAGE'
 const SET_CODE:'authReducer/SET_CODE'='authReducer/SET_CODE'
@@ -14,15 +15,27 @@ const initialState = {
     isAuth: false as boolean,
     code: null as null | number,
     message: null as null | string,
-    isInit: false as boolean
+    isInit: false as boolean,
+    isShowToast: false as boolean,
+    toastMessage: null as string | null
 }
 
 type InitialStateType = typeof initialState
 type ActionType = (SetAuthType | SetLocalStorageType 
+    | SetShowToastType 
     | SetCodeType | SetMessageType | SetInitType)
 
 export const authReducer=(state=initialState, action:ActionType ):InitialStateType=>{
     switch(action.type){
+        case SET_SHOW_TOAST:
+            if(action.callback){
+                action.callback()
+            }
+            return{
+                ...state,
+                isShowToast: action.isShowToast,
+                toastMessage: action.message
+            }
         case SET_INIT:
             return{...state, isInit: action.isInit }
         case SET_MESSAGE:
@@ -36,6 +49,22 @@ export const authReducer=(state=initialState, action:ActionType ):InitialStateTy
         case SET_AUTH:
             return {...state, isAuth: action.auth}
         default: return state
+    }
+}
+
+
+type SetShowToastType={
+    type: typeof SET_SHOW_TOAST
+    message: string | null
+    isShowToast: boolean
+    callback?:()=>void
+}
+export const setShowToast=(isShowToast:boolean,message: string | null=null,callback?:()=>void)=>{
+    return{
+        type: SET_SHOW_TOAST,
+        message,
+        isShowToast,
+        callback
     }
 }
 

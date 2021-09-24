@@ -7,8 +7,8 @@ import { SettingButton } from "../Bricks/SettingButton";
 import { AddMusicMenu } from "./Bricks/AddMusicMenu"
 import { MyToast } from "../Bricks/MyToast"
 import { useDispatch, useSelector } from "react-redux";
-import { setFilters, setMusicsAsync,  } from "../../BLL/Reducers/musicsReducer";
-import { countSelector, filtersSelector, initSelector, musicsSelector } from "../../BLL/Selectors/musicSelector";
+import { removeFromSavedMusicAsync, saveMusicAsync, setFilters, setMusicsAsync,  } from "../../BLL/Reducers/musicsReducer";
+import { countSelector, filtersSelector, initSelector, musicsSelector } from "../../BLL/Selectors/musicsSelector";
 import { Loader } from "../Bricks/Loader";
 import { FilterGetMusicType, GenreType } from "../../Types/music";
 import { MusicItem } from "./Bricks/MusicItem";
@@ -29,10 +29,14 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
     const filters = useSelector(filtersSelector)
 
     const musics = useSelector(musicsSelector)
+
     const MusicsJSX = musics.map(m=><MusicItem 
+        onSave={()=>dispatch(saveMusicAsync(m.musicId))}
+        onRemove={()=>dispatch(removeFromSavedMusicAsync(m.musicId))}
         onPlayMusic={()=>dispatch(setMusics(musics))} {...m} />)
 
     useEffect(()=>{
+        setPath(`/musics?title=${filters.title}&searchBy=${filters.searchBy}&size=${filters.size}&page=${filters.page}&onlyMySaved=${filters.onlyMySaved}&onlyMyCreated=${filters.onlyMyCreated}&genre=${filters.genre}&firstShow=${filters.firstShow}`)
         dispatch(setMusicsAsync({...filters}))
     },[])
    

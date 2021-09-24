@@ -206,3 +206,30 @@ export const getMudics=({
     .then(res=>res.data)
     .catch(e=>e.response.data)
 }
+
+export const saveMusic=(musicId:string)=>{
+    return instance.post<ResultCodeType>(`audio/savemusic/${musicId}`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+export const removeMusicFromSave=(musicId:string)=>{
+    return instance.delete<ResultCodeType>(`audio/savemusic/${musicId}`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+export type RateMusicType={
+    review?: string
+    rating: number
+    musicId: string
+    musicTitle: string
+}
+export const rateMusic=(req:RateMusicType)=>{
+    return instance.post<ResultCodeType>(`review`,{
+        idMusicOrPlaylist: req.musicId,
+        reviewFor: 'Music',
+        titleMusicOrPlaylist: req.musicTitle,
+        rating: req.rating, review: req.review
+    }).then(res=>res.data)
+    .catch(e=>e.response.data)
+}

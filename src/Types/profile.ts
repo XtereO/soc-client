@@ -1,8 +1,8 @@
 
 
 
-export type ReviewType={
-    user:{
+export type ReviewType={ 
+    user?:{
         avatar: string
         firstName: string
         secondName: string
@@ -11,10 +11,11 @@ export type ReviewType={
     }
     review: null | string
     rating: number
-    reviewFor: 'Music' | 'Playlist'
+    reviewFor?: 'Music' | 'Playlist'
     idMusicOrPlaylist: string
     titleMusicOrPlaylist: string
-    date: string
+    date?: string
+    reviewId?: string
 }
 export type ProfileDetailType={
     shortNickname: string

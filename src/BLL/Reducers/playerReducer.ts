@@ -20,7 +20,7 @@ const initialState={
     activeMusicDetails: null as MusicType | null,
     musics: [] as MusicType[],
     isInit: false as boolean,
-    mode: 'Repeat' as ModeType
+    mode: 'Usual' as ModeType
 }
 
 type InitialStateType = typeof initialState

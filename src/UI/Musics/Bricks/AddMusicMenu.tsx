@@ -5,7 +5,7 @@ import { addMusic } from "../../../BLL/Reducers/musicsReducer"
 import { GenreType } from "../../../Types/music"
 import { MyInput } from "../../Bricks/MyInput"
 import { MySelect } from "../../Bricks/MySelect"
-import {initSelector, messageSelector} from '../../../BLL/Selectors/musicSelector'
+import {initSelector, messageSelector} from '../../../BLL/Selectors/musicsSelector'
 import { Loader } from "../../Bricks/Loader";
 import React from "react"
 
