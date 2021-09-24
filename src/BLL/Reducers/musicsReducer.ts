@@ -5,10 +5,10 @@ import { FilterGetMusicType, GenreType, MusicType } from "../../Types/music";
 
 
 export const ADD_MUSIC:'musicReducer/ADD_MUSIC'='musicReducer/ADD_MUSIC'
-export const SET_MUSICS_ASYNC:'musicReducer/SET_MUSIC_ASYNC'='musicReducer/SET_MUSIC_ASYNC'
+export const SET_MUSICS_ASYNC:'musicReducer/SET_MUSICS_ASYNC'='musicReducer/SET_MUSICS_ASYNC'
 const SET_COUNT:'musicReducer/SET_COUNT'='musicReducer/SET_COUNT'
 const SET_FILTERS:'musicReducer/SET_FILTERS'='musicReducer/SET_FILTERS'
-const SET_MUSICS_STATE:'musicReducer/SET_MUSIC_STATE'='musicReducer/SET_MUSIC_STATE'
+const SET_MUSICS_STATE:'musicReducer/SET_MUSICS_STATE'='musicReducer/SET_MUSICS_STATE'
 const SET_INIT:'musicReducer/SET_INIT'='musicReducer/SET_INIT'
 const SET_MESSAGE:'musicReducer/SET_MESSAGE'='musicReducer/SET_MESSAGE'
 const SAVE_MUSIC_STATE:'musicReducer/SAVE_MUSIC_STATE'='musicReducer/SAVE_MUSIC_STATE'
@@ -17,6 +17,8 @@ const REMOVE_FROM_SAVED_MUSIC_STATE:'musicReducer/REMOVE_FROM_SAVED_MUSIC_STATE'
 export const REMOVE_FROM_SAVED_MUSIC_ASYNC:'musicReducer/REMOVE_FROM_SAVED_MUSIC_ASYNC'='musicReducer/REMOVE_FROM_SAVED_MUSIC_ASYNC'
 const RATE_MUSIC_STATE:'musicReducer/RATE_MUSIC_STATE'='musicReducer/RATE_MUSIC_STATE'
 export const RATE_MUSIC_ASYNC:'musicReducer/RATE_MUSIC_ASYNC'='musicReducer/RATE_MUSIC_ASYNC'
+const SET_MUSIC_STATE:'musicReducer/SET_MUSIC_STATE'='musicReducer/SET_MUSIC_STATE'
+export const SET_MUSIC_ASYNC:'musicReducer/SET_MUSIC_ASYNC'='musicReducer/SET_MUSIC_ASYNC'
 
 
 const initialState={
@@ -47,12 +49,27 @@ type InitialStateType = typeof initialState
 
 type ActionType = (
     SetInitType | SetMessageType | SaveMusicStateType |
-    RemoveFromSavedMusicStateType | RateMusicStateType 
+    RemoveFromSavedMusicStateType | RateMusicStateType |
+    SetMusicStateType
     | SetCountType | SetFiltersType | SetMusicsStateType
     )
 
 export const musicsReducer = (state=initialState,action:ActionType):InitialStateType=>{
     switch(action.type){
+        case SET_MUSIC_STATE:
+            return{
+                ...state,
+                musics:[
+                    ...state.musics.map(m=>{
+                        if(m.musicId===action.musicId){
+                            return{
+                                ...m,
+                                ...action.payload
+                            }
+                        }
+                    })
+                ]
+            }
         case RATE_MUSIC_STATE:
             return{
                 ...state,
@@ -134,6 +151,49 @@ export const musicsReducer = (state=initialState,action:ActionType):InitialState
                 filters: {...action.filters}
             }
         default: return state
+    }
+}
+
+
+export type SetMusicAsyncType={
+    type: typeof SET_MUSIC_ASYNC
+    musicId: string
+    payload:PayloadSetMusicAsyncType
+    callback:()=>void
+}
+type PayloadSetMusicAsyncType={
+    genre?: GenreType
+    title?: string
+    author?: string
+    music?: any //file
+    img?: any  // file
+}
+export const setMusicAsync=(musicId:string,callback:()=>void,payload: PayloadSetMusicAsyncType):SetMusicAsyncType=>{
+    return{
+        type: SET_MUSIC_ASYNC,
+        musicId,
+        payload,callback
+    }
+}
+
+
+type SetMusicStateType={
+    type: typeof SET_MUSIC_STATE
+    musicId: string
+    payload: PayloadSetMusicStateType
+}
+type PayloadSetMusicStateType={
+    genre?: GenreType
+    title?: string
+    author?: string
+    musicSrc?: string
+    imgSrc?: string
+}
+export const setMusicState=(musicId:string,payload:PayloadSetMusicStateType):SetMusicStateType=>{
+    return{
+        type: SET_MUSIC_STATE,
+        musicId,
+        payload
     }
 }
 

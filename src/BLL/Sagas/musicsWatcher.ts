@@ -1,5 +1,5 @@
-import { AddMusicType, ADD_MUSIC, setInit, setMessage, setCount, setFilters, SetMusicsAsyncType, setMusicsState, SET_MUSICS_ASYNC, SaveMusicAsyncType, saveMusicState, SAVE_MUSIC_ASYNC, RemoveFromSavedMusicStateType, removeFromSavedMusicState, REMOVE_FROM_SAVED_MUSIC_ASYNC, RateMusicAsyncType, rateMusicState, RATE_MUSIC_ASYNC } from "../Reducers/musicsReducer";
-import { addMusic, AddMusicRequestType, setImgMusic, setMP3Music,ResultCodeType, GetMusicsType, getMudics, saveMusic, removeMusicFromSave, rateMusic } from "../../DAL/api";
+import { AddMusicType, ADD_MUSIC, setInit, setMessage, setCount, setFilters, SetMusicsAsyncType, setMusicsState, SET_MUSICS_ASYNC, SaveMusicAsyncType, saveMusicState, SAVE_MUSIC_ASYNC, RemoveFromSavedMusicStateType, removeFromSavedMusicState, REMOVE_FROM_SAVED_MUSIC_ASYNC, RateMusicAsyncType, rateMusicState, RATE_MUSIC_ASYNC, SetMusicAsyncType, SET_MUSIC_ASYNC } from "../Reducers/musicsReducer";
+import { addMusic, AddMusicRequestType, setImgMusic, setMP3Music,ResultCodeType, GetMusicsType, getMudics, saveMusic, removeMusicFromSave, rateMusic, setMusic } from "../../DAL/api";
 import { call, put, takeLatest } from "@redux-saga/core/effects";
 import { setShowToast } from "../Reducers/authReducer";
 
@@ -106,6 +106,44 @@ function* rateMusicWorker(action: RateMusicAsyncType){
         yield put(setMessage(e.message))
     }
 }
+function* setMusicWorker(action: SetMusicAsyncType){
+    try{
+        yield put(setInit(true))
+        yield put(setMessage(null))
+        if(action.payload.img){
+            const dataImg:ResultCodeType = yield call(setImgMusic,action.payload.img,action.musicId)
+            if(dataImg.success){
+                yield put(setInit(false))
+                yield put(setShowToast(true,'Image changed successful',action.callback))
+            }else{
+                yield put(setInit(false))
+                yield put(setMessage(dataImg.message))
+            }
+        }else if(action.payload.music){
+            const dataMusic:ResultCodeType = yield call(setMP3Music,action.payload.music,action.musicId)
+            if(dataMusic.success){
+                yield put(setInit(false))
+                yield put(setShowToast(true,'Contain music changed successful',action.callback))
+            }else{
+                yield put(setInit(false))
+                yield put(setMessage(dataMusic.message))
+            }
+        }else if(action.payload.author || action.payload.title || action.payload.genre){
+            const data:ResultCodeType = yield call(setMusic,action.musicId,action.payload)
+            if(data.success){
+                yield put(setInit(false))
+                yield put(setShowToast(true,'Music information changed successful',action.callback))
+            }else{
+                yield put(setInit(false))
+                yield put(setMessage(data.message))
+            }
+        }
+        
+        yield put(setInit(false))
+    }catch(e){
+        yield put(setInit(false))
+    }
+}
 
 
 
@@ -115,4 +153,5 @@ export function* musicsWatcher() {
     yield takeLatest(SAVE_MUSIC_ASYNC, saveMusicsWorker)
     yield takeLatest(REMOVE_FROM_SAVED_MUSIC_ASYNC, removeFromSavedMusicWorker)
     yield takeLatest(RATE_MUSIC_ASYNC, rateMusicWorker)
+    yield takeLatest(SET_MUSIC_ASYNC, setMusicWorker)
 }

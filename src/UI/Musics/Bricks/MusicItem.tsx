@@ -8,6 +8,7 @@ import { MusicType } from "../../../Types/music"
 import { myProfileSelector } from "../../../BLL/Selectors/profileSelector";
 import { SettingButton } from "../../Bricks/SettingButton"
 import { RateMusicModal } from "./RateMusicModal"
+import { SettingsMusicModal } from "./SettingsMusicModal"
 
 
 
@@ -25,12 +26,20 @@ export const MusicItem: React.FC<MusicItemType> = (props) => {
     const activeMusicSettings = useSelector(activeMusicSettingsSelector)
     const myProfile = useSelector(myProfileSelector)
 
+
     let [showRating,setShowRating]=useState(false)
     const handleOpenRating=()=>{
         setShowRating(true)
     }
     const handleCloseRating=()=>{
         setShowRating(false)
+    }
+    let [showSettings,setShowSettings]=useState(false)
+    const handleOpenSettings=()=>{
+        setShowSettings(true)
+    }
+    const handleCloseSettings=()=>{
+        setShowSettings(false)
     }
 
     return <div className="row">
@@ -47,7 +56,9 @@ export const MusicItem: React.FC<MusicItemType> = (props) => {
                 </div>
                 <div className='col-6 d-flex justify-content-end'>
                     {props.owner.shortNickname===myProfile.shortNickname &&
-                    <button className='btn btn-light'>
+                    <button
+                    onClick={handleOpenSettings}
+                    className='btn btn-light'>
                         <SettingButton />
                     </button>}
                     {props.myReview ? 
@@ -199,5 +210,10 @@ export const MusicItem: React.FC<MusicItemType> = (props) => {
         show={showRating}
         onClose={handleCloseRating} 
         {...props}/>}
+        {showSettings && <SettingsMusicModal 
+        show={showSettings}
+        onClose={handleCloseSettings}
+        {...props}
+        />}
     </div>
 }

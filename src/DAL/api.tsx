@@ -233,3 +233,15 @@ export const rateMusic=(req:RateMusicType)=>{
     }).then(res=>res.data)
     .catch(e=>e.response.data)
 }
+
+type PayloadSetMusicType={
+    author?:string,
+    title?:string
+    genre?:GenreType
+}
+export const setMusic=(musicId: string, payload: PayloadSetMusicType)=>{
+    return instance.put<ResultCodeType>(`audio/music`,
+    {musicId,...payload})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}

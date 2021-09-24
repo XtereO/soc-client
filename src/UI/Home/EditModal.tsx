@@ -19,7 +19,6 @@ type PropsType={
 
 export const EditModal:React.FC<PropsType> =(props)=>{
 
-    let myProfile = useSelector(myProfileSelector)
     let isInit = useSelector(initSelector)
     let message = useSelector(messageSelector)
 
