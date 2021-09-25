@@ -41,7 +41,7 @@ export const SetMusicFile:React.FC<PropsType>=({musicId,onClose,isInit,mode})=>{
             handleSubmit,
             setFieldValue
         })=>{
-            <form onSubmit={handleSubmit}>
+            return<form onSubmit={handleSubmit}>
                 <div className="row w-100">
                 <h4 
                 className="col-md-6">
@@ -56,7 +56,7 @@ export const SetMusicFile:React.FC<PropsType>=({musicId,onClose,isInit,mode})=>{
                         //@ts-ignore
                         setFieldValue('file',e.target.files[0])
                     }}
-                    className="form-control"
+                    className='form-control'
                     type="file" />
                     <button 
                     disabled={isInit}

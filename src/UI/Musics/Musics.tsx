@@ -31,6 +31,7 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
     const musics = useSelector(musicsSelector)
 
     const MusicsJSX = musics.map(m=><MusicItem 
+        key={m.musicId}
         onSave={()=>dispatch(saveMusicAsync(m.musicId))}
         onRemove={()=>dispatch(removeFromSavedMusicAsync(m.musicId))}
         onPlayMusic={()=>dispatch(setMusics(musics))} {...m} />)

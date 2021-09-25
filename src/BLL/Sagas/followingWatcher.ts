@@ -1,14 +1,14 @@
 import { call, put, takeLatest } from "@redux-saga/core/effects";
 import { follow,  getFollowing, GetPeopleType, ResultCodeType, unfollow } from "../../DAL/api";
-import { FOLLOW, FollowType, setCount, setInit, setMessage, setOnePeopleFollow, setPage, SetFollowersAsyncType, setFollowingState, SET_FOLLOWING_ASYNC, UNFOLLOW, UnFollowType } from "../Reducers/followingReducer";
+import { FOLLOW, FollowType, setCount, setInit, setMessage, setOnePeopleFollow, setPage, SetFollowingAsyncType, setFollowingState, SET_FOLLOWING_ASYNC, UNFOLLOW, UnFollowType } from "../Reducers/followingReducer";
 
 
 
 
-function* followingWorker(action: SetFollowersAsyncType) {
+function* followingWorker(action: SetFollowingAsyncType) {
     try {
         yield put(setInit(true))
-        const date: GetPeopleType = yield call(getFollowing, action.page, action.portionSize, action.title)
+        const date: GetPeopleType = yield call(getFollowing, action.page, action.portionSize, action.title, action.userId)
         if (!date.success) {
             yield put(setMessage(date.message ? date.message : 'Some error occured'))
         } else {

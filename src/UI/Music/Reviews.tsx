@@ -10,7 +10,7 @@ type PropsType={
 
 export const Reviews:React.FC<PropsType>=({reviews})=>{
     
-    const reviewsJSX = reviews.map(r=><div className="col-md-6 mt-1">
+    const reviewsJSX = reviews.map(r=><div className="col-md-4 mt-1">
         <Review {...r} />
         </div>) 
     

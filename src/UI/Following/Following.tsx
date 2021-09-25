@@ -6,7 +6,7 @@ import { useState } from "react";
 import { PeopleItem, PeopleItemType } from "../People/PeopleItem";
 import { useDispatch, useSelector } from "react-redux";
 import { followingSelector,pageSelector,countSelector, initSelector } from "../../BLL/Selectors/followingSelector";
-import { setFollowersAsync } from "../../BLL/Reducers/followingReducer";
+import { setFollowingAsync } from "../../BLL/Reducers/followingReducer";
 import { useHistory } from "react-router";
 
 
@@ -24,30 +24,35 @@ const Following:React.FC<PropsType>=(props)=>{
     let count = useSelector(countSelector)
     let page = useSelector(pageSelector)
     
+    let [userId,setUserId] = useState('')
     let [title,setTitle] = useState<string>('')
     let [path,setPath] = useState<string>('')
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>) =>{
         setTitle(e.target.value)
     }
     const handleSubmit=()=>{
-        history.push(`/following?title=${title}&page=${1}`)
-        setPath(`/following?title=${title}&page=${1}`)
+        history.push(`/following?title=${title}&page=${1}&userId=${userId}`)
+        setPath(`/following?title=${title}&page=${1}&userId=${userId}`)
     }
 
     let changePage=(choosenPage:number)=>{
-        history.push(`/following?title=${title}&page=${choosenPage}`)
-        setPath(`/following?title=${title}&page=${choosenPage}`)
+        history.push(`/following?title=${title}&page=${choosenPage}&userId=${userId}`)
+        setPath(`/following?title=${title}&page=${choosenPage}&userId=${userId}`)
     }
 
     useEffect(()=>{
         const url = new URLSearchParams(history.location.search)
         const page = url.get('page')
         const title = url.get('title')
+        const userIdUrl = url.get('userId')
+        if(userIdUrl){
+            setUserId(userIdUrl)
+        }
 
         if(!page){
-            dispatch(setFollowersAsync())
+            dispatch(setFollowingAsync())
         }else{
-            dispatch(setFollowersAsync((title ? title : '' ),(+page)))
+            dispatch(setFollowingAsync((title ? title : '' ),(+page),10,userId ? userId : (userIdUrl ? userIdUrl : '')))
         }
     },[path])
     

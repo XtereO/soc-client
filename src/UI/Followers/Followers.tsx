@@ -24,30 +24,35 @@ const Followers:React.FC<PropsType>=(props)=>{
     let count = useSelector(countSelector)
     let page = useSelector(pageSelector)
     
+    let [userId,setUserId] = useState<string>('')
     let [title,setTitle] = useState<string>('')
     let [path,setPath] = useState<string>('')
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>) =>{
         setTitle(e.target.value)
     }
     const handleSubmit=()=>{
-        history.push(`/followers?title=${title}&page=${1}`)
-        setPath(`/followers?title=${title}&page=${1}`)
+        history.push(`/followers?title=${title}&page=${1}&userId=${userId}`)
+        setPath(`/followers?title=${title}&page=${1}&userId=${userId}`)
     }
 
     let changePage=(choosenPage:number)=>{
-        history.push(`/followers?title=${title}&page=${choosenPage}`)
-        setPath(`/followers?title=${title}&page=${choosenPage}`)
+        history.push(`/followers?title=${title}&page=${choosenPage}&userId=${userId}`)
+        setPath(`/followers?title=${title}&page=${choosenPage}&userId=${userId}`)
     }
 
     useEffect(()=>{
         const url = new URLSearchParams(history.location.search)
         const page = url.get('page')
         const title = url.get('title')
+        const userIdUrl = url.get('userId')
+        if(userIdUrl){
+            setUserId(userIdUrl)
+        }
 
         if(!page){
             dispatch(setFollowersAsync())
         }else{
-            dispatch(setFollowersAsync((title ? title : '' ),(+page)))
+            dispatch(setFollowersAsync((title ? title : '' ),(+page),10,userId ? userId : (userIdUrl ? userIdUrl : '')))
         }
     },[path])
     

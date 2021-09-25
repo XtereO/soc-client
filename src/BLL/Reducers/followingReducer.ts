@@ -127,16 +127,17 @@ export const setOnePeopleFollow=(userId: string, isFollow: boolean):SetOnePeople
         userId,isFollow
     }
 }
-export type SetFollowersAsyncType={
+export type SetFollowingAsyncType={
     page: number
     title: string
     portionSize: number
+    userId?: string
     type: typeof SET_FOLLOWING_ASYNC
 }
-export const setFollowersAsync=(title: string = '', page: number = 1 , portionSize: number=10):SetFollowersAsyncType=>{
+export const setFollowingAsync=(title: string = '', page: number = 1 , portionSize: number=10, userId?:string):SetFollowingAsyncType=>{
     return{
         page,title,
-        portionSize,
+        portionSize,userId,
         type: SET_FOLLOWING_ASYNC
     }
 }

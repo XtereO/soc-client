@@ -4,6 +4,7 @@ import { title } from "process";
 import { backendURL } from "../Consts";
 import { RegistrateRequestType } from "../Types/auth";
 import { FilterGetMusicType, GenreType, MusicType } from "../Types/music";
+import { GetPlaylistsFiltersType, PlaylistType } from "../Types/playlist";
 import { NamesType, ProfileDetailType, ProfileType, ReviewType } from "../Types/profile";
 
 
@@ -135,13 +136,13 @@ export const unfollow=(userId:string)=>{
     .then(res=>res.data)
     .catch(e=>e.response.data)
 }
-export const getFollowers=(page=1,size=10,title?:string)=>{
-    return instance.get<GetPeopleType>(`users/followers?page=${page}&size=${size}&title=${title ? title : ''}`)
+export const getFollowers=(page=1,size=10,title?:string,userId?:string)=>{
+    return instance.get<GetPeopleType>(`users/followers?page=${page}&size=${size}&title=${title ? title : ''}&userId=${userId}`)
     .then(res=>res.data)
     .catch(e=>e.response.data)
 }
-export const getFollowing=(page=1,size=10,title?:string)=>{
-    return instance.get<GetPeopleType>(`users/following?page=${page}&size=${size}&title=${title ? title : ''}`)
+export const getFollowing=(page=1,size=10,title?:string,userId?:string)=>{
+    return instance.get<GetPeopleType>(`users/following?page=${page}&size=${size}&title=${title ? title : ''}&userId=${userId}`)
     .then(res=>res.data)
     .catch(e=>e.response.data)
 }
@@ -166,7 +167,7 @@ export const setImgMusic=(img:any,musicId:string)=>{
     let formData = new FormData()
     formData.append('image',img)
     
-    return instance.put<ResultCodeType>(`audio/imusic/${musicId}`,
+    return instance.put<ResultCodeType & {imgSrc: string}>(`audio/imusic/${musicId}`,
     formData,{
         headers:{
         'Content-Type':'multipart/form-data'
@@ -179,7 +180,7 @@ export const setMP3Music=(mp3:any,musicId:string)=>{
     let formData=new FormData()
     formData.append('music',mp3)
     
-    return instance.put<ResultCodeType>(`audio/musicmp3/${musicId}`,
+    return instance.put<ResultCodeType & {musicSrc:string}>(`audio/musicmp3/${musicId}`,
     formData,{
         headers:{
             'Content-Type':'multipart/form-data'
@@ -201,7 +202,7 @@ export const getMudics=({
         onlyMySaved,firstShow
     }:FilterGetMusicType)=>{
     // Please dont touch string(s)!!!
-    let s = `audio/music?page=${page}&size=${size}&title=${title}&searchBy=${searchBy}&genre=${genre}&onlyMyCreated=${onlyMyCreated}&onlyMySaved=${onlyMySaved}&firstShow=${firstShow}`
+    let s = `audio/musics?page=${page}&size=${size}&title=${title}&searchBy=${searchBy}&genre=${genre}&onlyMyCreated=${onlyMyCreated}&onlyMySaved=${onlyMySaved}&firstShow=${firstShow}`
     return instance.get<GetMusicsType>(s)
     .then(res=>res.data)
     .catch(e=>e.response.data)
@@ -242,6 +243,40 @@ type PayloadSetMusicType={
 export const setMusic=(musicId: string, payload: PayloadSetMusicType)=>{
     return instance.put<ResultCodeType>(`audio/music`,
     {musicId,...payload})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+/*
+=========================================================
+====================PLAYLIST=BLOCK=======================
+=========================================================
+*/
+export type GetPlaylistsType={
+    playlists: PlaylistType[]
+    count: number
+    success: boolean
+    message?: string
+}
+export const getPlaylists=(filters:GetPlaylistsFiltersType)=>{
+    return instance.get<GetPlaylistsType>(`audio/playlists?page=${filters.page}&size=${filters.size}&title=${filters.title}&onlyMySaved=${filters.onlyMySaved}&onlyMyCreated=${filters.onlyMyCreated}&firstShow=${filters.firstShow}`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+export const setImgPlaylist=(playlistId:string,img: any)=>{
+    const formData = new FormData()
+    formData.append('image',img)
+
+    return instance.put<ResultCodeType & {imgSrc:string}>(`audio/iplaylist/${playlistId}`,
+    formData,{headers:{
+        'Content-Type':'multipart/form-data'
+    }}
+    ).then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+export const addPlaylist=(title:string, isPublic:boolean)=>{
+    return instance.post<ResultCodeType & {playlistId:string}>(`audio/playlist`,
+    {title,isPublic})
     .then(res=>res.data)
     .catch(e=>e.response.data)
 }

@@ -8,7 +8,7 @@ import { FOLLOW, FollowType, setCount, setInit, setMessage, setOnePeopleFollow, 
 function* followersWorker(action: SetFollowersAsyncType) {
     try {
         yield put(setInit(true))
-        const date: GetPeopleType = yield call(getFollowers, action.page, action.portionSize, action.title)
+        const date: GetPeopleType = yield call(getFollowers, action.page, action.portionSize, action.title, action.userId)
         if (!date.success) {
             yield put(setMessage(date.message ? date.message : 'Some error occured'))
         } else {

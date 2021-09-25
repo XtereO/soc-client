@@ -1,6 +1,4 @@
 
-import { stat } from "fs";
-import { backendURL } from "../../Consts";
 import { FilterGetMusicType, GenreType, MusicType } from "../../Types/music";
 
 
@@ -22,13 +20,7 @@ export const SET_MUSIC_ASYNC:'musicReducer/SET_MUSIC_ASYNC'='musicReducer/SET_MU
 
 
 const initialState={
-    activeMusic: null as null | HTMLAudioElement,
-    activeMusicSettings:{
-        duration: 0 as number,
-        playedInterval: 0 as number,
-        isMusicPlay: false as boolean
-    },
-    activeMusicDetails: null as MusicType | null,
+
     musics: [] as MusicType[],
     count: 0 as number,
     isInit: false as boolean,
@@ -57,6 +49,7 @@ type ActionType = (
 export const musicsReducer = (state=initialState,action:ActionType):InitialStateType=>{
     switch(action.type){
         case SET_MUSIC_STATE:
+            
             return{
                 ...state,
                 musics:[
@@ -67,6 +60,7 @@ export const musicsReducer = (state=initialState,action:ActionType):InitialState
                                 ...action.payload
                             }
                         }
+                        return m
                     })
                 ]
             }

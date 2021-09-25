@@ -14,6 +14,7 @@ import { followingReducer } from "./Reducers/followingReducer";
 import { musicsReducer } from "./Reducers/musicsReducer";
 import { musicsWatcher } from "./Sagas/musicsWatcher";
 import { playerReducer } from "./Reducers/playerReducer";
+import { playlistsReducer } from "./Reducers/playlistsReducer";
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
     followers: followersReducer,
     following: followingReducer,
     music: musicsReducer,
-    player: playerReducer
+    player: playerReducer,
+    playlists: playlistsReducer 
 })
 //@ts-ignore
 const composeEnhancers=window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

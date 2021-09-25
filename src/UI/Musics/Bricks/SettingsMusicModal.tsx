@@ -19,6 +19,7 @@ export const SettingsMusicModal:React.FC<PropsType>=(props)=>{
     return<Modal
     onHide={props.onClose}
     show={props.show}
+	size='lg'
     >
         <Modal.Header
         closeButton={true}
@@ -30,6 +31,7 @@ export const SettingsMusicModal:React.FC<PropsType>=(props)=>{
         <Modal.Body>
             <div className='card p-2 mt-2'>
                 <SetMusicFile 
+                key={1}
                 isInit={isInit}
                 onClose={props.onClose}
                 mode='Img' 
@@ -37,6 +39,7 @@ export const SettingsMusicModal:React.FC<PropsType>=(props)=>{
             </div>
             <div className="card p-2 mt-2">
                 <SetMusicFile 
+                key={2}
                 isInit={isInit}
                 onClose={props.onClose}
                 mode='Music'

@@ -116,12 +116,12 @@ const Home: React.FC<PropsType> = (props) => {
                     }
                 </div>
                 <div
-                    onClick={() => history.push(`/followers/${history.location.pathname.slice(6,)}`)}
+                    onClick={() => history.push(`/followers?page=1&title=&userId=${profile.userId}`)}
                     className="card Home__Link Home__Link_hover Home__Link_active p-4">
                     Followers: {profile.followers}
                 </div>
                 <div
-                    onClick={() => history.push(`/following/${history.location.pathname.slice(6,)}`)}
+                    onClick={() => history.push(`/following?page=1&title=&userId=${profile.userId}`)}
                     className="card Home__Link Home__Link_hover Home__Link_active p-4">
                     Following: {profile.following}
                 </div>

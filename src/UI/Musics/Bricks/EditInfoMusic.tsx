@@ -2,6 +2,7 @@
 
 
 
+import { debug } from "console"
 import { Formik } from "formik"
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
@@ -18,7 +19,7 @@ type PropsType={
     onClose:()=>void
     isInit:boolean
     musicId:string
-    author:string
+    author:string | null
     title:string
     genre:GenreType
 }
@@ -31,9 +32,9 @@ export const EditInfoMusic:React.FC<PropsType>=({
     ]
 
     return<Formik
-        enableReinitialize
+        
         initialValues={{
-            author: author,
+            author: author ? author : '',
             title: title,
             genre: genre
         }}
@@ -89,7 +90,7 @@ export const EditInfoMusic:React.FC<PropsType>=({
                         <MySelect 
                         options={options}
                         onChange={handleChange}
-                        name='shortNickname'
+                        name='genre'
                         value={values.genre}
                         style={{width:'100%'}}
                         />

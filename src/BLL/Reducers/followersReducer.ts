@@ -131,12 +131,13 @@ export type SetFollowersAsyncType={
     page: number
     title: string
     portionSize: number
+    userId?: string
     type: typeof SET_FOLLOWERS_ASYNC
 }
-export const setFollowersAsync=(title: string = '', page: number = 1 , portionSize: number=10):SetFollowersAsyncType=>{
+export const setFollowersAsync=(title: string = '', page: number = 1 , portionSize: number=10, userId?:string):SetFollowersAsyncType=>{
     return{
         page,title,
-        portionSize,
+        portionSize,userId,
         type: SET_FOLLOWERS_ASYNC
     }
 }

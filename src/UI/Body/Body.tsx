@@ -72,10 +72,10 @@ export const Body: React.FC<PropsType> = ({ mode }) => {
             path: '/chats'
         }, {
             route: Followers,
-            path: '/followers/:userId?'
+            path: '/followers'
         }, {
             route: Following,
-            path: '/following/:userId?'
+            path: '/following'
         }, {
             route: NotFound,
             path: '*'

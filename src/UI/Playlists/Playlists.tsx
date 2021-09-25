@@ -36,7 +36,7 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
                             page={page} pageChange={pageChange} />
                     </div>
                     <div className="col-4">
-                        Filter
+                        
                     </div>
                 </div> :
                 <div>
@@ -56,7 +56,7 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
                         </div>
                         :
                         <div>
-                            Filter
+                            
                             <div className="w-100 Center mt-4">
                             <button 
                             onClick={()=>setSearchMode(true)}
