@@ -50,9 +50,9 @@ export const AddMusicMenu:React.FC<PropsType>=({handleClose,show,showToast})=>{
             }}
             validate={(values)=>{
                 if(values.music && values.music.type!=="audio/mpeg"){
-                    return {'music': "This type of music dont support"}
+                    return {'music': "This type of music dont support. Please use mp3(mpeg)"}
                 }if(values.img && (!(values.img.type==="image/png" || values.img.type==="image/jpeg" || values.img.type==='image/jpg'))){
-                    return {'img': "This type of img dont support"}
+                    return {'img': "This type of image dont support. Please use png or jpeg"}
                 }
                 return {}
             }}

@@ -35,11 +35,6 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
         onSave={()=>dispatch(saveMusicAsync(m.musicId))}
         onRemove={()=>dispatch(removeFromSavedMusicAsync(m.musicId))}
         onPlayMusic={()=>dispatch(setMusics(musics))} {...m} />)
-
-    useEffect(()=>{
-        setPath(`/musics?title=${filters.title}&searchBy=${filters.searchBy}&size=${filters.size}&page=${filters.page}&onlyMySaved=${filters.onlyMySaved}&onlyMyCreated=${filters.onlyMyCreated}&genre=${filters.genre}&firstShow=${filters.firstShow}`)
-        dispatch(setMusicsAsync({...filters}))
-    },[])
    
     useEffect(()=>{
         const url = new URLSearchParams(history.location.search)
@@ -53,7 +48,9 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
         const firstShow = url.get('firstShow') === 'most%20rated' ? 'most rated' : url.get('firstShow')
         
         if(!(page && size && searchBy && onlyMyCreated && onlyMySaved && genre && firstShow)){
-            setPath(`/musics?title=${filters.title}&searchBy=${filters.searchBy}&size=${filters.size}&page=${filters.page}&onlyMySaved=${filters.onlyMySaved}&onlyMyCreated=${filters.onlyMyCreated}&genre=${filters.genre}&firstShow=${filters.firstShow}`)
+            const newPath=`/musics?title=${filters.title}&searchBy=${filters.searchBy}&size=${filters.size}&page=${filters.page}&onlyMySaved=${filters.onlyMySaved}&onlyMyCreated=${filters.onlyMyCreated}&genre=${filters.genre}&firstShow=${filters.firstShow}`
+            setPath(newPath)
+            history.push(newPath)
         }else{
             const newFilter = {
                 page: (+page),

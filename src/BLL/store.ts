@@ -15,6 +15,7 @@ import { musicsReducer } from "./Reducers/musicsReducer";
 import { musicsWatcher } from "./Sagas/musicsWatcher";
 import { playerReducer } from "./Reducers/playerReducer";
 import { playlistsReducer } from "./Reducers/playlistsReducer";
+import { playlistsWatcher } from "./Sagas/playlistsWatcher";
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -33,7 +34,7 @@ export type AppStateType = ReturnType<RootReducerType>
 
 const sagaMiddleware = createSagaMiddleware()
 
-export const store = createStore(rootReducer, composeEnhancers(applyMiddleware(sagaMiddleware)))
+export const store = createStore(rootReducer, (applyMiddleware(sagaMiddleware)))
 
 function* rootSaga(){
     yield all([
@@ -42,7 +43,8 @@ function* rootSaga(){
         peopleWatcher(),
         followersWatcher(),
         followingWatcher(),
-        musicsWatcher()
+        musicsWatcher(),
+        playlistsWatcher()
     ])
 }
 sagaMiddleware.run(rootSaga)

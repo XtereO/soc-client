@@ -28,9 +28,6 @@ type ActionType = (SetAuthType | SetLocalStorageType
 export const authReducer=(state=initialState, action:ActionType ):InitialStateType=>{
     switch(action.type){
         case SET_SHOW_TOAST:
-            if(action.callback){
-                action.callback()
-            }
             return{
                 ...state,
                 isShowToast: action.isShowToast,

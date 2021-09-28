@@ -24,10 +24,39 @@ const initialState={
     } as GetPlaylistsFiltersType
 }
 type InitialStateType = typeof initialState
-type ActionType = any
+type ActionType = (SetCountType | SetInitType 
+    | SetMessageType | SetFiltersType |
+    SetPlaylistsStateType) 
 
 export const playlistsReducer = (state=initialState,action:ActionType):InitialStateType=>{
     switch(action.type){
+        case SET_COUNT:
+            return{
+                ...state,
+                count: action.count
+            }
+        case SET_INIT:
+            return{
+                ...state,
+                isInit: action.isInit
+            }
+        case SET_MESSAGE:
+            return{
+                ...state,
+                message: action.message
+            }
+        case SET_PLAYLISTS_STATE:
+            return{
+                ...state,
+                playlists: action.playlists
+            }
+        case SET_FILTERS:
+            return{
+                ...state,
+                filters:{
+                    ...action.filters
+                }
+            }
         default:
             return state
     }
@@ -38,12 +67,13 @@ export type AddPlaylistAsyncType={
     title: string
     isPublic: boolean
     img?: any //file
+    callback: ()=>void //close modal
 }
-export const addPlaylistAsync=(title:string,isPublic:boolean,img?:any):AddPlaylistAsyncType=>{
+export const addPlaylistAsync=(title:string,isPublic:boolean,callback:()=>void,img?:any):AddPlaylistAsyncType=>{
     return{
         type: ADD_PLAYLIST_ASYNC,
         title, isPublic,
-        img
+        img, callback
     }
 }
 
@@ -82,9 +112,9 @@ export const setInit=(isInit:boolean):SetInitType=>{
 
 type SetMessageType={
     type: typeof SET_MESSAGE
-    message: string
+    message: string | null
 }
-export const setMessage=(message:string):SetMessageType=>{
+export const setMessage=(message:string | null):SetMessageType=>{
     return{
         type:SET_MESSAGE,
         message
