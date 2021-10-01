@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { MusicType } from "../../../Types/music"
 import { MyInput } from "../../Bricks/MyInput";
 import {messageSelector} from '../../../BLL/Selectors/musicsSelector'
-import { rateMusic } from "../../../DAL/api";
 import { rateMusicAsync } from "../../../BLL/Reducers/musicsReducer";
 
 

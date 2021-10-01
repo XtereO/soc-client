@@ -34,7 +34,7 @@ export type AppStateType = ReturnType<RootReducerType>
 
 const sagaMiddleware = createSagaMiddleware()
 
-export const store = createStore(rootReducer, (applyMiddleware(sagaMiddleware)))
+export const store = createStore(rootReducer, composeEnhancers(applyMiddleware(sagaMiddleware)))
 
 function* rootSaga(){
     yield all([

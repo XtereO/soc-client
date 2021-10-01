@@ -7,10 +7,11 @@ import { SettingButton } from "../Bricks/SettingButton";
 import { useDispatch, useSelector } from "react-redux";
 import { countSelector, filtersSelector, initSelector, messageSelector, playlistsSelector } from "../../BLL/Selectors/playlistsSelector";
 import { useHistory } from "react-router";
-import { addPlaylistAsync, setFilters, setPlaylistsAsync } from "../../BLL/Reducers/playlistsReducer";
+import { addPlaylistAsync, removeFromPlaylistAsync, setFilters, setPlaylistsAsync } from "../../BLL/Reducers/playlistsReducer";
 import { GetPlaylistsFiltersType } from "../../Types/playlist";
 import { PlaylistItem } from "./Bricks/PlaylistItem";
 import { AddPlaylistModal } from "./Bricks/AddPlaylistModal";
+import { savePlaylistAsync } from "../../BLL/Reducers/playlistsReducer";
 
 
 
@@ -34,7 +35,11 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
     const dispatch = useDispatch()
     const playlists = useSelector(playlistsSelector)
     const count = useSelector(countSelector)
-    const playlistsJSX = playlists.map(p=><PlaylistItem {...p}/>)
+    const playlistsJSX = playlists.map(p=><PlaylistItem 
+        key={p.playlistId}
+        onRemove={()=>dispatch(removeFromPlaylistAsync(p.playlistId))}
+        onSave={()=>dispatch(savePlaylistAsync(p.playlistId))}
+        {...p}/>)
     let [path, setPath] = useState('')
     let [isSearchMode, setSearchMode] = useState(true)
     let [showAddPlaylist,setShowAddPlaylist] = useState(false)

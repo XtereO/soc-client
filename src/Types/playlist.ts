@@ -1,5 +1,5 @@
 import { MusicType } from "./music";
-import { ProfileType } from "./profile";
+import { ProfileType, ReviewType } from "./profile";
 
 
 
@@ -23,6 +23,8 @@ export type PlaylistType={
     owner: ProfileType
     isPublic: boolean
     date: string    
+    isSaved: boolean
+    myReview: ReviewType
 }
 
 export type GetPlaylistsFiltersType = {

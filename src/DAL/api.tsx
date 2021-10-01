@@ -280,3 +280,35 @@ export const addPlaylist=(title:string, isPublic:boolean)=>{
     .then(res=>res.data)
     .catch(e=>e.response.data)
 }
+export const savePlaylist=(playlistId:string)=>{
+    return instance.post<ResultCodeType>(`audio/saveplaylist/${playlistId}`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+export const removePlaylistFromSaved=(playlistId:string)=>{
+    return instance.delete<ResultCodeType>(`audio/saveplaylist/${playlistId}`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+type RatePlaylistType={
+    review: string | null
+    rating: number
+    playlistId: string
+    playlistTitle: string
+}
+export const ratePlaylist=(req:RatePlaylistType)=>{
+    return instance.post<ResultCodeType & {review:ReviewType}>(`review`,{
+        idMusicOrPlaylist: req.playlistId,
+        reviewFor: 'Playlist',
+        titleMusicOrPlaylist: req.playlistTitle,
+        rating: req.rating, review: req.review
+    }).then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+export const setPlaylist=(playlistId:string, payload:{isPublic?:boolean,title?:string})=>{
+    return instance.put<ResultCodeType>(`audio/changeplaylist`,
+    {payload,playlistId})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
