@@ -1,4 +1,4 @@
-import { GetPlaylistsFiltersType, PlaylistType } from "../../Types/playlist";
+import { GetPlaylistsFiltersType, MinimilizeMusicType, PlaylistType } from "../../Types/playlist";
 import { ReviewType } from "../../Types/profile";
 
 const SET_PLAYLISTS_STATE:'playlistsReducer/SET_PLAYLISTS_STATE'='playlistsReducer/SET_PLAYLISTS_STATE'
@@ -8,10 +8,18 @@ const SET_MESSAGE:'playlistsReducer/SET_MESSAGE'='playlistsReducer/SET_MESSAGE'
 const SET_FILTERS:'playlistsReducer/SET_FILTERS'='playlistsReducer/SET_FILTERS'
 const SAVE_PLAYLIST_STATE:'playlistsReducer/SAVE_PLAYLIST_STATE'='playlistsReducer/SAVE_PLAYLIST_STATE'
 const REMOVE_FROM_SAVED_PLAYLIST_STATE:'playlistsReducer/REMOVE_FROM_SAVED_PLAYLIST_STATE'='playlistsReducer/REMOVE_FROM_SAVED_PLAYLIST_STATE'
-const RATE_PLAYLIST_STATE:'playlistReducer/RATE_PLAYLIST_STATE'='playlistReducer/RATE_PLAYLIST_STATE'
-const SET_PLAYLIST_STATE:'playlistReducer/SET_PLAYLIST_STATE'='playlistReducer/SET_PLAYLIST_STATE'
-export const SET_PLAYLIST_ASYNC:'playlistReducer/SET_PLAYLIST_ASYNC'='playlistReducer/SET_PLAYLIST_ASYNC'
-export const RATE_PLAYLIST_ASYNC:'playlistReducer/RATE_PLAYLIST_ASYNC'='playlistReducer/RATE_PLAYLIST_ASYNC'
+const RATE_PLAYLIST_STATE:'playlistsReducer/RATE_PLAYLIST_STATE'='playlistsReducer/RATE_PLAYLIST_STATE'
+const SET_PLAYLIST_STATE:'playlistsReducer/SET_PLAYLIST_STATE'='playlistsReducer/SET_PLAYLIST_STATE'
+const SET_MUSICS_STATE:'playlistsReducer/SET_MUSICS_STATE'='playlistsReducer/SET_MUSICS_STATE'
+const ADD_MUSIC_TO_PLAYLIST_STATE:'playlistsReducer/ADD_MUSIC_STATE'='playlistsReducer/ADD_MUSIC_STATE'
+const SET_MUSICS_FILTERS:'playlistsReducer/SET_MUSICS_FILTERS'='playlistsReducer/SET_MUSICS_FILTERS'
+const SET_COUNT_MUSIC:'playlistsReducer/SET_COUNT_MUSIC'='playlistsReducer/SET_COUNT_MUSIC'
+const REMOVE_MUSIC_FROM_PLAYLIST_STATE:'playlistsReducer/REMOVE_MUSIC_FROM_PLAYLIST_STATE'='playlistsReducer/REMOVE_MUSIC_FROM_PLAYLIST_STATE'
+export const REMOVE_MUSIC_FROM_PLAYLIST_ASYNC:'playlistsReducer/REMOVE_MUSIC_FROM_PLAYLIST_ASYNC'='playlistsReducer/REMOVE_MUSIC_FROM_PLAYLIST_ASYNC'
+export const SET_MUSICS_ASYNC:'playlistsReducer/SET_MUSICS_ASYNC'='playlistsReducer/SET_MUSICS_ASYNC'
+export const ADD_MUSIC_TO_PLAYLIST_ASYNC:'playlistsReducer/ADD_MUSIC_TO_PLAYLIST'='playlistsReducer/ADD_MUSIC_TO_PLAYLIST'
+export const SET_PLAYLIST_ASYNC:'playlistsReducer/SET_PLAYLIST_ASYNC'='playlistsReducer/SET_PLAYLIST_ASYNC'
+export const RATE_PLAYLIST_ASYNC:'playlistsReducer/RATE_PLAYLIST_ASYNC'='playlistsReducer/RATE_PLAYLIST_ASYNC'
 export const SAVE_PLAYLIST_ASYNC:'playlistsReducer/SAVE_PLAYLISTS_ASYNC'='playlistsReducer/SAVE_PLAYLISTS_ASYNC'
 export const REMOVE_FROM_SAVED_PLAYLIST_ASYNC:'playlistsReducer/REMOVE_FROM_SAVED_PLAYLIST_ASYNC'='playlistsReducer/REMOVE_FROM_SAVED_PLAYLIST_ASYNC'
 export const SET_PLAYLISTS_ASYNC:'playlistsReducer/SET_PLAYLISTS_ASYNC'='playlistsReducer/SET_PLAYLISTS_ASYNC'
@@ -23,6 +31,13 @@ const initialState={
     count: 0 as number,
     isInit: false as boolean,
     message: null as null|string,
+    filtersForSearchMusics:{
+        page: 1 as number, 
+        size: 10 as number,
+        title: '' as string,
+        onlyMyCreated: false as boolean,
+        onlyMySaved: false as boolean
+    },
     filters: {
         page: 1,
         size: 10,
@@ -30,17 +45,80 @@ const initialState={
         onlyMyCreated: false as boolean,
         onlyMySaved: false as boolean,
         firstShow: 'new' as 'new' | 'old' | 'most rated'
-    } as GetPlaylistsFiltersType
+    } as GetPlaylistsFiltersType,
+    countMusic: 0 as number,
+    musics: [] as MinimilizeMusicType[]
 }
 type InitialStateType = typeof initialState
-type ActionType = (SetCountType | SetInitType 
+type ActionType = (
+    SetFiltersMusicsType | SetMusicsStateType | 
+    SetCountType | SetInitType | SetCountMusicType 
     | SetMessageType | SetFiltersType | 
     RemoveFromSavedPlaylistStateType |
+    AddMusicToPlaylistStateType |
+    RemoveMusicFromPlaylistStateType |
     SavePlaylistStateType | RatePlaylistStateType | 
     SetPlaylistsStateType | SetPlaylistStateType) 
 
 export const playlistsReducer = (state=initialState,action:ActionType):InitialStateType=>{
     switch(action.type){
+        case REMOVE_MUSIC_FROM_PLAYLIST_STATE:
+            return{
+                ...state,
+                playlists:[...state.playlists.map(p=>{
+                    if(p.playlistId===action.playlistId){
+                        return{
+                            ...p,
+                            countMusics:(p.countMusics-1)
+                        }
+                    }
+                })],
+                musics:[...state.musics.map(m=>{
+                    if(m.musicId===action.musicId){
+                        return {
+                            ...m,
+                            isInPlaylist: false
+                        }
+                    }
+                    return m
+                })]
+            }
+        case ADD_MUSIC_TO_PLAYLIST_STATE:
+            return{
+                ...state,
+                playlists:[...state.playlists.map(p=>{
+                    if(p.playlistId===action.playlistId){
+                        return{
+                            ...p,
+                            countMusics:(p.countMusics+1)
+                        }
+                    }
+                })],
+                musics:[...state.musics.map(m=>{
+                    if(m.musicId===action.musicId){
+                        return {
+                            ...m,
+                            isInPlaylist: true
+                        }
+                    }
+                    return m
+                })]
+            }
+        case SET_COUNT_MUSIC:
+            return{
+                ...state,
+                countMusic: action.countMusic
+            }
+        case SET_MUSICS_STATE:
+            return{
+                ...state,
+                musics:[...action.musics]
+            }
+        case SET_MUSICS_FILTERS:
+            return{
+                ...state,
+                filtersForSearchMusics:{...action}
+            }
         case SET_PLAYLIST_STATE:
             return{
                 ...state,
@@ -130,6 +208,113 @@ export const playlistsReducer = (state=initialState,action:ActionType):InitialSt
 }
 
 
+type RemoveMusicFromPlaylistStateType={
+    type: typeof REMOVE_MUSIC_FROM_PLAYLIST_STATE
+    playlistId: string
+    musicId: string
+}
+export const removeMusicFromPlaylistState=(playlistId:string,musicId:string):RemoveMusicFromPlaylistStateType=>{
+    return{
+        type: REMOVE_MUSIC_FROM_PLAYLIST_STATE,
+        playlistId, musicId
+    }
+}
+export type RemoveMusicFromPlaylistAsyncType={
+    type: typeof REMOVE_MUSIC_FROM_PLAYLIST_ASYNC
+    playlistId: string
+    musicId: string
+}
+export const removeMusicFromPlaylistAsync=(playlistId:string,musicId:string):RemoveMusicFromPlaylistAsyncType=>{
+    return{
+        type: REMOVE_MUSIC_FROM_PLAYLIST_ASYNC,
+        playlistId, musicId
+    }
+}
+
+type SetCountMusicType={
+    type: typeof SET_COUNT_MUSIC
+    countMusic: number
+}
+export const setCountMusic=(countMusic:number):SetCountMusicType=>{
+    return{
+        type: SET_COUNT_MUSIC,
+        countMusic
+    }
+}
+
+type SetFiltersMusicsType={
+    type:typeof SET_MUSICS_FILTERS
+    page: number, 
+    size: number,
+    title: string,
+    onlyMyCreated: boolean,
+    onlyMySaved: boolean
+} 
+export const setFiltersMusic=(
+                              page:number,size:number,
+                              title:string,onlyMyCreated:boolean,
+                              onlyMySaved:boolean):SetFiltersMusicsType=>{
+    return{
+        type: SET_MUSICS_FILTERS,
+        page,size,
+        title,onlyMyCreated,
+        onlyMySaved
+    }
+}
+
+type SetMusicsStateType={
+    type: typeof SET_MUSICS_STATE
+    musics: MinimilizeMusicType[]
+}
+export const setMusicsState=(musics:MinimilizeMusicType[]):SetMusicsStateType=>{
+    return{
+        type: SET_MUSICS_STATE,
+        musics
+    }
+}
+
+export type SetMusicsAsyncType={
+    type: typeof SET_MUSICS_ASYNC
+    playlistId:string
+    title:string
+    page:number
+    onlyMySaved:boolean 
+    onlyMyCreated:boolean
+}
+export const setMusicsAsync=(playlistId:string,page:number,
+                             title:string,onlyMyCreated:boolean,
+                             onlyMySaved:boolean):SetMusicsAsyncType=>{
+    return{
+        type: SET_MUSICS_ASYNC,
+        playlistId,page,title,
+        onlyMyCreated,onlyMySaved
+    }
+}
+
+type AddMusicToPlaylistStateType={
+    type: typeof ADD_MUSIC_TO_PLAYLIST_STATE
+    playlistId: string
+    musicId: string
+}
+export const addMusicToPlaylistState=(playlistId:string, musicId:string):AddMusicToPlaylistStateType=>{
+    return{
+        type: ADD_MUSIC_TO_PLAYLIST_STATE,
+        playlistId, musicId
+    }
+}
+
+export type AddMusicToPlaylistAsyncType={
+    type: typeof ADD_MUSIC_TO_PLAYLIST_ASYNC
+    playlistId: string
+    musicId: string
+}
+export const addMusicToPlaylistAsync=(playlistId:string, musicId: string):AddMusicToPlaylistAsyncType=>{
+    return{
+        type: ADD_MUSIC_TO_PLAYLIST_ASYNC,
+        playlistId, musicId
+    }
+}
+
 type SetPlaylistStateType={
     type: typeof SET_PLAYLIST_STATE
     payload: PayloadType
@@ -157,7 +342,7 @@ export type SetPlaylistAsyncType={
     playlistId: string
     callback:()=>void
 }
-export const setPlaylistAsync=(payload:PayloadType, playlistId:string, callback:()=>void):SetPlaylistAsyncType=>{
+export const setPlaylistAsync=(payload:PayloadAsyncType, playlistId:string, callback:()=>void):SetPlaylistAsyncType=>{
     return{
         type: SET_PLAYLIST_ASYNC,
         payload, playlistId,

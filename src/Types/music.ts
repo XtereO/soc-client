@@ -15,6 +15,7 @@ export type MusicType={
     genre: GenreType
     isSaved: boolean
     myReview: null | ReviewType
+    isInPlaylist: boolean
 }
 
 export type FilterGetMusicType={

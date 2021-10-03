@@ -308,7 +308,28 @@ export const ratePlaylist=(req:RatePlaylistType)=>{
 
 export const setPlaylist=(playlistId:string, payload:{isPublic?:boolean,title?:string})=>{
     return instance.put<ResultCodeType>(`audio/changeplaylist`,
-    {payload,playlistId})
+    {...payload,playlistId})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+ 
+export const addMusicToPlaylist=(playlistId:string, musicsId:string[])=>{
+    return instance.put<ResultCodeType>(`audio/aplaylist`,
+    {playlistId,musicsId})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+export const removeMusicFromPlaylist=(playlistId:string, musicsId:string[])=>{
+    return instance.put<ResultCodeType>(`audio/rplaylist`,
+    {playlistId,musicsId})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+export const getMusicsForPlaylist=(playlistId:string,title:string='',page:number=1,size:number=10,onlyMySaved:boolean=false, onlyMyCreated:boolean=false)=>{
+    let s = `audio/musics?page=${page}&size=${size}&title=${title}&playlistId=${playlistId}&onlyMySaved=${onlyMySaved}&onlyMyCreated=${onlyMyCreated}`
+    return instance.get<GetMusicsType>(s)
     .then(res=>res.data)
     .catch(e=>e.response.data)
 }

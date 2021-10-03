@@ -25,6 +25,7 @@ export type PlaylistType={
     date: string    
     isSaved: boolean
     myReview: ReviewType
+    countMusics: number
 }
 
 export type GetPlaylistsFiltersType = {
@@ -34,4 +35,13 @@ export type GetPlaylistsFiltersType = {
     onlyMyCreated: boolean
     onlyMySaved: boolean
     firstShow: 'new' | 'old' | 'most rated'
+}
+
+export type MinimilizeMusicType = {
+    title: string
+    author: string
+    musicId: string
+    isInPlaylist: boolean
+    isSaved: boolean
+    owner: ProfileType
 }

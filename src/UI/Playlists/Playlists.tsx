@@ -7,7 +7,7 @@ import { SettingButton } from "../Bricks/SettingButton";
 import { useDispatch, useSelector } from "react-redux";
 import { countSelector, filtersSelector, initSelector, messageSelector, playlistsSelector } from "../../BLL/Selectors/playlistsSelector";
 import { useHistory } from "react-router";
-import { addPlaylistAsync, removeFromPlaylistAsync, setFilters, setPlaylistsAsync } from "../../BLL/Reducers/playlistsReducer";
+import { addMusicToPlaylistAsync, addPlaylistAsync, removeFromPlaylistAsync, removeMusicFromPlaylistAsync, setFilters, setPlaylistAsync, setPlaylistsAsync } from "../../BLL/Reducers/playlistsReducer";
 import { GetPlaylistsFiltersType } from "../../Types/playlist";
 import { PlaylistItem } from "./Bricks/PlaylistItem";
 import { AddPlaylistModal } from "./Bricks/AddPlaylistModal";
@@ -36,6 +36,17 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
     const playlists = useSelector(playlistsSelector)
     const count = useSelector(countSelector)
     const playlistsJSX = playlists.map(p=><PlaylistItem 
+        addMusicToPlaylist={(
+            musicId:string
+        )=>dispatch(addMusicToPlaylistAsync(p.playlistId,musicId))}
+        removeMusicFromPlaylist={(
+            musicId:string
+        )=>dispatch(removeMusicFromPlaylistAsync(p.playlistId,musicId))}
+        setInfo={(isPublic:boolean, title:string, callback:()=>void)=>dispatch(
+            setPlaylistAsync({isPublic,title},
+            p.playlistId,callback))}
+        setImg={(img:any, callback:()=>void)=>dispatch(setPlaylistAsync({img},
+            p.playlistId, callback))}
         key={p.playlistId}
         onRemove={()=>dispatch(removeFromPlaylistAsync(p.playlistId))}
         onSave={()=>dispatch(savePlaylistAsync(p.playlistId))}

@@ -1,20 +1,38 @@
 import React, { useState } from "react"
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom"
+import { myProfileSelector } from "../../../BLL/Selectors/profileSelector";
 import { backendURL } from "../../../Consts"
 //@ts-ignore
 import default_playlist from "../../../Media/default_playlist.jpg";
 import { PlaylistType } from "../../../Types/playlist";
+import { SettingButton } from "../../Bricks/SettingButton";
 import { RatePlaylistModal } from "./RatePlaylistModal";
 import { SettingsPlaylistModal } from "./SettingsPlaylistModal";
 
 
 export type PlaylistItemType=PlaylistType &{
+    addMusicToPlaylist:(musicId:string)=>void
+    removeMusicFromPlaylist:(musicId:string)=>void
     onRemove:()=>void
     onSave:()=>void
+    setImg:(img:any, callback:()=>void)=>void
+    setInfo:(isPublic:boolean, title:string, callback:()=>void)=>void
 }
 
-export const PlaylistItem:React.FC<PlaylistItemType>=({title,imgSrc,playlistId,...props})=>{
+export const PlaylistItem:React.FC<PlaylistItemType>=({
+    title,imgSrc,playlistId,
+    ...props})=>{
+
+    let myProfile = useSelector(myProfileSelector)
     
+    let [showSettings,setShowSettings] = useState(false)
+    const handleOpenSettings=()=>{
+        setShowSettings(true)
+    }
+    const handleCloseSettings=()=>{
+        setShowSettings(false)
+    }
     let [showRating, setShowRating] = useState(false)
     const handleOpenRating=()=>{
         setShowRating(true)
@@ -36,6 +54,12 @@ export const PlaylistItem:React.FC<PlaylistItemType>=({title,imgSrc,playlistId,.
                 <h4>{title}</h4>
             </div>
             <div className='col-6 d-flex justify-content-end'>
+            {props.owner.shortNickname===myProfile.shortNickname &&
+                    <button
+                    onClick={handleOpenSettings}
+                    className='btn btn-light'>
+                        <SettingButton />
+                    </button>}
             {props.myReview ? 
                     <button 
                     onClick={handleOpenRating}
@@ -82,6 +106,15 @@ export const PlaylistItem:React.FC<PlaylistItemType>=({title,imgSrc,playlistId,.
         {...props} title={title}
         imgSrc={imgSrc} playlistId={playlistId}
         />}
-        {<SettingsPlaylistModal />}
+        {showSettings && <SettingsPlaylistModal 
+        onClose={handleCloseSettings}
+        show={showSettings}
+        playlistId={playlistId}
+        title={title} imgSrc={imgSrc}
+        {...props}
+        setImg={(img:any)=>props.setImg(img, handleCloseSettings)}
+        setInfo={(isPublic:boolean,title:string)=>props.setInfo(
+            isPublic,title,handleCloseSettings)} 
+        />}
     </div>
 }
