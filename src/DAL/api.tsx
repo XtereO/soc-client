@@ -4,7 +4,7 @@ import { title } from "process";
 import { backendURL } from "../Consts";
 import { RegistrateRequestType } from "../Types/auth";
 import { FilterGetMusicType, GenreType, MusicType } from "../Types/music";
-import { GetPlaylistsFiltersType, PlaylistType } from "../Types/playlist";
+import { GetPlaylistsFiltersType, PlaylistDetailType, PlaylistType } from "../Types/playlist";
 import { NamesType, ProfileDetailType, ProfileType, ReviewType } from "../Types/profile";
 
 
@@ -327,9 +327,15 @@ export const removeMusicFromPlaylist=(playlistId:string, musicsId:string[])=>{
     .catch(e=>e.response.data)
 }
 
-export const getMusicsForPlaylist=(playlistId:string,title:string='',page:number=1,size:number=10,onlyMySaved:boolean=false, onlyMyCreated:boolean=false)=>{
-    let s = `audio/musics?page=${page}&size=${size}&title=${title}&playlistId=${playlistId}&onlyMySaved=${onlyMySaved}&onlyMyCreated=${onlyMyCreated}`
+export const getMusicsForPlaylist=(playlistId:string,title:string='',page:number=1,size:number=10,onlyMySaved:boolean=false, onlyMyCreated:boolean=false, genre:GenreType = 'All', searchBy:'author' | 'title'='title')=>{
+    let s = `audio/musics?page=${page}&size=${size}&title=${title}&playlistId=${playlistId}&onlyMySaved=${onlyMySaved}&onlyMyCreated=${onlyMyCreated}&genre=${genre}&searchBy=${searchBy}`
     return instance.get<GetMusicsType>(s)
     .then(res=>res.data)
     .catch(e=>e.response.data)
 }
+
+export const getPlaylistDetail=(playlistId:string)=>{
+    return instance.get<{playlist:PlaylistDetailType} & ResultCodeType>(`audio/playlist/${playlistId}`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+} 

@@ -6,13 +6,16 @@ import { ProfileType, ReviewType } from "./profile";
 export type PlaylistDetailType = {
     playlistId: string
     title: string
-    musics: MusicType[]
     imgSrc: string
     summaryRating: number
     countRated: number
     owner: ProfileType
     isPublic: boolean
-    date: string
+    date: string    
+    isSaved: boolean
+    myReview: ReviewType
+    musics: MusicType[] 
+    countSaves: number
 }
 export type PlaylistType={
     playlistId: string
@@ -39,8 +42,9 @@ export type GetPlaylistsFiltersType = {
 
 export type MinimilizeMusicType = {
     title: string
-    author: string
+    author: string | null
     musicId: string
+    imgSrc: string | null
     isInPlaylist: boolean
     isSaved: boolean
     owner: ProfileType

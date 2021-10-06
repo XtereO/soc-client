@@ -16,7 +16,7 @@ type PropsType={
 export const Content:React.FC<PropsType>=({items,page,count,pageChange})=>{
     return<div>
     <div>
-        {items}
+        {[...items].slice((page-1)*10, page*10)}
     </div>
     <div className="Center" style={{}}>
         <Pagination

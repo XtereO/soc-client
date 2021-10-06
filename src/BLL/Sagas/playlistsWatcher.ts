@@ -1,9 +1,10 @@
 import { call, put, takeLatest } from "@redux-saga/core/effects";
-import { removeMusicFromPlaylistState,AddPlaylistAsyncType, SetMusicsAsyncType, ADD_PLAYLIST_ASYNC, RemoveFromSavedPlaylistAsyncType, removeFromPlaylistState, REMOVE_FROM_SAVED_PLAYLIST_ASYNC, SavePlaylistAsyncType, savePlaylistState, SAVE_PLAYLIST_ASYNC, setCount, setInit, setMessage, SetPlaylistsAsyncType, setPlaylistsState, SET_PLAYLISTS_ASYNC, RatePlaylistAsyncType, ratePlaylistState, RATE_PLAYLIST_ASYNC, SetPlaylistAsyncType, setPlaylistState, SET_PLAYLIST_ASYNC, setMusicsState, setCountMusic, SET_MUSICS_ASYNC, AddMusicToPlaylistAsyncType, addMusicToPlaylistState, ADD_MUSIC_TO_PLAYLIST_ASYNC, RemoveMusicFromPlaylistAsyncType, REMOVE_MUSIC_FROM_PLAYLIST_ASYNC } from "../Reducers/playlistsReducer";
-import { addMusicToPlaylist, addPlaylist,  getMusicsForPlaylist, GetMusicsType, getPlaylists, GetPlaylistsType, ratePlaylist, removeMusicFromPlaylist, removePlaylistFromSaved, ResultCodeType, savePlaylist, setImgPlaylist, setPlaylist } from "../../DAL/api";
+import { removeMusicFromPlaylistState,AddPlaylistAsyncType, SetMusicsAsyncType, ADD_PLAYLIST_ASYNC, RemoveFromSavedPlaylistAsyncType, removeFromPlaylistState, REMOVE_FROM_SAVED_PLAYLIST_ASYNC, SavePlaylistAsyncType, savePlaylistState, SAVE_PLAYLIST_ASYNC, setCount, setInit, setMessage, SetPlaylistsAsyncType, setPlaylistsState, SET_PLAYLISTS_ASYNC, RatePlaylistAsyncType, ratePlaylistState, RATE_PLAYLIST_ASYNC, SetPlaylistAsyncType, setPlaylistState, SET_PLAYLIST_ASYNC, setMusicsState, setCountMusic, SET_MUSICS_ASYNC, AddMusicToPlaylistAsyncType, addMusicToPlaylistState, ADD_MUSIC_TO_PLAYLIST_ASYNC, RemoveMusicFromPlaylistAsyncType, REMOVE_MUSIC_FROM_PLAYLIST_ASYNC, setFiltersMusic, SetActivePlaylistAsyncType, setActivePlaylistState, SET_ACTIVE_PLAYLIST_ASYNC } from "../Reducers/playlistsReducer";
+import { addMusicToPlaylist, addPlaylist,  getMusicsForPlaylist, GetMusicsType, getPlaylistDetail, getPlaylists, GetPlaylistsType, ratePlaylist, removeMusicFromPlaylist, removePlaylistFromSaved, ResultCodeType, savePlaylist, setImgPlaylist, setPlaylist } from "../../DAL/api";
 import { setShowToast } from "../Reducers/authReducer";
 import { ReviewType } from "../../Types/profile";
 import { backendURL } from "../../Consts";
+import { PlaylistDetailType } from "../../Types/playlist";
 
 
 
@@ -143,10 +144,12 @@ function* setMusicsWorker(action:SetMusicsAsyncType) {
         yield put(setMessage(null))
         const data:GetMusicsType = yield call(
             getMusicsForPlaylist,action.playlistId,
-            action.title,action.page,10,
-            action.onlyMySaved,action.onlyMyCreated)
+            action.filters.title,action.filters.page,10,
+            action.filters.onlyMySaved,action.filters.onlyMyCreated,
+            action.filters.genre,action.filters.searchBy)
         if(data.success){
             yield put(setMusicsState(data.musics))
+            yield put(setFiltersMusic(action.filters))
             yield put(setCountMusic(data.count))
         }else if(data.message){
             yield put(setMessage(data.message))
@@ -172,7 +175,6 @@ function* addMusicToPlaylistWorker(action:AddMusicToPlaylistAsyncType) {
         yield put(setMessage(e.message))
     }
 }
-
 function* removeMusicFromPlaylistWorker(action:RemoveMusicFromPlaylistAsyncType) {
     try{
         yield put(setMessage(null))
@@ -188,8 +190,22 @@ function* removeMusicFromPlaylistWorker(action:RemoveMusicFromPlaylistAsyncType)
         yield put(setMessage(e.message))
     }
 }
+function* setActivePlaylistWorker(action:SetActivePlaylistAsyncType){
+    try{
+        yield put(setMessage(null))
+        const data:({playlist:PlaylistDetailType} & ResultCodeType) = yield call(getPlaylistDetail,action.playlistId)
+        if(data.success){
+            yield put(setActivePlaylistState(data.playlist))
+        }else{
+            yield put(setMessage(null))
+        }
+    }catch(e){
+        yield put(setMessage(e.message))
+    }
+}
 
 export function* playlistsWatcher() {
+    yield takeLatest(SET_ACTIVE_PLAYLIST_ASYNC, setActivePlaylistWorker)
     yield takeLatest(REMOVE_MUSIC_FROM_PLAYLIST_ASYNC, removeMusicFromPlaylistWorker)
     yield takeLatest(SET_PLAYLIST_ASYNC, setPlaylistWorker)
     yield takeLatest(RATE_PLAYLIST_ASYNC, ratePlaylistWorker)

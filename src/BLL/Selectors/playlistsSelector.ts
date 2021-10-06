@@ -22,9 +22,12 @@ export const filtersSelector=(state:AppStateType)=>{
 export const musicsSelector=(state:AppStateType)=>{
     return state.playlists.musics
 }
-export const filtersForSearchMusics=(state:AppStateType)=>{
+export const filtersForSearchMusicsSelector=(state:AppStateType)=>{
     return state.playlists.filtersForSearchMusics
 }
-export const countMusic=(state:AppStateType)=>{
+export const countMusicSelector=(state:AppStateType)=>{
     return state.playlists.countMusic
+}
+export const activePlaylistSelector=(state:AppStateType)=>{
+    return state.playlists.activePlaylist
 }

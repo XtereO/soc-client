@@ -173,7 +173,7 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
                         }
                 </div>
         }
-        <AddPlaylistModal
+        {showAddPlaylist && <AddPlaylistModal
         isInit={isInit}
         message={message}
         onSubmit={(title:string,isPublic:boolean,img?:any)=>{
@@ -184,7 +184,7 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
         }} 
         show={showAddPlaylist}
         closeHandler={closeAddPlaylist}
-        />
+        />}
     </div>
 }
 
