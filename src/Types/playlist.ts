@@ -13,7 +13,7 @@ export type PlaylistDetailType = {
     isPublic: boolean
     date: string    
     isSaved: boolean
-    myReview: ReviewType
+    myReview: ReviewType | null
     musics: MusicType[] 
     countSaves: number
 }
@@ -27,7 +27,7 @@ export type PlaylistType={
     isPublic: boolean
     date: string    
     isSaved: boolean
-    myReview: ReviewType
+    myReview: ReviewType | null
     countMusics: number
 }
 

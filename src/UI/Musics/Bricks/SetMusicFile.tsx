@@ -11,11 +11,12 @@ type PropsType={
     onClose: ()=>void
     mode: 'Music' | 'Img'
     isInit: boolean
+    setMusicAsync:(onClose:()=>void,payload:PayloadType)=>void
 }
+type PayloadType={img?:any,music?:any}
 
-export const SetMusicFile:React.FC<PropsType>=({musicId,onClose,isInit,mode})=>{
+export const SetMusicFile:React.FC<PropsType>=({musicId,onClose,isInit,mode,...props})=>{
     
-    const dispatch = useDispatch()
 
     return<Formik
     initialValues={{file: '' as any}}
@@ -29,9 +30,11 @@ export const SetMusicFile:React.FC<PropsType>=({musicId,onClose,isInit,mode})=>{
         }
     }}
     onSubmit={(values)=>{
-        dispatch(setMusicAsync(musicId,onClose,
+        props.setMusicAsync(
+            onClose,
             {img:values.file,
-            music:values.file}))
+            music:values.file}
+        )
     }}
     >
         {({

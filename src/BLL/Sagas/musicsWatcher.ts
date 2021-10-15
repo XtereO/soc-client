@@ -1,4 +1,4 @@
-import { AddMusicType, ADD_MUSIC, setInit, setMessage, setCount, setFilters, SetMusicsAsyncType, setMusicsState, SET_MUSICS_ASYNC, SaveMusicAsyncType, saveMusicState, SAVE_MUSIC_ASYNC, RemoveFromSavedMusicStateType, removeFromSavedMusicState, REMOVE_FROM_SAVED_MUSIC_ASYNC, RateMusicAsyncType, rateMusicState, RATE_MUSIC_ASYNC, SetMusicAsyncType, SET_MUSIC_ASYNC, setMusicState } from "../Reducers/musicsReducer";
+import { AddMusicType, ADD_MUSIC, setInit, setMessage, setCount, setFilters, SetMusicsAsyncType, setMusicsState, SET_MUSICS_ASYNC, SaveMusicAsyncType, saveMusicState, SAVE_MUSIC_ASYNC, RemoveFromSavedMusicAsyncType, removeFromSavedMusicState, REMOVE_FROM_SAVED_MUSIC_ASYNC, RateMusicAsyncType, rateMusicState, RATE_MUSIC_ASYNC, SetMusicAsyncType, SET_MUSIC_ASYNC, setMusicState } from "../Reducers/musicsReducer";
 import { addMusic, AddMusicRequestType, setImgMusic, setMP3Music,ResultCodeType, GetMusicsType, getMudics, saveMusic, removeMusicFromSave, rateMusic, setMusic } from "../../DAL/api";
 import { call, put, takeLatest } from "@redux-saga/core/effects";
 import { setShowToast } from "../Reducers/authReducer";
@@ -67,7 +67,7 @@ function* saveMusicsWorker(action: SaveMusicAsyncType){
         yield put(setShowToast(true,e.message))
     }   
 }
-function* removeFromSavedMusicWorker(action: RemoveFromSavedMusicStateType){
+function* removeFromSavedMusicWorker(action: RemoveFromSavedMusicAsyncType){
     try{
         yield put(setMessage(null))
         const data:ResultCodeType = yield call(removeMusicFromSave,action.musicId)

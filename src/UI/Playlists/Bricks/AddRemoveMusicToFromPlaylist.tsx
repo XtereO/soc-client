@@ -8,27 +8,47 @@ import {Content} from '../../Musics/Bricks/Content'
 import { MyInput } from "../../Bricks/MyInput"
 import { SettingButton } from "../../Bricks/SettingButton"
 import { SearchButton } from "../../Bricks/SearchButton"
+import { setActiveMusic } from "../../../BLL/Reducers/playerReducer"
 
 
 
 type PropsType={
     playlist: PlaylistDetailType 
+    messageError: string | null
     show: boolean
     closeHandler: ()=>void
     filters: FilterGetMusicType
     onFiltersSubmit:(filter:FilterGetMusicType)=>void
     count: number
     musics: MinimilizeMusicType[]
+    setActivePlaylist: ()=>void
     setMusics: (filter:FilterGetMusicType)=>void
     setMusicsSync: (musics:MusicType[])=>void
+    setMusicsCount: (count:number)=>void
     addMusicToPlaylist: (muiscId:string)=>void
     removeMusicFromPlaylist: (musicId:string)=>void
 }
 
 export const AddRemoveMusicToFromPlaylist:React.FC<PropsType>=(props)=>{
     
+    let [mode,setMode] = useState<'add' | 'remove'>('add')
+
     const chooseRemoveMode=()=>{
+        props.setActivePlaylist()
+        props.onFiltersSubmit({...props.filters, page:1,title:''})
+        setMode('remove')
         props.setMusicsSync(props.playlist.musics)
+    }
+    useEffect(()=>{
+        debugger
+        if(mode==='remove'){
+            props.setMusicsSync(props.playlist.musics)
+        }
+    },[props.playlist.musics])
+    const chooseAddMode=()=>{
+        props.onFiltersSubmit({...props.filters, page:1,title:''})
+        setMode('add')
+        props.setMusics(props.filters)
     }
     let musicsJSX = props.musics.map((m:MinimilizeMusicType)=><div 
     className='card mt-2 p-2'>
@@ -61,8 +81,7 @@ export const AddRemoveMusicToFromPlaylist:React.FC<PropsType>=(props)=>{
     </div>)
     
     let [isEditFiltersMode, setEditFiltersMode] = useState(false)
-    let [mode,setMode] = useState<'add' | 'remove'>('add')
-    let [title,setTitle] = useState<string>('')
+    let [title,setTitle] = useState<string>(props.filters.title)
     const handleChangeTitlte = (e:React.ChangeEvent<HTMLInputElement>) =>{
         setTitle(e.target.value)
     }
@@ -76,7 +95,9 @@ export const AddRemoveMusicToFromPlaylist:React.FC<PropsType>=(props)=>{
         genre: ['All', 'Rep', 'Hip-hop', `Rock'n'roll`, 'Metall', 'Other' ]
     }
     useEffect(()=>{
-        props.setMusics(props.filters)
+        if(mode==='add'){
+            props.setMusics(props.filters)
+        }
     },[props.filters])
 
     return<Modal
@@ -86,13 +107,13 @@ export const AddRemoveMusicToFromPlaylist:React.FC<PropsType>=(props)=>{
         <Modal.Header>
             {mode==='add' &&
             <button 
-            onClick={()=>setMode('remove')}
+            onClick={chooseRemoveMode}
             className='btn btn-outline-danger'>
                 Go remove musics
             </button>}
             {mode==='remove' &&
             <button 
-            onClick={()=>setMode('add')}
+            onClick={chooseAddMode}
             className='btn btn-outline-success'>
                 Go add musics
             </button>}
@@ -101,17 +122,20 @@ export const AddRemoveMusicToFromPlaylist:React.FC<PropsType>=(props)=>{
         <Modal.Body>
             {
                 (!isEditFiltersMode) && mode==='add' &&
-                <div>
+                <div className='Center'>
                     <MyInput 
                     value={title}
                     onChange={handleChangeTitlte}
                     />
                     <SearchButton
+                    style={{borderRadius:20000}}
                     onClick={onSearchButtonSubmit}
                     />
+                    <div className='mt-1'>
                     <SettingButton 
                     onClick={()=>setEditFiltersMode(true)}
                     />
+                    </div>
                 </div>
             }
             {
@@ -123,13 +147,15 @@ export const AddRemoveMusicToFromPlaylist:React.FC<PropsType>=(props)=>{
                     onSubmit={(firstShow: "new" | "old" | "most rated", onlyMySaved: boolean, onlyMyCreated: boolean, searchBy?: "title" | "author", genre?: GenreType)=>{
                         props.onFiltersSubmit({
                             firstShow,onlyMySaved,
-                            onlyMyCreated,searchBy,
-                            genre,page:1,size:10,
+                            onlyMyCreated,
+                            searchBy:searchBy as 'author' | 'title',
+                            genre:genre as GenreType,
+                            page:1,size:10,
                             title:props.filters.title
                     })
                     } }
                     />
-                    <div>
+                    <div className='Center mt-2'>
                         <button 
                         onClick={()=>setEditFiltersMode(false)}
                         className='btn btn-light'>
@@ -141,12 +167,24 @@ export const AddRemoveMusicToFromPlaylist:React.FC<PropsType>=(props)=>{
             {
                 (!isEditFiltersMode) &&
                     <Content 
-                    count={props.count}
-                    items={musicsJSX} 
+                    count={mode==='remove' ?
+                     props.playlist.musics.length : props.count }
+                    items={
+                        mode==='add' ?
+                        musicsJSX :
+                        musicsJSX.slice((props.filters.page-1)*10,
+                        props.filters.page*10)
+                    } 
                     page={props.filters.page} 
                     pageChange={function (page: number): void {
                     props.onFiltersSubmit({...props.filters,page})
                 } } />
+            }
+            {
+                props.messageError &&
+                <div className='Center text-danger'>
+                    {props.messageError}
+                </div> 
             }
         </Modal.Body>
     </Modal>

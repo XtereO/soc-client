@@ -5,13 +5,14 @@ import { Search } from "../Musics/Bricks/Search"
 import { Content } from "../Musics/Bricks/Content";
 import { SettingButton } from "../Bricks/SettingButton";
 import { useDispatch, useSelector } from "react-redux";
-import { countSelector, filtersSelector, initSelector, messageSelector, playlistsSelector } from "../../BLL/Selectors/playlistsSelector";
+import { activePlaylistSelector, countMusicSelector, countSelector, filtersForSearchMusicsSelector, filtersSelector, initSelector, messageSelector, musicsSelector, playlistsSelector } from "../../BLL/Selectors/playlistsSelector";
 import { useHistory } from "react-router";
-import { addMusicToPlaylistAsync, addPlaylistAsync, removeFromPlaylistAsync, removeMusicFromPlaylistAsync, setFilters, setPlaylistAsync, setPlaylistsAsync } from "../../BLL/Reducers/playlistsReducer";
-import { GetPlaylistsFiltersType } from "../../Types/playlist";
+import { addMusicToPlaylistAsync, addPlaylistAsync, removeFromPlaylistAsync, removeMusicFromPlaylistAsync, setActivePlaylistAsync, setCountMusic, setFilters, setFiltersMusic, setMusicsAsync, setMusicsState, setPlaylistAsync, setPlaylistsAsync } from "../../BLL/Reducers/playlistsReducer";
+import { GetPlaylistsFiltersType, MinimilizeMusicType } from "../../Types/playlist";
 import { PlaylistItem } from "./Bricks/PlaylistItem";
 import { AddPlaylistModal } from "./Bricks/AddPlaylistModal";
 import { savePlaylistAsync } from "../../BLL/Reducers/playlistsReducer";
+import { FilterGetMusicType } from "../../Types/music";
 
 
 
@@ -35,7 +36,31 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
     const dispatch = useDispatch()
     const playlists = useSelector(playlistsSelector)
     const count = useSelector(countSelector)
-    const playlistsJSX = playlists.map(p=><PlaylistItem 
+    const countMusics = useSelector(countMusicSelector)
+    const musics = useSelector(musicsSelector)
+    const activePlaylist = useSelector(activePlaylistSelector)
+    const filtersForMusic = useSelector(filtersForSearchMusicsSelector)
+    const playlistsJSX = playlists.map(p=><PlaylistItem
+        setActivePlaylist={(playlistId:string | null)=>{
+            dispatch(setActivePlaylistAsync(playlistId))
+        }}
+        messageError={message}
+        filters={filtersForMusic}
+        activePlaylist={activePlaylist}
+        musics={musics}
+        onFilterSubmit={(filters:FilterGetMusicType)=>{
+            dispatch(setFiltersMusic(filters))
+        }}
+        setMusicsCount={(count:number)=>{
+            dispatch(setCountMusic(count))
+        }}
+        setMusics={(filters:FilterGetMusicType)=>{
+            dispatch(setMusicsAsync(p.playlistId,filters))
+        }}
+        setMusicsSync={(musics:MinimilizeMusicType[])=>{
+            dispatch(setMusicsState(musics))
+        }}
+        countMusics={countMusics}
         addMusicToPlaylist={(
             musicId:string
         )=>dispatch(addMusicToPlaylistAsync(p.playlistId,musicId))}
@@ -50,7 +75,7 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
         key={p.playlistId}
         onRemove={()=>dispatch(removeFromPlaylistAsync(p.playlistId))}
         onSave={()=>dispatch(savePlaylistAsync(p.playlistId))}
-        {...p}/>)
+        playlist={p}/>)
     let [path, setPath] = useState('')
     let [isSearchMode, setSearchMode] = useState(true)
     let [showAddPlaylist,setShowAddPlaylist] = useState(false)

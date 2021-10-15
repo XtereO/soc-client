@@ -7,13 +7,14 @@ import { SettingButton } from "../Bricks/SettingButton";
 import { AddMusicMenu } from "./Bricks/AddMusicMenu"
 import { MyToast } from "../Bricks/MyToast"
 import { useDispatch, useSelector } from "react-redux";
-import { removeFromSavedMusicAsync, saveMusicAsync, setFilters, setMusicsAsync,  } from "../../BLL/Reducers/musicsReducer";
+import { rateMusicAsync, removeFromSavedMusicAsync, saveMusicAsync, setFilters, setMusicAsync, setMusicsAsync,  } from "../../BLL/Reducers/musicsReducer";
 import { countSelector, filtersSelector, initSelector, musicsSelector } from "../../BLL/Selectors/musicsSelector";
 import { Loader } from "../Bricks/Loader";
 import { FilterGetMusicType, GenreType } from "../../Types/music";
-import { MusicItem } from "./Bricks/MusicItem";
+import { MusicItem, PayloadType } from "./Bricks/MusicItem";
 import { setActiveMusic, setMusics } from "../../BLL/Reducers/playerReducer";
 import { useHistory } from "react-router";
+import { messageSelector } from "../../BLL/Selectors/profileSelector";
  
 
 
@@ -28,9 +29,19 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
     let [path, setPath] = useState('')
     const filters = useSelector(filtersSelector)
 
+    const message = useSelector(messageSelector)
     const musics = useSelector(musicsSelector)
+    const isInit = useSelector(initSelector)
 
     const MusicsJSX = musics.map(m=><MusicItem 
+        message={message}
+        isInit={isInit}
+        rateMusicAsync={(
+            title:string,rating:number,onClose:()=>void,review:string
+        )=>dispatch(rateMusicAsync(m.musicId,title,rating,onClose,review))}
+        setMusicAsync={(
+            onClose:()=>void,payload:PayloadType
+        )=>dispatch(setMusicAsync(m.musicId,onClose,payload))}
         key={m.musicId}
         onSave={()=>dispatch(saveMusicAsync(m.musicId))}
         onRemove={()=>dispatch(removeFromSavedMusicAsync(m.musicId))}
@@ -129,7 +140,6 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
         setPath(newPath)
     }
     const count = useSelector(countSelector)
-    const isInit = useSelector(initSelector)
 
     return <div>
         {

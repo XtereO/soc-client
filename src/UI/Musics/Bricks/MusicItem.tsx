@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom"
 import { setActiveMusic, setPlayedMusicInterval, setPlayingMusic } from "../../../BLL/Reducers/playerReducer"
 import { activeMusicDetailsSelector, activeMusicSettingsSelector  } from "../../../BLL/Selectors/playerSelector"
 import { backendURL } from "../../../Consts"
-import { MusicType } from "../../../Types/music"
+import { GenreType, MusicType } from "../../../Types/music"
 import { myProfileSelector } from "../../../BLL/Selectors/profileSelector";
 import { SettingButton } from "../../Bricks/SettingButton"
 import { RateMusicModal } from "./RateMusicModal"
@@ -17,6 +17,17 @@ export type MusicItemType = MusicType & {
     onPlayMusic:()=>void
     onSave:()=>void
     onRemove:()=>void
+    rateMusicAsync:(title:string,rating:number,onClose:()=>void,review:string)=>void
+    message: string | null
+    isInit: boolean
+    setMusicAsync:(onClose:()=>void, payload:PayloadType)=>void
+}
+export type PayloadType={
+    img?:any
+    music?:any
+    author?:string
+    genre?:GenreType
+    title?:string
 }
 
 export const MusicItem: React.FC<MusicItemType> = (props) => {
@@ -210,10 +221,10 @@ export const MusicItem: React.FC<MusicItemType> = (props) => {
         show={showRating}
         onClose={handleCloseRating} 
         {...props}/>}
-        {showSettings && <SettingsMusicModal 
+        {showSettings && <SettingsMusicModal
         show={showSettings}
         onClose={handleCloseSettings}
         {...props}
-        />}
+        />} 
     </div>
 }

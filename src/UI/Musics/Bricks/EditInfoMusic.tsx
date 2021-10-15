@@ -2,12 +2,9 @@
 
 
 
-import { debug } from "console"
 import { Formik } from "formik"
 import React from "react"
-import { useDispatch, useSelector } from "react-redux"
 import { setMusicAsync } from "../../../BLL/Reducers/musicsReducer"
-import { initSelector, messageSelector, myProfileSelector } from "../../../BLL/Selectors/profileSelector"
 import { GenreType } from "../../../Types/music"
 import { MyInput } from "../../Bricks/MyInput"
 import {MySelect} from '../../Bricks/MySelect'
@@ -22,11 +19,12 @@ type PropsType={
     author:string | null
     title:string
     genre:GenreType
+    setMusicAsync:(onClose:()=>void, payload:PayloadType)=>void
 }
+type PayloadType = {author?:string, genre?:GenreType, title?:string}
 export const EditInfoMusic:React.FC<PropsType>=({
-    onClose,isInit,musicId,author,title,genre})=>{
+    onClose,isInit,author,title,genre,setMusicAsync})=>{
     
-    const dispatch = useDispatch()
     const options = [
         'Rep', 'Hip-hop', `Rock'n'roll`, 'Metall', 'Other'
     ]
@@ -42,7 +40,7 @@ export const EditInfoMusic:React.FC<PropsType>=({
             
         }}
         onSubmit={(values)=>{
-            dispatch(setMusicAsync(musicId,onClose,values))
+            setMusicAsync(onClose,values)
         }}>
         {({
             values,

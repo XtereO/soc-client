@@ -225,9 +225,9 @@ export const playlistsReducer = (state=initialState,action:ActionType):InitialSt
 
 type SetActivePlaylistStateType={
     type: typeof SET_ACTIVE_PLAYLIST_STATE
-    playlist: PlaylistDetailType
+    playlist: PlaylistDetailType | null
 }
-export const setActivePlaylistState=(playlist:PlaylistDetailType):SetActivePlaylistStateType=>{
+export const setActivePlaylistState=(playlist:PlaylistDetailType | null):SetActivePlaylistStateType=>{
     return{
         type: SET_ACTIVE_PLAYLIST_STATE,
         playlist
@@ -236,9 +236,9 @@ export const setActivePlaylistState=(playlist:PlaylistDetailType):SetActivePlayl
 
 export type SetActivePlaylistAsyncType={
     type: typeof SET_ACTIVE_PLAYLIST_ASYNC
-    playlistId: string
+    playlistId: string | null
 }
-export const setActivePlaylistAsync=(playlistId:string):SetActivePlaylistAsyncType=>{
+export const setActivePlaylistAsync=(playlistId:string | null):SetActivePlaylistAsyncType=>{
     return{
         type: SET_ACTIVE_PLAYLIST_ASYNC,
         playlistId

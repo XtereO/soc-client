@@ -1,23 +1,20 @@
 import { Formik } from "formik"
 import React from "react"
 import { Modal } from "react-bootstrap"
-import { useDispatch, useSelector } from "react-redux";
 import { MusicType } from "../../../Types/music"
 import { MyInput } from "../../Bricks/MyInput";
-import {messageSelector} from '../../../BLL/Selectors/musicsSelector'
-import { rateMusicAsync } from "../../../BLL/Reducers/musicsReducer";
 
 
 
 type PropsType=MusicType & {
     onClose: ()=>void
     show: boolean
+    message: string | null
+    rateMusicAsync: (title:string,rating:number,onClose:()=>void,review:string)=>void
 }
 
 export const RateMusicModal:React.FC<PropsType>=(props)=>{
 
-    const message = useSelector(messageSelector)
-    const dispatch = useDispatch()
 
     return<Modal
         onHide={props.onClose}
@@ -40,9 +37,9 @@ export const RateMusicModal:React.FC<PropsType>=(props)=>{
                 }
             }}
             onSubmit={(values)=>{
-                dispatch(rateMusicAsync(props.musicId,
-                    props.title,(+values.rating),props.onClose,
-                    values.review))
+                props.rateMusicAsync(
+                    props.title,(+values.rating),
+                    props.onClose,values.review) 
             }}
             >
                 {({
@@ -92,7 +89,7 @@ export const RateMusicModal:React.FC<PropsType>=(props)=>{
                             </button>
                         </div>
                         <div className="Center text-danger">
-                            {message && message}
+                            {props.message && props.message}
                         </div>
                     </form>
                 }}

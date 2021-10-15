@@ -242,7 +242,7 @@ export const saveMusicAsync=(musicId:string):SaveMusicAsyncType=>{
     }
 }
 
-export type RemoveFromSavedMusicStateType={
+type RemoveFromSavedMusicStateType={
     musicId: string
     type: typeof REMOVE_FROM_SAVED_MUSIC_STATE
 }
@@ -253,7 +253,7 @@ export const removeFromSavedMusicState=(musicId:string):RemoveFromSavedMusicStat
     }
 }
 
-type RemoveFromSavedMusicAsyncType={
+export type RemoveFromSavedMusicAsyncType={
     type: typeof REMOVE_FROM_SAVED_MUSIC_ASYNC
     musicId: string
 }
