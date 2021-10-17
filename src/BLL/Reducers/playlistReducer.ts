@@ -267,7 +267,8 @@ export const playlistReducer = (state=initialState,action:ActionType):InitialSta
                 ...state,
                 playlist: state.playlist  ? {
                     ...state.playlist,
-                    isSaved: false
+                    isSaved: false,
+                    countSaves: (state.playlist.countSaves-1)
                 } : null
             }
         case SAVE_PLAYLIST_STATE:
@@ -275,7 +276,8 @@ export const playlistReducer = (state=initialState,action:ActionType):InitialSta
                 ...state,
                 playlist: state.playlist  ? {
                     ...state.playlist,
-                    isSaved: true
+                    isSaved: true,
+                    countSaves: (state.playlist.countSaves+1)
                 } : null
             }
         case SET_INIT:

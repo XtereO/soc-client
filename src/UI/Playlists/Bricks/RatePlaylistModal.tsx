@@ -9,9 +9,14 @@ import { PlaylistType } from "../../../Types/playlist";
 
 
 
-type PropsType=PlaylistType & {
+type PropsType= {
+    title: string
+    playlistId: string
     onClose: ()=>void
     show: boolean
+    ratePlaylistAsync:(playlistId:string,rating:number,review:string | null,
+        title:string,onClose:()=>void,
+        )=>void
 }
 
 export const RatePlaylistModal:React.FC<PropsType>=(props)=>{
@@ -40,10 +45,10 @@ export const RatePlaylistModal:React.FC<PropsType>=(props)=>{
                 }
             }}
             onSubmit={(values)=>{
-                dispatch(ratePlaylistAsync(props.playlistId,
+                props.ratePlaylistAsync(props.playlistId,
                     (+values.rating),values.review ? values.review : null,
                     props.title,props.onClose,
-                    ))
+                    )
             }}
             >
                 {({

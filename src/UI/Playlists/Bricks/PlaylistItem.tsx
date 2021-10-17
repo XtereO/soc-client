@@ -29,6 +29,9 @@ export type PlaylistItemType = {
     removeMusicFromPlaylist: (musicId: string) => void
     onRemove: () => void
     onSave: () => void
+    ratePlaylistAsync:(playlistId:string,rating:number,review:string | null,
+        title:string,onClose:()=>void,
+        )=>void
     setImg: (img: any, callback: () => void) => void
     setInfo: (isPublic: boolean, title: string, callback: () => void) => void
 }
@@ -163,6 +166,7 @@ export const PlaylistItem: React.FC<PlaylistItemType> = ({
                 show={showRating}
                 onClose={handleCloseRating}
                 {...playlist}
+                ratePlaylistAsync={props.ratePlaylistAsync}
             />}
         {showSettings && <SettingsPlaylistModal
             onClose={handleCloseSettings}

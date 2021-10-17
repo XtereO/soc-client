@@ -1,9 +1,7 @@
 import axios from "axios";
-import { type } from "os";
-import { title } from "process";
 import { backendURL } from "../Consts";
 import { RegistrateRequestType } from "../Types/auth";
-import { FilterGetMusicType, GenreType, MusicType } from "../Types/music";
+import { FilterGetMusicType, GenreType, MusicDetailType, MusicType } from "../Types/music";
 import { GetPlaylistsFiltersType, PlaylistDetailType, PlaylistType } from "../Types/playlist";
 import { NamesType, ProfileDetailType, ProfileType, ReviewType } from "../Types/profile";
 
@@ -243,6 +241,14 @@ type PayloadSetMusicType={
 export const setMusic=(musicId: string, payload: PayloadSetMusicType)=>{
     return instance.put<ResultCodeType>(`audio/music`,
     {musicId,...payload})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+
+export type GetMusicType = (MusicDetailType & ResultCodeType)
+export const getMusic=(musicId:string)=>{
+    return instance.get<GetMusicType>(`audio/music/${musicId}`)
     .then(res=>res.data)
     .catch(e=>e.response.data)
 }

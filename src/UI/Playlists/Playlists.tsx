@@ -7,7 +7,7 @@ import { SettingButton } from "../Bricks/SettingButton";
 import { useDispatch, useSelector } from "react-redux";
 import { activePlaylistSelector, countMusicSelector, countSelector, filtersForSearchMusicsSelector, filtersSelector, initSelector, messageSelector, musicsSelector, playlistsSelector } from "../../BLL/Selectors/playlistsSelector";
 import { useHistory } from "react-router";
-import { addMusicToPlaylistAsync, addPlaylistAsync, removeFromPlaylistAsync, removeMusicFromPlaylistAsync, setActivePlaylistAsync, setCountMusic, setFilters, setFiltersMusic, setMusicsAsync, setMusicsState, setPlaylistAsync, setPlaylistsAsync } from "../../BLL/Reducers/playlistsReducer";
+import { addMusicToPlaylistAsync, addPlaylistAsync, ratePlaylistAsync, removeFromPlaylistAsync, removeMusicFromPlaylistAsync, setActivePlaylistAsync, setCountMusic, setFilters, setFiltersMusic, setMusicsAsync, setMusicsState, setPlaylistAsync, setPlaylistsAsync } from "../../BLL/Reducers/playlistsReducer";
 import { GetPlaylistsFiltersType, MinimilizeMusicType } from "../../Types/playlist";
 import { PlaylistItem } from "./Bricks/PlaylistItem";
 import { AddPlaylistModal } from "./Bricks/AddPlaylistModal";
@@ -41,6 +41,10 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
     const activePlaylist = useSelector(activePlaylistSelector)
     const filtersForMusic = useSelector(filtersForSearchMusicsSelector)
     const playlistsJSX = playlists.map(p=><PlaylistItem
+        ratePlaylistAsync={(playlistId:string,rating:number,review:string | null,
+            title:string,onClose:()=>void,
+            )=>dispatch(ratePlaylistAsync(playlistId,
+                rating,review,title,onClose))}
         setActivePlaylist={(playlistId:string | null)=>{
             dispatch(setActivePlaylistAsync(playlistId))
         }}

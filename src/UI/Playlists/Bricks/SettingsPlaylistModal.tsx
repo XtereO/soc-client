@@ -7,11 +7,13 @@ import { SetEditInfoPlaylist } from "./SetEditInfoPlaylist";
 import { SetImgFile } from "./SetImgFile";
 
 
-type PropsType=PlaylistType & {
+type PropsType={
     onClose: ()=>void
     show: boolean
     setInfo:(isPublic:boolean,title:string)=>void
     setImg:(img:any)=>void
+    isPublic:boolean
+    title:string
 }
 
 export const SettingsPlaylistModal:React.FC<PropsType>=(props)=>{

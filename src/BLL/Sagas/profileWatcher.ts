@@ -12,7 +12,7 @@ function* reviewsWorker(action: SetReviewsAsyncType) {
     try {
         yield put(setInit(true))
         const response: GetReviewType = yield call(getReviews, action.idWhoNeedIt,
-            action.page, action.showNewFirst, action.size, 'User')
+            action.page, true, action.size, 'User')
         yield put(setReviews(response.reviews))
         yield put(setPage(action.page))
         yield put(setCount(response.count))

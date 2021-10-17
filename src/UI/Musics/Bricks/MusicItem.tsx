@@ -66,7 +66,7 @@ export const MusicItem: React.FC<MusicItemType> = (props) => {
                     <h4>{props.title} - {props.author}</h4>
                 </div>
                 <div className='col-6 d-flex justify-content-end'>
-                    {props.owner.shortNickname===myProfile.shortNickname &&
+                    {props.owner.userId===myProfile.userId &&
                     <button
                     onClick={handleOpenSettings}
                     className='btn btn-light'>

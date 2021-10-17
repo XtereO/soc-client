@@ -10,7 +10,7 @@ export const messageSelector=(state:AppStateType)=>{
 export const playlistSelector=(state:AppStateType)=>{
     return state.playlist.playlist
 }
-export const filtersForSearchMusics=(state:AppStateType)=>{
+export const filtersForSearchMusicsSelector=(state:AppStateType)=>{
     return state.playlist.filtersForSearchMusics
 }
 export const countMusicsSelector=(state:AppStateType)=>{

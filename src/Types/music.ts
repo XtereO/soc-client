@@ -18,6 +18,22 @@ export type MusicType={
     isInPlaylist: boolean
 }
 
+export type MusicDetailType={
+    musicId: string
+    owner: ProfileType
+    title: string
+    musicSrc: string | null
+    imgSrc: string | null
+    author: string | null
+    summaryRating: number
+    countRated: number//How many people rated this music
+    date: string
+    genre: GenreType
+    isSaved: boolean
+    myReview: null | ReviewType
+    countSaves: number
+}
+
 export type FilterGetMusicType={
     page: number 
     size: number
