@@ -16,7 +16,7 @@ function* setActiveMusicWorker(action: SetActiveMusicAsyncType){
         }else{
             yield put(setInit(false))
             yield put(setMessage(null))
-            yield put(setActiveMusicState({...data}))
+            yield put(setActiveMusicState(data.music))
         }
     }catch(e){
         yield put(setInit(false))
@@ -125,6 +125,7 @@ function* setReviewsWorker(action: SetReviewsAsyncType){
         yield put(setInit(true))
         const response: GetReviewType = yield call(getReviews, action.musicId,
             action.page, true, 6, 'MusicOrPlaylist')
+            
         yield put(setReviewsState(response.reviews))
         yield put(setPageReviews(action.page))
         yield put(setCountReviews(response.count))

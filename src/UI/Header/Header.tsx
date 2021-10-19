@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useContext, useEffect } from "react"
 import { Container, Nav, Navbar } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
 import {NavLink} from "react-router-dom"
@@ -6,12 +6,14 @@ import { setProfileAsync } from "../../BLL/Reducers/profileReducer"
 import { authSelector } from "../../BLL/Selectors/authSelector"
 import { HeaderLink } from "./HeaderLink"
 import { HeaderRightSide } from "./HeaderRightSide"
-
+import { ModeContext } from '../../App'
 
 type PropsType = {}
 
 export const Header:React.FC<PropsType> = (props) => {
 
+
+    const mode = useContext(ModeContext)
     const dispatch = useDispatch()
     let auth = useSelector(authSelector)
     useEffect(()=>{
@@ -40,7 +42,9 @@ export const Header:React.FC<PropsType> = (props) => {
                 </HeaderLink>)
                 }
             </Navbar.Collapse>
-            <div className="justify-content-end ">
+            <div 
+            style={{width: mode ? '35%' : '100%'}}
+            >
                 <HeaderRightSide/>
             </div>
         </Container>

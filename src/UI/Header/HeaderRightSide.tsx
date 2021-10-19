@@ -8,6 +8,7 @@ import { myProfileSelector, profileSelector } from '../../BLL/Selectors/profileS
 import { backendURL } from "../../Consts"
 //@ts-ignore
 import defaultAvatar from '../../Media/default_avatar.jpg'
+import { MusicPlayer } from "../Bricks/MusicPlayer"
 
 
 type PropsType={}
@@ -25,17 +26,22 @@ export const HeaderRightSide:React.FC<PropsType>=(props)=>{
         'Playlists'
     ]
 
-    return<div className="d-flex row">
-    <div className="col-8 Center d-flex">
-        <SettingButton onClick={()=>setShow(prev=>!prev)}/>
+    return<div className="w-100">
+    <div className="w-100">
+        {true ?  
+        <div className='w-100'>
+            <MusicPlayer />
+        </div>
+        :
+        <div>(<SettingButton onClick={()=>setShow(prev=>!prev)}/>
         {
         isShow ? <MySelect options={options}/> 
         :
         <MyInput />
-        }
+        })</div>}
         
     </div>
-    {isAuth && <div className="col-4 row">
+    {(isAuth && false) && <div className="col-4 row">
     <div className="col-6">
         <img
         className="Avatar"

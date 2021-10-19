@@ -98,12 +98,12 @@ export const musicReducer = (state = initialState, action: ActionType): InitialS
         case SET_ACTIVE_MUSIC_STATE:
             return {
                 ...state,
-                music: {...action.music}
+                music: action.music
             }
         case SET_REVIEWS_STATE:
             return{
                 ...state,
-                reviews: {...action.reviews}
+                reviews: [...action.reviews]
             }
         case SET_PAGE_REVIEWS:
             return{

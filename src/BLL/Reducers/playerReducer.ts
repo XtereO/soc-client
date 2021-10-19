@@ -45,14 +45,15 @@ export const playerReducer = (state=initialState,action:ActionType):InitialState
                 mode: action.mode
             }
         case SET_PLAYED_MUSIC_INTERVAL:
-            //@ts-ignore
-            state.activeMusic.currentTime=(action.playedInterval ? action.playedInterval : ++state.activeMusicSettings.playedInterval)
-            
+            if(action.playedInterval){
+                //@ts-ignore
+                state.activeMusic.currentTime=action.playedInterval
+            }
             return{
                 ...state,
                 activeMusicSettings:{
                     ...state.activeMusicSettings,
-                    playedInterval: (action.playedInterval ? action.playedInterval : state.activeMusicSettings.playedInterval)
+                    playedInterval: (action.playedInterval ? (action.playedInterval) : (state.activeMusicSettings.playedInterval+1))
                 }
             }
         case SET_PLAYING_MUSIC:

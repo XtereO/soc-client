@@ -50,7 +50,7 @@ export const Body: React.FC<PropsType> = ({ mode }) => {
             path: '/playlists',
             route: Playlists
         }, {
-            path: '/playlist/:playlistId?',
+            path: '/playlist/:playlistId',
             route: Playlist
         }, {
             path: '/people',
@@ -59,7 +59,7 @@ export const Body: React.FC<PropsType> = ({ mode }) => {
             path: '/musics',
             route: Musics
         }, {
-            path: '/music/:musicId?',
+            path: '/music/:musicId',
             route: Music
         }, {
             path: '/home/:userId?',

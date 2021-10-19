@@ -246,7 +246,7 @@ export const setMusic=(musicId: string, payload: PayloadSetMusicType)=>{
 }
 
 
-export type GetMusicType = (MusicDetailType & ResultCodeType)
+export type GetMusicType = {music:MusicDetailType}& ResultCodeType
 export const getMusic=(musicId:string)=>{
     return instance.get<GetMusicType>(`audio/music/${musicId}`)
     .then(res=>res.data)
