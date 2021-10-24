@@ -1,26 +1,28 @@
+import { backendURL } from "../../Consts"
+import { MessageType } from "../../Types/chat"
 
 
 
 
 type PropsType={
-    firstName: string
-    avatar: string
-    message: string
-}
+} & MessageType
 
-export const Message:React.FC<PropsType>=({firstName,avatar,message})=>{
+export const Message:React.FC<PropsType>=(props)=>{
     return<div className="card row">
         <div className="col-3">
             <img 
             className="RoundImage"
-            src={avatar}/>
+            src={backendURL + props.companion.avatar}/>
         </div>
         <div className="col-9">
-            <div>
-                {firstName}
+            <div className='w-100'>
+                {props.date}
             </div>
             <div>
-                {message}
+                {props.companion.firstName+' '+props.companion.secondName}
+            </div>
+            <div>
+                {props.textMessage}
             </div>
         </div>
     </div>

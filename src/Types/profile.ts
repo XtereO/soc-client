@@ -26,6 +26,7 @@ export type ProfileDetailType={
     aboutMe: string
     followers: number
     following: number
+    unreadedMessages: number
     isFollow: boolean | null // null - my profile
 }
 export type ProfileType={

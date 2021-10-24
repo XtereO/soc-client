@@ -21,6 +21,9 @@ import { playlistWatcher } from "./Sagas/playlistWatcher";
 import { musicReducer } from "./Reducers/musicReducer";
 import { musicWatcher } from "./Sagas/musicWatcher";
 import { chatsReducer } from "./Reducers/chatsReducer";
+import { chatsWatcher } from "./Sagas/chatsWatcher";
+import { chatReducer } from "./Reducers/chatReducer";
+import { chatWatcher, setLastMessageWatcher } from "./Sagas/chatWatcher";
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -33,7 +36,8 @@ const rootReducer = combineReducers({
     playlists: playlistsReducer,
     playlist: playlistReducer,
     music: musicReducer,
-    chats: chatsReducer
+    chats: chatsReducer,
+    chat: chatReducer
 })
 //@ts-ignore
 const composeEnhancers=window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -54,7 +58,10 @@ function* rootSaga(){
         musicsWatcher(),
         playlistsWatcher(),
         playlistWatcher(),
-        musicWatcher()
+        musicWatcher(),
+        chatsWatcher(),
+        chatWatcher(),
+        setLastMessageWatcher()
     ])
 }
 sagaMiddleware.run(rootSaga)

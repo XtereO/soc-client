@@ -32,7 +32,7 @@ export const Search: React.FC<PropsType> = ({
                 style={{ borderRadius: 20000 }} />
                 <Plus 
                 onClick={handleOpenAddMenu ? handleOpenAddMenu : ()=>{}}
-                style={{ width: 50 }} />
+                style={{ width: 50, height: 50 }} />
             </div> 
         </div>
     </div>

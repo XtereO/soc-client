@@ -1,27 +1,17 @@
 import { useHistory } from "react-router-dom"
+import { TypeChatType, MessageType } from "../../Types/chat"
 
 
 
 
 type PropsType={
     id: string
-    type: string
     
-    //leave empty for Dialog
     avatar: string
     title: string
 
  
-    lastMessage: {
-        companion: any
-        textMessage: string
-        date: string
-    }
-    companions:{
-        count:number
-        isHavePermission:boolean 
-        user:any
-    }[]
+    lastMessage?: MessageType
 }
 
 
@@ -29,7 +19,7 @@ export const ChatItem:React.FC<PropsType>=(props)=>{
     
     const history = useHistory()
 
-    return<div onClick={()=>history.push(`chat/${props.id}`)}
+    return<div key={props.id} onClick={()=>history.push(`chat/${props.id}`)}
      className="ChatItem ChatItem_hover ChatItem_active row">
         <div className="col-3">
             <img 
@@ -37,7 +27,13 @@ export const ChatItem:React.FC<PropsType>=(props)=>{
             className="w-100 img RoundImage" />
         </div>
         <div className="col-9">
-            {props.lastMessage.textMessage}
+            <div>
+                <h4>{props.title}</h4>
+            </div>
+            {props.lastMessage && 
+            props.lastMessage.companion.firstName + ' '  
+            + props.lastMessage.companion.secondName + ': '
+            + props.lastMessage.textMessage}
         </div>
     </div>
 }

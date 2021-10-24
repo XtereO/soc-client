@@ -8,6 +8,7 @@ const SET_COUNT:'chatsReducer/SET_COUNT'='chatsReducer/SET_COUNT'
 const SET_CHATS_STATE:'chatsReducer/SET_CHATS_STATE'='chatsReducer/SET_CHATS_STATE'
 const SET_TYPE_CHAT:'chatsReducer/SET_TYPE_CHAT'='chatsReducer/SET_TYPE_CHAT'
 const SET_TITLE:'chatsReducer/SET_TITLE'='chatsReducer/SET_TITLE'
+const SET_ONLY_JOINED:'chatsReducer/SET_ONLY_JOINED'='chatsReducer/SET_ONLY_JOINED'
 export const CREATE_CHAT_ASYNC:'chatsReducer/CREATE_CHAT_ASYNC'='chatsReducer/CREATE_CHAT_ASYNC'
 export const SET_CHATS_ASYNC:'chatsReducer/SET_CHATS_ASYNC'='chatsReducer/SET_CHATS_ASYNC'
 
@@ -19,6 +20,7 @@ const initialState= {
     count: 0 as number,
     title: '' as string,
     page: 1 as number,
+    onlyJoined:true as boolean,
     isInit: false as boolean,
     message: null as null | string
 }
@@ -26,10 +28,15 @@ const initialState= {
 type InitialStateType = typeof initialState
 type ActionType = (SetInitType | SetMessageType |
     SetPageType | SetCountType | SetChatsStateType |
-    SetTypeChatType | SetTitleType)
+    SetTypeChatType | SetTitleType | SetOnlyJoinedType)
 
 export const chatsReducer = (state=initialState,action:ActionType):InitialStateType=>{
     switch(action.type){
+        case SET_ONLY_JOINED:
+            return{
+                ...state,
+                onlyJoined: action.onlyJoined
+            }
         case SET_INIT:
             return{
                 ...state,
@@ -70,6 +77,18 @@ export const chatsReducer = (state=initialState,action:ActionType):InitialStateT
     }
 }
 
+
+type SetOnlyJoinedType = {
+    type: typeof SET_ONLY_JOINED
+    onlyJoined: boolean
+}
+export const setOnlyJoined=(onlyJoined:boolean):SetOnlyJoinedType=>{
+    return{
+        type: SET_ONLY_JOINED,
+        onlyJoined
+    }
+}
+
 type SetTitleType = {
     type: typeof SET_TITLE
     title: string
@@ -94,9 +113,9 @@ export const setInit = (isInit:boolean):SetInitType=>{
 
 type SetMessageType = {
     type: typeof SET_MESSAGE
-    message: string
+    message: string | null
 }
-export const setMessage = (message: string):SetMessageType=>{
+export const setMessage = (message: string | null):SetMessageType=>{
     return{
         type:SET_MESSAGE,
         message
@@ -139,12 +158,15 @@ export const setChatsState=(chats:ChatType[]):SetChatsStateType=>{
 export type SetChatsAsyncType = {
     type: typeof SET_CHATS_ASYNC
     page: number
+    title: string
     typeChat: TypeChatType
+    onlyJoined: boolean
 }
-export const setChatsAsync = (page: number, typeChat: TypeChatType) =>{
+export const setChatsAsync = (page: number, title:string, typeChat: TypeChatType, onlyJoined=true) =>{
     return{
         type: SET_CHATS_ASYNC,
-        page, typeChat
+        page, typeChat, title,
+        onlyJoined
     }
 }
 
@@ -152,16 +174,18 @@ export type CreateChatAsyncType={
     type: typeof CREATE_CHAT_ASYNC
     typeChat: TypeChatType
     payload: PayloadChatType
+    callback:()=>void
 }
-type PayloadChatType = {
-    avatar?: string
+export type PayloadChatType = {
+    avatar?: any
     title?: string
     companionId?: string
 }
-export const createChatAsync=(typeChat:TypeChatType,payload:PayloadChatType):CreateChatAsyncType=>{
+export const createChatAsync=(typeChat:TypeChatType,payload:PayloadChatType,callback:()=>void):CreateChatAsyncType=>{
     return{
         type: CREATE_CHAT_ASYNC,
-        typeChat,payload
+        typeChat,payload,
+        callback
     }
 }
 

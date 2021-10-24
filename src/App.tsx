@@ -4,14 +4,17 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 import './App.css';
+import { setLastMessage } from './BLL/Reducers/chatReducer';
 import { setActiveMusic, setPlayedMusicInterval, setPlayingMusic } from './BLL/Reducers/playerReducer';
 import { setProfileAsync } from './BLL/Reducers/profileReducer';
+import { chatSelector, messagesSelector } from './BLL/Selectors/chatSelector';
 import { activeMusicDetailsSelector, activeMusicSettingsSelector, modeSelector, musicsSelector } from './BLL/Selectors/playerSelector';
 import { backendURL } from './Consts';
 import { MusicType } from './Types/music';
 import { Body } from './UI/Body/Body';
 import { Footer } from './UI/Footer/Footer';
 import { Header } from './UI/Header/Header';
+import { getLastItem } from './utils';
 
 export const ModeContext = React.createContext(true)
 
@@ -22,6 +25,14 @@ function App() {
   const musicMode = useSelector(modeSelector)
   const musics = useSelector(musicsSelector)
   const activeMusicDetails = useSelector(activeMusicDetailsSelector)
+  const activeChat = useSelector(chatSelector)
+  const messages = useSelector(messagesSelector)
+
+  useEffect(()=>{
+    const getLastMessage = ()=>{
+      dispatch(setLastMessage(activeChat ? activeChat.chatId : null))
+    }
+  },[getLastItem(messages)])
 
   useEffect(() => {
     let timerId = setTimeout(() => {

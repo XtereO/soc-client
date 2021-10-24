@@ -29,3 +29,7 @@ export const initSelector = (state: AppStateType) => {
 export const messageSelector = (state: AppStateType) => {
     return state.chats.message
 }
+
+export const onlyJoinedSelector = (state: AppStateType) => {
+    return state.chats.onlyJoined
+}

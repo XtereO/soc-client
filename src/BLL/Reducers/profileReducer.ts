@@ -263,6 +263,7 @@ type SetProfileType = {
     followers: number
     isFollow: boolean | null
     isMyProfile: boolean
+    unreadedMessages: number
 }
 export const setProfile = (req: ProfileDetailType, isMyProfile: boolean): SetProfileType => {
     return {

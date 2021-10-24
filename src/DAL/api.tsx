@@ -1,6 +1,8 @@
 import axios from "axios";
+import { title } from "process";
 import { backendURL } from "../Consts";
 import { RegistrateRequestType } from "../Types/auth";
+import { ChatType, MessageType, TypeChatType } from "../Types/chat";
 import { FilterGetMusicType, GenreType, MusicDetailType, MusicType } from "../Types/music";
 import { GetPlaylistsFiltersType, PlaylistDetailType, PlaylistType } from "../Types/playlist";
 import { NamesType, ProfileDetailType, ProfileType, ReviewType } from "../Types/profile";
@@ -345,3 +347,148 @@ export const getPlaylistDetail=(playlistId:string)=>{
     .then(res=>res.data)
     .catch(e=>e.response.data)
 } 
+
+/*
+=========================================================
+====================CHAT=BLOCK=======================
+=========================================================
+*/
+
+export type GetChatsType={
+    chats: ChatType[]
+    count: number
+} & ResultCodeType
+//get only joined chats
+export const getChats=(page:number,title:string,typeChat:TypeChatType,size=10)=>{
+    return instance.get<GetChatsType>(`chat/getChats?page=${page}&title=${title}&typeChat=${typeChat}&size=${size}`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+//get all groups
+export const getGroups=(page:number,title:string,size=10)=>{
+    return instance.get<GetChatsType>(`chat/getGroups?page=${page}&title=${title}&size=${size}`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+export type ChangeChatType = {
+    chat:ChatType
+} & ResultCodeType
+export const createDialog=(companionId:string)=>{
+    return instance.post<ChangeChatType>(`chat/createDialog`,
+    {companionId})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+export const createDiscussion=(title:string)=>{
+    return instance.post<ChangeChatType>(`chat/createDiscussion`,
+    {title})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+export const createGroup=(title:string)=>{
+    return instance.post<ChangeChatType>(`chat/createGroup`,
+    {title})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+export const setChatAvatar=(chatId:string,file:any)=>{
+    const formData = new FormData()
+    formData.append('image',file)
+
+    return instance.put<ChangeChatType>(`chat/setAvatar?chatId=${chatId}`,
+    formData,{headers:{
+        'Content-Type':'multipart/form-data'
+    }}
+    )
+}
+
+export const addCompanionToDiscussionAPI = (companionId:string,chatId:string)=>{
+    return instance.post<ChangeChatType>(`chat/addCompanionsToDiscussion`,
+    {chatId,companionsId:[companionId]})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+export const removeCompanionFromChatAPI = (companionId:string,chatId:string)=>{
+    return instance.put<ChangeChatType>(`chat/removeCompanionsFromChat`,
+    {chatId,companionsId:[companionId]})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+export const leaveChatAPI = (chatId:string)=>{
+    return instance.delete<ResultCodeType>(`chat/leaveChat/${chatId}`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+export const joinGroupAPI = (chatId:string)=>{
+    return instance.post<ChangeChatType>(`chat/joinGroup`,
+    {chatId})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+export const sendMessageAPI = (chatId:string, textMessage: string)=>{
+    return instance.post<ResultCodeType>(`chat/sendMessage`,
+    {chatId,textMessage})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+export const WatchChatAPI = (chatId:string)=>{
+    return instance.post<ChangeChatType>(`chat/watchChat`,
+    {chatId})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+export const addPermissionAPI = (companionId:string,chatId:string)=>{
+    return instance.post<ChangeChatType>(`chat/addPermissions`,
+    {chatId,companionsId:[companionId]})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+export const setTitleAPI = (title:string, chatId: string)=>{
+    return instance.patch<ChangeChatType>(`chat/setTitle`,
+    {chatId,title})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+export const removePermissionAPI = (companionId:string,chatId:string)=>{
+    return instance.put<ChangeChatType>(`chat/removePermissions`,
+    {chatId,permissionsId:[companionId]})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+export type GetDetailChatType = {
+    chat:ChatType
+    messages:MessageType[]
+    count:number
+} & ResultCodeType
+export const getDetailChat = (chatId:string,page:number,size=30)=>{
+    return instance.get<GetDetailChatType>(`chat/getChatDetail?chatId=${chatId}&page=${page}&size=${size}`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+export type StreamMessageType = {
+    message: MessageType
+    user: ProfileDetailType
+    chat: ChatType
+} & ResultCodeType
+export const streamMessage = () =>{
+    return instance.get<StreamMessageType>(`/streamChat`)
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
+}
+
+
+
+
+

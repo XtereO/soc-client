@@ -5,7 +5,7 @@ export type TypeChatType = 'dialog' | 'group' | 'discussion'
 export type MessageType = {
     messageId: string
     companion: ProfileType
-    textMessage: string
+    textMessage: string  
     date: string
 }
 export type CompanionType = {
