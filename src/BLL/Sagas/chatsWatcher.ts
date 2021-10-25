@@ -36,7 +36,6 @@ function* setChatsWorker(action:SetChatsAsyncType){
 
 function* createChatWorker(action:CreateChatAsyncType){
     try{
-        debugger
         yield put(setMessage(null))
         yield put(setInit(true))
         let data:ChangeChatType|null = null

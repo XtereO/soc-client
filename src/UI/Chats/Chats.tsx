@@ -96,7 +96,8 @@ const Chats: React.FC<PropsType> = (props) => {
         history.push(newPath)
     }
     const handleChangeCheckboxGroup = (e:React.ChangeEvent<HTMLInputElement>) =>{
-        const newPath=`/chats?title=${''}&page=${1}&typeChat=${typeChat}&onlyJoined=${e.target.defaultChecked}`
+        debugger
+        const newPath=`/chats?title=${''}&page=${1}&typeChat=${typeChat}&onlyJoined=${e.target.checked}`
         setPath(newPath)
         history.push(newPath)
     }
@@ -138,7 +139,7 @@ const Chats: React.FC<PropsType> = (props) => {
                         <input
                         onChange={handleChangeCheckboxGroup} 
                         id='onlyJoined'
-                        defaultChecked={true}
+                        defaultChecked={onlyJoined}
                         type='checkbox' />
                     </div>
                     }
