@@ -60,7 +60,7 @@ function* leaveChatWorker(action:LeaveChatType){
         yield put(setMessage(null))
         const data:ResultCodeType = yield call(leaveChatAPI,action.chatId)
         if(data.success){
-            
+            action.callback()
         }else if(data.message){
             yield put(setMessage(data.message))
         }
@@ -162,12 +162,10 @@ function* removePermissionWorker(action:RemovePermissionType){
 function* setLastMessageWorker(action:SetLastMessageType){
     try{
         yield put(setMessage(null))
-        const data:StreamMessageType = yield fork(streamMessage)
+        const data:StreamMessageType = yield call(streamMessage)
         if(data.success){
             yield put(setActiveChatState(data.chat))
-            if(action.activeChatId===data.chat.chatId){
-                yield put(setMessagesState([data.message],true))
-            }
+            yield put(setMessagesState([data.message],true))
             yield put(setProfile(data.user,true))
         }else if(data.message){
             yield put(setMessage(data.message))

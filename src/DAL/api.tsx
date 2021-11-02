@@ -483,9 +483,7 @@ export type StreamMessageType = {
     chat: ChatType
 } & ResultCodeType
 export const streamMessage = () =>{
-    return instance.get<StreamMessageType>(`/streamChat`)
-    .then(res=>res.data)
-    .catch(e=>e.response.data)
+    return instance.get<StreamMessageType>(`chat/streamMessage`)
 }
 
 

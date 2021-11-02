@@ -59,10 +59,15 @@ export const chatReducer = (state = initialState, action: ActionType): InitialSt
                 message: action.message
             }
         case SET_MESSAGES_STATE:
-            return {
-                ...state,
-                messages: (!action.isNew) ? 
-                [...action.messages] : [...state.messages,...action.messages]
+            if((!action.chatId) || (!state.chat) 
+            || (state.chat && action.chatId===state.chat.chatId)){
+                return {
+                    ...state,
+                    messages: (!action.isNew) ? 
+                    [...action.messages] : [...action.messages,...state.messages]
+                }
+            }else{
+                return{...state}
             }
         case SET_ACTIVE_CHAT_STATE:
             return {
@@ -157,11 +162,12 @@ type SetMessagesStateType = {
     type: typeof SET_MESSAGES_STATE
     messages: MessageType[]
     isNew?:boolean
+    chatId:string|null
 }
-export const setMessagesState = (messages: MessageType[],isNew=false): SetMessagesStateType => {
+export const setMessagesState = (messages: MessageType[],isNew=false,chatId=null): SetMessagesStateType => {
     return {
         type: SET_MESSAGES_STATE,
-        messages,isNew
+        messages,isNew,chatId
     }
 }
 
@@ -203,11 +209,12 @@ export const removeCompanionFromChat = (chatId: string, companionId: string): Re
 export type LeaveChatType = {
     type: typeof LEAVE_CHAT
     chatId: string
+    callback: ()=>void
 }
-export const leaveChat = (chatId: string): LeaveChatType => {
+export const leaveChat = (chatId: string,callback: ()=>void): LeaveChatType => {
     return {
         type: LEAVE_CHAT,
-        chatId
+        chatId, callback
     }
 }
 

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { joinGroup, leaveChat, setActiveChatAsync, setMessagesAsync, watchChat } from "../../BLL/Reducers/chatReducer";
+import { joinGroup, leaveChat, sendMessage, setActiveChatAsync, setMessagesAsync, watchChat } from "../../BLL/Reducers/chatReducer";
 import { chatSelector, countSelector, initSelector, messageSelector, messagesSelector, pageSelector } from "../../BLL/Selectors/chatSelector";
 import { myProfileSelector } from "../../BLL/Selectors/profileSelector";
 import { backendURL } from "../../Consts";
@@ -19,16 +19,19 @@ type PropsType = {
 
 const Chat: React.FC<PropsType> = (props) => {
 
+    
+    const myProfile = useSelector(myProfileSelector)
     const history = useHistory()
     const dispatch = useDispatch()
     const messages = useSelector(messagesSelector)
-    const messagesJSX = messages.map(m => <Message {...m} />)
+    const messagesJSX = messages.map(m => <Message 
+        isMyMessage={myProfile.shortNickname===m.companion.shortNickname}
+        {...m} />)
     const chat = useSelector(chatSelector)
     const page = useSelector(pageSelector)
     const message = useSelector(messageSelector)
     const isInit = useSelector(initSelector)
     const count = useSelector(countSelector)
-    const myProfile = useSelector(myProfileSelector)
 
     useEffect(() => {
 
@@ -39,7 +42,7 @@ const Chat: React.FC<PropsType> = (props) => {
     useEffect(() => {
         if(chat){
             dispatch(watchChat(chat.chatId))
-        }
+        } 
     },[messages])
 
     const handlePageChange = (page: number) => {
@@ -47,8 +50,7 @@ const Chat: React.FC<PropsType> = (props) => {
     }
     const handleLeaveChat = () =>{
         if(chat){
-            dispatch(leaveChat(chat.chatId))
-            history.push('/chats')
+            dispatch(leaveChat(chat.chatId,()=>history.push('/chats')))
         }
     } 
     const handleJoinGroup = () =>{
@@ -56,11 +58,30 @@ const Chat: React.FC<PropsType> = (props) => {
             dispatch(joinGroup)
         }
     }
+    const [textMessage,setTextMessage]=useState<string|null>(null)
+    const handleTextMessage=(e:React.ChangeEvent<HTMLTextAreaElement>)=>{
+        setTextMessage(e.target.value)
+    }
+    const handleSendMessage=()=>{
+        if(chat && textMessage){
+            setTextMessage(null)
+            dispatch(sendMessage(chat.chatId,textMessage))
+        }
+    }
+    const ref = useRef<HTMLDivElement>(null)
+    useEffect(()=>{
+        if(ref.current){
+            ref.current.scrollIntoView({behavior:'smooth'})
+        }
+    },[ref.current])
 
     if (chat) {
         return <div>
-            <div className="row">
-                <div className='col-md-3'>
+            <div style={{
+                display:'grid',
+                gridTemplateColumns:'1fr 60px'
+            }}>
+                <div>
                 <img 
                 className='RoundImage'
                 style={{width:50,height:50}}
@@ -73,7 +94,7 @@ const Chat: React.FC<PropsType> = (props) => {
                     (chat.title ? chat.title : 'Without title')
                 }
                 </div>
-                <div className='col-md-9 d-flex justify-content-end'>
+                <div className='d-flex justify-content-end'>
                     {
                     (chat.companions.some(c=>c.user.shortNickname===myProfile.shortNickname)) &&
                     <button 
@@ -91,18 +112,29 @@ const Chat: React.FC<PropsType> = (props) => {
                     </button>}
                 </div>
             </div>
-            <div className='mt-2'>
+            <div
+            style={{
+                height:500,
+                overflowY:'scroll'
+            }}
+            className='mt-2'>
                 <Content
                     page={page}
                     count={count}
-                    items={messagesJSX}
+                    items={[[...messagesJSX].reverse(),
+                    <div ref={ref}></div>]}
                     pageChange={handlePageChange}
                 />
             </div>
-            <div>
-                <textarea className='form-control'>
+            <div
+            className='mt-4'>
+                <textarea 
+                value={textMessage ? textMessage : ''}
+                onChange={handleTextMessage}
+                className='form-control'>
                 </textarea>
                 <button
+                    onClick={handleSendMessage}
                     className="Center w-100 btn btn-success">
                     send
                 </button>

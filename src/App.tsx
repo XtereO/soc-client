@@ -4,12 +4,14 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 import './App.css';
-import { setLastMessage } from './BLL/Reducers/chatReducer';
+import { setLastMessage, setMessagesState } from './BLL/Reducers/chatReducer';
 import { setActiveMusic, setPlayedMusicInterval, setPlayingMusic } from './BLL/Reducers/playerReducer';
-import { setProfileAsync } from './BLL/Reducers/profileReducer';
+import { setNamesState, setProfile, setProfileAsync } from './BLL/Reducers/profileReducer';
 import { chatSelector, messagesSelector } from './BLL/Selectors/chatSelector';
 import { activeMusicDetailsSelector, activeMusicSettingsSelector, modeSelector, musicsSelector } from './BLL/Selectors/playerSelector';
 import { backendURL } from './Consts';
+import { streamMessage } from './DAL/api';
+import { ChatType } from './Types/chat';
 import { MusicType } from './Types/music';
 import { Body } from './UI/Body/Body';
 import { Footer } from './UI/Footer/Footer';
@@ -29,10 +31,21 @@ function App() {
   const messages = useSelector(messagesSelector)
 
   useEffect(()=>{
-    const getLastMessage = ()=>{
-      dispatch(setLastMessage(activeChat ? activeChat.chatId : null))
-    }
-  },[getLastItem(messages)])
+    subscribe()
+  },[])
+  const subscribe = async ()=>{
+    try{
+      const {data} = await streamMessage()
+      //@ts-ignore
+      dispatch(setMessagesState([data.message],true,data.chat.chatId))
+      dispatch(setProfile(data.user,true))
+      await subscribe()
+    }catch(e){
+      setTimeout(()=>{
+        subscribe()
+      },5000)
+    } 
+  }
 
   useEffect(() => {
     let timerId = setTimeout(() => {

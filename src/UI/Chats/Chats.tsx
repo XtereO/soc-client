@@ -96,7 +96,6 @@ const Chats: React.FC<PropsType> = (props) => {
         history.push(newPath)
     }
     const handleChangeCheckboxGroup = (e:React.ChangeEvent<HTMLInputElement>) =>{
-        debugger
         const newPath=`/chats?title=${''}&page=${1}&typeChat=${typeChat}&onlyJoined=${e.target.checked}`
         setPath(newPath)
         history.push(newPath)
@@ -112,7 +111,11 @@ const Chats: React.FC<PropsType> = (props) => {
         setShowAddMenu(false)
     }
     const handleSubmitCreateChat = (typeChat: TypeChatType, payload: PayloadChatType, callback: () => void)=> {
-        dispatch(createChatAsync(typeChat, payload, callback))
+        const newCallback=()=>{
+            handleCloseAddMenu()
+            dispatch(setChatsAsync(page,title,typeChat))
+        }
+        dispatch(createChatAsync(typeChat, payload,newCallback))
     }
 
     return <div>

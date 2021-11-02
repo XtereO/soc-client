@@ -58,7 +58,7 @@ function* createChatWorker(action:CreateChatAsyncType){
                 yield put(setInit(false))
                 yield put(setShowToast(true,'Chat is created successful'))
             }
-        }else if(data && data.success && action.typeChat==='dialog'){
+        }else if(data && data.success){
             yield action.callback()
             yield put(setInit(false))
             yield put(setShowToast(true,'Chat is created successful'))

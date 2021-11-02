@@ -13,6 +13,7 @@
     "axios": "^0.21.1",
     "formik": "^2.2.9",
     "js-cookie": "^3.0.1",
+    "moment": "^2.29.1",
     "query-parser": "^0.0.1",
     "query-string": "^4.3.4",
     "react": "^17.0.2",
