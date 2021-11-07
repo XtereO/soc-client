@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { joinGroup, leaveChat, sendMessage, setActiveChatAsync, setMessagesAsync, watchChat } from "../../BLL/Reducers/chatReducer";
+import { joinGroup, leaveChat, sendMessage, setActiveChatAsync, setAvatar, setMessagesAsync, setTitle, watchChat } from "../../BLL/Reducers/chatReducer";
 import { chatSelector, countSelector, initSelector, messageSelector, messagesSelector, pageSelector } from "../../BLL/Selectors/chatSelector";
 import { myProfileSelector } from "../../BLL/Selectors/profileSelector";
 import { backendURL } from "../../Consts";
@@ -11,6 +11,8 @@ import { Content } from "../Musics/Bricks/Content";
 import { Message } from "./Message";
 //@ts-ignore
 import mount from "../../Media/mount.gif";
+import { SettingButton } from "../Bricks/SettingButton";
+import { MainSettings } from "./MainSettings";
 
 
 type PropsType = {
@@ -75,11 +77,19 @@ const Chat: React.FC<PropsType> = (props) => {
         }
     },[ref.current])
 
+    let [showMainSettings, setShowMainSettings] = useState(false)
+    const handleCloseMainSettings = ()=>{
+        setShowMainSettings(false)
+    }
+    const handleOpenMainSettings = ()=>{
+        setShowMainSettings(true)
+    }
+
     if (chat) {
         return <div>
             <div style={{
                 display:'grid',
-                gridTemplateColumns:'1fr 60px'
+                gridTemplateColumns:'1fr 120px'
             }}>
                 <div>
                 <img 
@@ -95,6 +105,15 @@ const Chat: React.FC<PropsType> = (props) => {
                 }
                 </div>
                 <div className='d-flex justify-content-end'>
+                    {chat.type!=='dialog' && 
+                    chat.companions.filter(c=>c.user.shortNickname===myProfile.shortNickname).length>0
+                    && chat.companions.filter(c=>c.user.shortNickname===myProfile.shortNickname)[0].isHavePermission &&
+                    <button 
+                    onClick={handleOpenMainSettings}
+                    className='btn btn-light'>
+                        <SettingButton />
+                    </button>
+                    }
                     {
                     (chat.companions.some(c=>c.user.shortNickname===myProfile.shortNickname)) &&
                     <button 
@@ -139,6 +158,14 @@ const Chat: React.FC<PropsType> = (props) => {
                     send
                 </button>
             </div>
+            {showMainSettings && <MainSettings setAvatar={(img: any)=> {
+                dispatch(setAvatar(chat.chatId, img, handleCloseMainSettings))
+            } } setTitle={(title: string)=> {
+                dispatch(setTitle(chat.chatId,title, handleCloseMainSettings))
+            } } title={chat.title} 
+            handleClose={handleCloseMainSettings} 
+            show={showMainSettings} isInit={isInit} message={message}            
+            />}
         </div>
     }
     return <Loader />

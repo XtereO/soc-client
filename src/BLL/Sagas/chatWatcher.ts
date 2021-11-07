@@ -1,5 +1,6 @@
 import { call, fork, put, take, takeLatest } from "@redux-saga/core/effects";
 import { addCompanionToDiscussionAPI, addPermissionAPI, ChangeChatType, getDetailChat, GetDetailChatType, joinGroupAPI, leaveChatAPI, removeCompanionFromChatAPI, removePermissionAPI, ResultCodeType, sendMessageAPI, setChatAvatar, setTitleAPI, streamMessage, StreamMessageType, WatchChatAPI } from "../../DAL/api";
+import { setShowToast } from "../Reducers/authReducer";
 import { AddCompanionToDiscussionType, AddPermissionType, ADD_COMPANION_TO_DISCUSSION, ADD_PERMISSION, JoinGroupType, JOIN_GROUP, LeaveChatType, LEAVE_CHAT, RemoveCompanionFromChatType, RemovePermissionType, REMOVE_COMPANION_FROM_CHAT, REMOVE_PERMISSION, SendMessageType, SEND_MESSAGE, SetActiveChatAsyncType, setActiveChatState, SetAvatarType, setCount, setInit, SetLastMessageType, setMessage, setMessagesState, setPage, SetTitleType, SET_ACTIVE_CHAT_ASYNC, SET_AVATAR, SET_LAST_MESSAGE, SET_TITLE, WatchChatType, WATCH_CHAT } from "../Reducers/chatReducer";
 import { setProfile, setProfileAsync } from "../Reducers/profileReducer";
 
@@ -126,6 +127,8 @@ function* setAvatarWorker(action:SetAvatarType){
         const data:ChangeChatType = yield call(setChatAvatar,action.chatId,action.avatar)
         if(data.success){
             yield put(setActiveChatState(data.chat))
+            yield action.callback()
+            yield put(setShowToast(true,'Avatar changed successful'))
         }else if(data.message){
             yield put(setMessage(data.message))
         }
@@ -139,6 +142,8 @@ function* setTitleWorker(action:SetTitleType){
         const data:ChangeChatType = yield call(setTitleAPI,action.title,action.chatId)
         if(data.success){
             yield put(setActiveChatState(data.chat))
+            yield action.callback()
+            yield put(setShowToast(true,'Title changed successful'))
         }else if(data.message){
             yield put(setMessage(data.message))
         }

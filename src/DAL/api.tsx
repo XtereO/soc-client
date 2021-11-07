@@ -397,11 +397,13 @@ export const setChatAvatar=(chatId:string,file:any)=>{
     const formData = new FormData()
     formData.append('image',file)
 
-    return instance.put<ChangeChatType>(`chat/setAvatar?chatId=${chatId}`,
+    return instance.patch<ChangeChatType>(`chat/setAvatar?chatId=${chatId}`,
     formData,{headers:{
         'Content-Type':'multipart/form-data'
     }}
     )
+    .then(res=>res.data)
+    .catch(e=>e.response.data)
 }
 
 export const addCompanionToDiscussionAPI = (companionId:string,chatId:string)=>{

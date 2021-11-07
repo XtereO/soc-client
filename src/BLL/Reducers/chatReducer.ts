@@ -268,11 +268,13 @@ export type SetAvatarType = {
     type: typeof SET_AVATAR
     chatId: string
     avatar: any
+    callback: ()=>void
 }
-export const setAvatar = (chatId: string, avatar: any): SetAvatarType => {
+export const setAvatar = (chatId: string, avatar: any, callback:()=>void): SetAvatarType => {
     return {
         type: SET_AVATAR,
-        chatId, avatar
+        chatId, avatar,
+        callback
     }
 }
 
@@ -280,11 +282,13 @@ export type SetTitleType = {
     type: typeof SET_TITLE
     title: string
     chatId: string
+    callback:()=>void
 }
-export const setTitle = (chatId: string, title: string): SetTitleType => {
+export const setTitle = (chatId: string, title: string, callback:()=>void): SetTitleType => {
     return {
         type: SET_TITLE,
-        title, chatId
+        title, chatId,
+        callback
     }
 }
 
