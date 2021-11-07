@@ -19,7 +19,7 @@ export type ReviewType={
 }
 export type ProfileDetailType={
     shortNickname: string
-    userId: string|null
+    userId: string | null
     avatar: string | null
     firstName: string
     secondName: string
@@ -31,7 +31,7 @@ export type ProfileDetailType={
 }
 export type ProfileType={
     shortNickname: string
-    userId: string|null
+    userId: string
     avatar: string | null
     firstName: string
     secondName: string

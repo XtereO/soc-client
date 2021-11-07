@@ -11,6 +11,11 @@
     display: flex;
     justify-content: center;
 }
+.CenterY{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 .Input{
     border-radius: 200px;
     border: 0.5px silver solid;

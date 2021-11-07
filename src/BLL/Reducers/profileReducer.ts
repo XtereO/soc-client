@@ -21,24 +21,26 @@ const initialState = {
     profile: {
         shortNickname: '',
         avatar: null,
-        userId: null,
+        userId: '',
         firstName: '',
         secondName: '',
         aboutMe: '',
         followers: 0,
         following: 0,
-        isFollow: null
+        isFollow: null,
+        unreadedMessages: 0
     } as ProfileDetailType,
     myProfile: {
         shortNickname: '',
         avatar: null,
-        userId: null,
+        userId: '',
         firstName: '',
         secondName: '',
         aboutMe: '',
         followers: 0,
         following: 0,
-        isFollow: null 
+        isFollow: null,
+        unreadedMessages:0
     } as ProfileDetailType,
     reviews: [] as ReviewType[],
     page: 1 as number,
