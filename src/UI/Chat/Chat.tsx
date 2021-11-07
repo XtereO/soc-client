@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { addPermission, joinGroup, leaveChat, removePermission, sendMessage, setActiveChatAsync, setAvatar, setMessagesAsync, setTitle, watchChat } from "../../BLL/Reducers/chatReducer";
+import { addPermission, joinGroup, leaveChat, removeCompanionFromChat, removePermission, sendMessage, setActiveChatAsync, setAvatar, setMessagesAsync, setTitle, watchChat } from "../../BLL/Reducers/chatReducer";
 import { chatSelector, countSelector, initSelector, messageSelector, messagesSelector, pageSelector } from "../../BLL/Selectors/chatSelector";
 import { myProfileSelector } from "../../BLL/Selectors/profileSelector";
 import { backendURL } from "../../Consts";
@@ -58,7 +58,7 @@ const Chat: React.FC<PropsType> = (props) => {
     } 
     const handleJoinGroup = () =>{
         if(chat){
-            dispatch(joinGroup)
+            dispatch(joinGroup(chat.chatId))
         }
     }
     const [textMessage,setTextMessage]=useState<string|null>(null)
@@ -184,6 +184,9 @@ const Chat: React.FC<PropsType> = (props) => {
             show={showMainSettings} isInit={isInit} message={message}            
             />}
             {showMembers && <Members chat={chat} 
+            removeCompanionFromChat = {(userId:string)=>{
+                dispatch(removeCompanionFromChat(chat.chatId,userId))
+            }}
             myProfile = {myProfile}
             show={showMembers} 
             handleClose={handleCloseMembers} 

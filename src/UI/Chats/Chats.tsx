@@ -47,7 +47,7 @@ const Chats: React.FC<PropsType> = (props) => {
                 page: (+pageURL),
                 title: titleURL ? titleURL : '',
                 typeChat: typeChatURL as TypeChatType,
-                onlyJoined: onlyJoinedURL ? (!!onlyJoinedURL) : onlyJoined
+                onlyJoined: onlyJoinedURL==='true' ? true : false
             }
             dispatch(setTitle(newFilter.title))
             dispatch(setPage(newFilter.page))

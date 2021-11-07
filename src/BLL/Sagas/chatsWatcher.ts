@@ -18,7 +18,6 @@ function* setChatsWorker(action:SetChatsAsyncType){
         }else{
             data = yield call(getGroups,action.page,action.title,10)
         }
-
         if(data && data.success){
             yield put(setInit(false))
             yield put(setChatsState(data.chats))
