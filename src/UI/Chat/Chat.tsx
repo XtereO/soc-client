@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { addPermission, joinGroup, leaveChat, removeCompanionFromChat, removePermission, sendMessage, setActiveChatAsync, setAvatar, setMessagesAsync, setTitle, watchChat } from "../../BLL/Reducers/chatReducer";
+import { addCompanionToDiscussion, addPermission, joinGroup, leaveChat, removeCompanionFromChat, removePermission, sendMessage, setActiveChatAsync, setAvatar, setMessagesAsync, setTitle, watchChat } from "../../BLL/Reducers/chatReducer";
 import { chatSelector, countSelector, initSelector, messageSelector, messagesSelector, pageSelector } from "../../BLL/Selectors/chatSelector";
 import { myProfileSelector } from "../../BLL/Selectors/profileSelector";
 import { backendURL } from "../../Consts";
@@ -183,7 +183,11 @@ const Chat: React.FC<PropsType> = (props) => {
             handleClose={handleCloseMainSettings} 
             show={showMainSettings} isInit={isInit} message={message}            
             />}
-            {showMembers && <Members chat={chat} 
+            {showMembers && <Members 
+            addMemberToChat = {(userId:string)=>{
+                dispatch(addCompanionToDiscussion(chat.chatId,userId))
+            }}
+            chat={chat} 
             removeCompanionFromChat = {(userId:string)=>{
                 dispatch(removeCompanionFromChat(chat.chatId,userId))
             }}

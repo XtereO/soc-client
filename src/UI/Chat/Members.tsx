@@ -2,10 +2,10 @@ import { Modal } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { backendURL } from "../../Consts";
 import { ChatType } from "../../Types/chat";
-import { ProfileDetailType } from "../../Types/profile";
+import { ProfileDetailType, ProfileType } from "../../Types/profile";
 //@ts-ignore
 import default_avatar from '../../Media/default_avatar.jpg'
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { followersSelector, pageSelector } from "../../BLL/Selectors/followersSelector";
 import { countSelector } from "../../BLL/Selectors/chatSelector";
@@ -27,16 +27,17 @@ type PropsType = {
     addPermission: (userId: string) => void
     removePermission: (userId: string) => void
     removeCompanionFromChat: (userId: string) => void
+    addMemberToChat: (userId: string) => void
 }
 
 export const Members: React.FC<PropsType> = ({ chat, myProfile,
-    show, handleClose, addPermission,
+    show, handleClose, addPermission, addMemberToChat,
     removePermission, removeCompanionFromChat }) => {
 
 
     const isUserHavePermission = chat.companions.filter(c => c.user.shortNickname === myProfile.shortNickname).length > 0 ? chat.companions.filter(c => c.user.shortNickname === myProfile.shortNickname)[0].isHavePermission : false
     const membersJSX = chat.companions.map(c => <UserItem
-        removeCompanionChat={()=>removeCompanionFromChat(c.user.userId)}
+        removeCompanionChat={() => removeCompanionFromChat(c.user.userId)}
         isUserHavePermission={isUserHavePermission}
         addPermission={() => {
             addPermission(c.user.userId)
@@ -55,111 +56,124 @@ export const Members: React.FC<PropsType> = ({ chat, myProfile,
             closeButton
         >
             Members
-            {isUserHavePermission && chat.type==='discussion'
-            && mode==='edit' && <button
-            className='btn btn-outline-primary'
-            onClick={()=>setMode('add')}>
-                add members
-            </button>}
-            {isUserHavePermission && chat.type==='discussion'
-            && mode==='add' && <button
-            className='btn btn-outline-primary'
-            onClick={()=>setMode('edit')}>
-                edit
-            </button>}
+            {isUserHavePermission && chat.type === 'discussion'
+                && mode === 'edit' && <button
+                    className='btn btn-outline-primary'
+                    onClick={() => setMode('add')}>
+                    add members
+                </button>}
+            {isUserHavePermission && chat.type === 'discussion'
+                && mode === 'add' && <button
+                    className='btn btn-outline-primary'
+                    onClick={() => setMode('edit')}>
+                    edit
+                </button>}
         </Modal.Header>
         <Modal.Body>
-            {chat.type==='group' || 
-            (mode==='edit' && chat.type==='discussion') && 
-            membersJSX}
-            {chat.type==='discussion' && mode==='add' &&
-            }
+            {((chat.type === 'group') ||
+                (mode === 'edit' && chat.type === 'discussion')) &&
+                membersJSX}
+            {chat.type === 'discussion' && mode === 'add' &&
+                <SearchMember 
+                companions={chat.companions.map(c=>c.user)}
+                addMemberToChat={addMemberToChat} />}
         </Modal.Body>
     </Modal>
 }
 
 
 type SearchMembersType = {
-    addMemberToChat:(userId:string)=>void
+    companions: ProfileType[]
+    addMemberToChat: (userId: string) => void
 }
-export const SearchMember:React.FC<SearchMembersType>=({
-    addMemberToChat    
-})=>{
-    const [title, setTitle] = useState('')
-    const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
-        setTitle(e.target.value)
-    }
-    const handleSubmit=()=>{
-        dispatch(setFollowersAsync(title, page))
-    }
-    const changePage = (page: number) =>{
-        dispatch(setFollowersAsync(title, page))
-    }
+export const SearchMember: React.FC<SearchMembersType> = ({
+    addMemberToChat, companions
+}) => {
+
     const dispatch = useDispatch()
     const followers = useSelector(followersSelector)
     const page = useSelector(pageSelector)
     const count = useSelector(countSelector)
-    
-    return<div>
+    const [title, setTitle] = useState('')
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTitle(e.target.value)
+    }
+    const handleSubmit = () => {
+        dispatch(setFollowersAsync(title, page))
+    }
+    const changePage = (page: number) => {
+        dispatch(setFollowersAsync(title, page))
+    }
+    useEffect(() => {
+        dispatch(setFollowersAsync(title, page))
+    }, [])
+
+    return <div>
         <div className="Center mt-2">
-            <MyInput 
-            value={title}
-            onChange={handleChange}
+            <MyInput
+                value={title}
+                onChange={handleChange}
             />
             <SearchButton onClick={handleSubmit} />
         </div>
         <div className="">
-            {followers.map((p:PeopleItemType)=>
-            <div 
-            style  = {{
-                display:'grid',
-                gridTemplateColumns:'1fr 50px'
-            }}
-            className="mt-2 MyCard" >
-                <div className='d-flex'>
-                    <div className="CenterY"
-                    style={{width:50}}>
-                        <NavLink to={`/home/${p.userId}`}>  
-                        <img 
-                        style={{
-                            width:50,
-                            height:50,
-                            borderRadius:20000
-                        }}
-                        src={p.avatar ? 
-                        backendURL+p.avatar : 
-                        default_avatar
-                        }
-                        />
-                        </NavLink>
-                    </div>
-                    <div className='CenterY'>
-                        <div>
-                            {p.firstName} {p.secondName}
-                        </div>
-                        <div>
+            {followers.map((p: PeopleItemType) =>
+                <div
+                    style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 50px'
+                    }}
+                    className="mt-2 MyCard" >
+                    <div className='d-flex'>
+                        <div className="CenterY"
+                            style={{ width: 50 }}>
                             <NavLink to={`/home/${p.userId}`}>
-                                {p.shortNickname}
+                                <img
+                                    style={{
+                                        width: 50,
+                                        height: 50,
+                                        borderRadius: 20000
+                                    }}
+                                    src={p.avatar ?
+                                        backendURL + p.avatar :
+                                        default_avatar
+                                    }
+                                />
                             </NavLink>
                         </div>
+                        <div className='CenterY'>
+                            <div>
+                                {p.firstName} {p.secondName}
+                            </div>
+                            <div>
+                                <NavLink to={`/home/${p.userId}`}>
+                                    {p.shortNickname}
+                                </NavLink>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div className='d-flex justify-content-end'>
-                    <button
-                    onClick={()=>addMemberToChat(p.userId)}
-                    className='btn btn-outline-success'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
-</svg>
-                    </button>
-                </div>
-            </div>)}
+                    <div className='d-flex justify-content-end'>
+                        <button
+                            disabled={companions.some(c => c.shortNickname === p.shortNickname)}
+                            onClick={() => addMemberToChat(p.userId ? p.userId : '')}
+                            className='btn btn-outline-success'>
+                            {
+                                companions.some(c => c.shortNickname === p.shortNickname) ?
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check-lg" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z" />
+                                    </svg> :
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+                                    </svg>}
+                        </button>
+                    </div>
+                </div>)}
         </div>
         <div className="Center mt-2">
-            <Pagination  
-            count={count}
-            portionSize={10}
-            page={page} pageChange={changePage}
+            <Pagination
+                count={count}
+                portionSize={10}
+                page={page} pageChange={changePage}
             />
         </div>
     </div>
@@ -184,24 +198,24 @@ export const UserItem: React.FC<UserType> = ({ user, removePermission,
     addPermission, isHavePermission, removeCompanionChat,
     unreadedMesssage, isUserHavePermission }) => {
     return <div style={{
-        display:'grid',
-        gridTemplateColumns:'1fr 100px'
-        }}
+        display: 'grid',
+        gridTemplateColumns: '1fr 100px'
+    }}
         className='MyCard mt-2'>
         <div className='d-flex'>
             <div className='CenterY'>
                 <NavLink to={`/home/${user.userId}`}>
-                <img
-                    style={{
-                        width: 50,
-                        height: 50,
-                        borderRadius: 20000
-                    }}
-                    src={
-                        user.avatar ?
-                            backendURL + user.avatar :
-                            default_avatar
-                    } />
+                    <img
+                        style={{
+                            width: 50,
+                            height: 50,
+                            borderRadius: 20000
+                        }}
+                        src={
+                            user.avatar ?
+                                backendURL + user.avatar :
+                                default_avatar
+                        } />
                 </NavLink>
             </div>
             <div className='CenterY px-2'>
@@ -217,12 +231,12 @@ export const UserItem: React.FC<UserType> = ({ user, removePermission,
         </div>
         <div className='d-flex justify-content-end'>
             {isUserHavePermission && <button
-            onClick = {removeCompanionChat}
-            className='btn btn-outline-danger'>
+                onClick={removeCompanionChat}
+                className='btn btn-outline-danger'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
-  <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
-</svg>
+                    <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z" />
+                    <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z" />
+                </svg>
             </button>}
             <button
                 onClick={() => {
