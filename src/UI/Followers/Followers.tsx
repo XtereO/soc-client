@@ -6,8 +6,9 @@ import { useState } from "react";
 import { PeopleItem, PeopleItemType } from "../People/PeopleItem";
 import { useDispatch, useSelector } from "react-redux";
 import { followersSelector,pageSelector,countSelector, initSelector } from "../../BLL/Selectors/followersSelector";
-import { setFollowersAsync } from "../../BLL/Reducers/followersReducer";
+import { follow, unfollow, setFollowersAsync } from "../../BLL/Reducers/followersReducer";
 import { useHistory } from "react-router";
+import { ProfileType } from "../../Types/profile";
 
 
 type PropsType={
@@ -65,9 +66,12 @@ const Followers:React.FC<PropsType>=(props)=>{
             <SearchButton onClick={handleSubmit} />
         </div>
         <div className="">
-            {followers.map((p:PeopleItemType)=>
-            <div className="mt-2" >
-                <PeopleItem {...p} isInit={isInit} />
+            {followers.map((p:ProfileType)=><div className="mt-2 px-2" >
+            <PeopleItem 
+                {...p}
+                follow={(userId:string)=>dispatch(follow(userId))}
+                unfollow={(userId:string)=>dispatch(unfollow(userId))}
+                isInit={isInit} />
             </div>)}
         </div>
         <div className="Center mt-2">

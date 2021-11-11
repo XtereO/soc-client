@@ -117,7 +117,7 @@ export const SearchMember: React.FC<SearchMembersType> = ({
             <SearchButton onClick={handleSubmit} />
         </div>
         <div className="">
-            {followers.map((p: PeopleItemType) =>
+            {followers.map((p: ProfileType) =>
                 <div
                     style={{
                         display: 'grid',

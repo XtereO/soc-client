@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from "react-router-dom"
 import { Pagination } from "../Bricks/Pagination";
-import { myProfileSelector, profileSelector } from "../../BLL/Selectors/profileSelector";
-import { SetAboutMeAsync, setInit, setMessage, setProfileAsync, setReviewsAsync } from "../../BLL/Reducers/profileReducer";
+import { messageSelector, myProfileSelector, profileSelector } from "../../BLL/Selectors/profileSelector";
+import { sendMessage, SetAboutMeAsync, setInit, setMessage, setProfileAsync, setReviewsAsync } from "../../BLL/Reducers/profileReducer";
 import { EditModal } from "./EditModal";
 import { MyToast } from "../Bricks/MyToast";
 import { backendURL } from "../../Consts";
@@ -11,6 +11,7 @@ import { reviewsSelector, countSelector, pageSelector } from '../../BLL/Selector
 //@ts-ignore
 import defaultAvatar from '../../Media/default_avatar.jpg'
 import { Reviews } from "../Music/Reviews";
+import { SendMessageModal } from "./Bricks/SendMessageModal";
 
 type PropsType = {}
 
@@ -25,7 +26,9 @@ const Home: React.FC<PropsType> = (props) => {
     let reviews = useSelector(reviewsSelector)
     let count = useSelector(countSelector)
     let page = useSelector(pageSelector)
+    let message = useSelector(messageSelector)
     
+    let [showSendMessageModal,setShowSendMessageModal] = useState(false)
     let [showModal, setShowModal] = useState(false)
     let [isEditMode, setMode] = useState(false)
     let onCloseModal=()=>{
@@ -47,6 +50,9 @@ const Home: React.FC<PropsType> = (props) => {
         dispatch(setReviewsAsync(userId ? userId : myProfile.userId))
     }, [history.location.pathname])
 
+    const handleCloseSendMessageModal = () =>{
+        setShowSendMessageModal(false)
+    }
     const handlerOpenTextArea = () => {
         setMode(true)
     }
@@ -64,7 +70,7 @@ const Home: React.FC<PropsType> = (props) => {
                 @{profile.shortNickname}
             </div>
             {
-                myProfile.userId === profile.userId &&
+                myProfile.userId === profile.userId ?
                 <div style={{ display: 'flex' }}
                     className="col-6 justify-content-end">
                     <button
@@ -72,6 +78,14 @@ const Home: React.FC<PropsType> = (props) => {
                         onClick={() => setShowModal(true)}
                     >
                         Edit
+                    </button>
+                </div> : <div style={{ display: 'flex' }}
+                    className="col-6 justify-content-end">
+                        <button
+                        className="btn btn-light"
+                        onClick={() => setShowSendMessageModal(true)}
+                    >
+                        Send Message
                     </button>
                 </div>}
         </div>
@@ -146,6 +160,15 @@ const Home: React.FC<PropsType> = (props) => {
                 This user dont leave a reviews yet 
             </div>}
         </div>
+        {showSendMessageModal && profile.userId && <SendMessageModal 
+        handleClose={handleCloseSendMessageModal}
+        show={showSendMessageModal}
+        messageError={message}
+        sendMessage={(textMessage:string)=>{
+            dispatch(sendMessage(textMessage,
+                profile.userId as string, handleCloseSendMessageModal))
+        }}
+        />} 
         <EditModal
             showNamesToast={() => setShowNames(true)}
             showPasswordToast={() => setShowPassword(true)}

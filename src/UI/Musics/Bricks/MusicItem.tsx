@@ -9,6 +9,7 @@ import { myProfileSelector } from "../../../BLL/Selectors/profileSelector";
 import { SettingButton } from "../../Bricks/SettingButton"
 import { RateMusicModal } from "./RateMusicModal"
 import { SettingsMusicModal } from "./SettingsMusicModal"
+import ReactTooltip from "react-tooltip";
 
 
 
@@ -53,19 +54,36 @@ export const MusicItem: React.FC<MusicItemType> = (props) => {
         setShowSettings(false)
     }
 
-    return <div className="row">
-        <div className="col-2">
-            <NavLink to={`/music/${props.musicId}`}>
-                <img src={backendURL+props.imgSrc }
-                className="img w-100 img-rounded" />
-            </NavLink>
+    return <div style={{
+        display:'grid',
+        gridTemplateColumns:'100px 1fr',
+        gridGap:'20px'
+    }} className="">
+        <div className="">
+                <NavLink to={`/music/${props.musicId}`}>
+                <img 
+                style={{height:100,width:100}}
+                src={backendURL+props.imgSrc }
+                className="img-rounded" />
+                </NavLink>
+                
+                <a data-tip data-for='global'>
+                    Rating: {
+                    props.countRated!==0 ?
+                    props.summaryRating/props.countRated :
+                    '?'
+                    } 
+                </a>
+                <ReactTooltip effect='solid' id='global' place='bottom' type='dark'>
+                    Count rated: {props.countRated}
+                </ReactTooltip>
         </div>
-        <div className="col-10">
+        <div className="">
             <div className='row'>
                 <div className='col-6'>
                     <h4>{props.title} - {props.author}</h4>
                 </div>
-                <div className='col-6 d-flex justify-content-end'>
+                <div style={{height:50}} className='col-6 d-flex justify-content-end'>
                     {props.owner.userId===myProfile.userId &&
                     <button
                     onClick={handleOpenSettings}
@@ -201,19 +219,6 @@ export const MusicItem: React.FC<MusicItemType> = (props) => {
                         backgroundColor: "red"
                     }}>
                     </div>}
-                </div>
-            </div>
-            <div className='d-flex justify-content-end'>
-                <div>
-                    {/*
-                    On hover show how many rate
-                    */}
-                    Rating: {
-                    props.countRated!==0 ?
-                    props.summaryRating/props.countRated :
-                    '?'
-                    } 
-
                 </div>
             </div>
         </div>

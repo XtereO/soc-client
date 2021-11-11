@@ -33,7 +33,7 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
     const musics = useSelector(musicsSelector)
     const isInit = useSelector(initSelector)
 
-    const MusicsJSX = musics.map(m=><MusicItem 
+    const MusicsJSX = musics.map(m=><div className='mt-2 mb-2'><MusicItem 
         message={message}
         isInit={isInit}
         rateMusicAsync={(
@@ -45,7 +45,7 @@ const Musics: React.FC<PropsType> = ({ mode }) => {
         key={m.musicId}
         onSave={()=>dispatch(saveMusicAsync(m.musicId))}
         onRemove={()=>dispatch(removeFromSavedMusicAsync(m.musicId))}
-        onPlayMusic={()=>dispatch(setMusics(musics))} {...m} />)
+        onPlayMusic={()=>dispatch(setMusics(musics))} {...m} /></div>)
    
     useEffect(()=>{
         const url = new URLSearchParams(history.location.search)

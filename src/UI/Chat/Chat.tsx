@@ -11,9 +11,12 @@ import { Content } from "../Musics/Bricks/Content";
 import { Message } from "./Message";
 //@ts-ignore
 import mount from "../../Media/mount.gif";
+//@ts-ignore
+import default_avatar from '../../Media/default_avatar.jpg'
 import { SettingButton } from "../Bricks/SettingButton";
 import { MainSettings } from "./MainSettings";
 import { Members } from "./Members";
+
 
 
 type PropsType = {
@@ -104,7 +107,10 @@ const Chat: React.FC<PropsType> = (props) => {
                 <img 
                 className='RoundImage'
                 style={{width:50,height:50}}
-                src={chat.avatar ? backendURL+chat.avatar : mount} />
+                src={chat.avatar ? backendURL+chat.avatar : (chat.type==='dialog' ?
+                (chat.companions.filter(c=>c.user.userId!==myProfile.userId)[0].user.avatar ? 
+                backendURL+chat.companions.filter(c=>c.user.userId!==myProfile.userId)[0].user.avatar :
+                default_avatar) : mount) } />
                 
                 {chat.type}: {
                     chat.type==='dialog' ?

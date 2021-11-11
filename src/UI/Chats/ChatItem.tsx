@@ -1,4 +1,4 @@
-import { useHistory } from "react-router-dom"
+import { NavLink, useHistory } from "react-router-dom"
 import { TypeChatType, MessageType } from "../../Types/chat"
 
 
@@ -9,7 +9,7 @@ type PropsType={
     
     avatar: string
     title: string
-
+    unreadedMessages: number
  
     lastMessage?: MessageType
 }
@@ -20,15 +20,31 @@ export const ChatItem:React.FC<PropsType>=(props)=>{
     const history = useHistory()
 
     return<div key={props.id} onClick={()=>history.push(`chat/${props.id}`)}
-     className="ChatItem ChatItem_hover ChatItem_active row">
-        <div className="col-3">
+     style={{
+        display:'grid',
+        gridTemplateColumns:'100px 1fr',
+        gridGap:'20px'
+     }}
+     
+     className="ChatItem ChatItem_hover ChatItem_active">
+        <div className="">
             <img 
+            style={{
+                height:100,
+                width:100
+            }}
             src={props.avatar}
             className="w-100 img RoundImage" />
         </div>
-        <div className="col-9">
-            <div>
+        <div className="">
+            <div className='d-flex'>
                 <h4>{props.title}</h4>
+                {props.unreadedMessages!==0 && <div 
+                className='mt-1 px-1 text-center'
+                style={{borderRadius:20000, marginLeft:5, height:30, minWidth:30, color:'white',
+                backgroundColor:'red'}}>
+                    {props.unreadedMessages===1 ? 'new' : props.unreadedMessages }
+                </div>}
             </div>
             {props.lastMessage && 
             props.lastMessage.companion.firstName + ' '  

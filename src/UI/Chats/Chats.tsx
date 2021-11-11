@@ -64,7 +64,10 @@ const Chats: React.FC<PropsType> = (props) => {
     const message = useSelector(messageSelector)
     const myProfile = useSelector(myProfileSelector)
     const chats = useSelector(chatsSelector)
-    const chatsJSX = chats.map(c => <ChatItem
+    const chatsJSX = chats.map(c =><div className='mb-2' ><ChatItem
+        unreadedMessages={c.companions.filter(com=>com.user.shortNickname===myProfile.shortNickname).length>0 ? 
+            c.companions.filter(com=>com.user.shortNickname===myProfile.shortNickname)[0].count : 0
+        }
         id={c.chatId} avatar={
             c.type === 'dialog' ?
                 (c.companions.filter(f => f.user.userId !== myProfile.userId)[0].user.avatar ?
@@ -78,7 +81,7 @@ const Chats: React.FC<PropsType> = (props) => {
                 + c.companions.filter(f => f.user.userId !== myProfile.userId)[0].user.secondName
                 ) : c.title
         } 
-        lastMessage={c.lastMessage} />)
+        lastMessage={c.lastMessage} /></div>)
 
     const handleChangePage = (page: number) => {
         const newPath=`/chats?title=${title}&page=${page}&typeChat=${typeChat}&onlyJoined=${onlyJoined}`

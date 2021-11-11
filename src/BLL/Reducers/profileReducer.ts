@@ -15,6 +15,8 @@ export const SET_NAMES_ASYNC: 'profileReducer/SET_NAMES_ASYNC' = 'profileReducer
 export const SET_PROFILE_ASYNC: 'profileReducer/SET_PROFILE_ASYNC' = 'profileReducer/SET_PROFILE_ASYNC'
 export const SET_REVIEWS_ASYNC: 'profileReducer/SET_REVIEWS_ASYNC' = 'profileReducer/SET_REVIEWS_ASYNC'
 export const SET_ABOUT_ME_ASYNC: 'profileReducer/SET_ABOUT_ME_ASYNC' = 'profileReducer/SET_ABOUT_ME_ASYNC'
+export const SEND_MESSAGE: 'profileReducer/SEND_MESSAGE' = 'profileReducer/SEND_MESSAGE'
+
 
 const initialState = {
     isInit: false as boolean,
@@ -130,6 +132,20 @@ export const profileReducer = (state = initialState, action: ActionType): Initit
 }
 
 
+export type SendMessageType = {
+    type: typeof SEND_MESSAGE
+    textMessage: string
+    companionId: string
+    callback: ()=>void
+}
+export const sendMessage = (textMessage:string,companionId:string,callback:()=>void):SendMessageType =>{
+    return{
+        type: SEND_MESSAGE,
+        textMessage,
+        companionId,
+        callback
+    }
+}
 export type SetPasswordsAsyncType={
     type: typeof SET_PASSWORDS_ASYNC
     password: string

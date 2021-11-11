@@ -1,16 +1,36 @@
 import { call, put, takeEvery, takeLatest } from "@redux-saga/core/effects";
-import { getProfile, GetProfileType, getReviews, GetReviewType, ResultCodeType, setAvatar, SetAvatarType, setNames, setPasswords } from "../../DAL/api";
+import { getProfile, GetProfileType, getReviews, GetReviewType, ResultCodeType, sendMessageProfile, setAvatar, SetAvatarType, setNames, setPasswords } from "../../DAL/api";
 import { ProfileType, ReviewType } from "../../Types/profile";
-import { setAboutMeState, SetAboutMeAsyncType, setCount, setInit, setPage, setProfile, SetProfileAsyncType, setReviews, SetReviewsAsyncType, SET_PROFILE_ASYNC, SET_REVIEWS_ASYNC, SET_ABOUT_ME_ASYNC, SetNamesAsyncType, SET_NAMES_ASYNC, setNamesState, setMessage, SetAvatarAsyncType, SET_AVATAR_ASYNC, setAvatarState, SetPasswordsAsyncType, SET_PASSWORDS_ASYNC } from "../Reducers/profileReducer";
+import { setAboutMeState, SetAboutMeAsyncType, setCount, setInit, setPage, setProfile, SetProfileAsyncType, setReviews, SetReviewsAsyncType, SET_PROFILE_ASYNC, SET_REVIEWS_ASYNC, SET_ABOUT_ME_ASYNC, SetNamesAsyncType, SET_NAMES_ASYNC, setNamesState, setMessage, SetAvatarAsyncType, SET_AVATAR_ASYNC, setAvatarState, SetPasswordsAsyncType, SET_PASSWORDS_ASYNC, SendMessageType, SEND_MESSAGE } from "../Reducers/profileReducer";
 import { setAboutMe } from '../../DAL/api'
-import { setAuth } from "../Reducers/authReducer";
+import { setAuth, setShowToast } from "../Reducers/authReducer";
 
 
 
 
+function* sendMessageWorker(action: SendMessageType) {
+    try{
+        yield put(setInit(true))
+        yield put(setMessage(null))
+        const response: ResultCodeType = yield call(sendMessageProfile,action.companionId,action.textMessage)
+        if(response.success){
+            yield put(setInit(false))
+            yield action.callback()
+            yield put(setShowToast(true,'Message send successfull'))
+        }else if(response.message){
+            yield put(setInit(false))
+            yield put(setMessage(response.message))
+        }
+        yield put(setInit(false))
+    }catch(e){
+        yield put(setInit(false))
+        yield put(setMessage(e.message))
+    }
+}
 function* reviewsWorker(action: SetReviewsAsyncType) {
     try {
         yield put(setInit(true))
+        yield put(setMessage(null))
         const response: GetReviewType = yield call(getReviews, action.idWhoNeedIt,
             action.page, true, action.size, 'User')
         yield put(setReviews(response.reviews))
@@ -18,7 +38,8 @@ function* reviewsWorker(action: SetReviewsAsyncType) {
         yield put(setCount(response.count))
         yield put(setInit(false))
     } catch (e) {
-
+        yield put(setInit(false))
+        yield put(setMessage(e.message))
     }
 }
 function* profileWorker(action: SetProfileAsyncType) {
@@ -95,6 +116,7 @@ function* passwordsWorker(action: SetPasswordsAsyncType) {
 }
 
 export function* profileWatcher() {
+    yield takeLatest(SEND_MESSAGE, sendMessageWorker)
     yield takeLatest(SET_PROFILE_ASYNC, profileWorker)
     yield takeLatest(SET_REVIEWS_ASYNC, reviewsWorker)
     yield takeLatest(SET_ABOUT_ME_ASYNC, aboutMeWorker)

@@ -488,6 +488,12 @@ export const streamMessage = () =>{
     return instance.get<StreamMessageType>(`chat/streamMessage`)
 }
 
+export const sendMessageProfile = (companionId:string,textMessage:string) =>{
+    return instance.post<ResultCodeType>(`chat/sendMessage`,
+    {companionId,textMessage})
+    .then(res=>res.data)
+    .catch(e=>e.response.data)    
+}
 
 
 
