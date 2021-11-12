@@ -89,7 +89,7 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
     const openAddPlaylist = () =>{
         setShowAddPlaylist(true)
     }
-    let filters = useSelector(filtersSelector)
+    const filters = useSelector(filtersSelector)
 
 
     const handleChangeFilters=(firstShow:'new' | 'old' | 'most rated', 
@@ -104,7 +104,7 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
         history.push(newPath)
     }
     const handleChangeTitle=(e:React.ChangeEvent<HTMLInputElement>)=>{
-        setFilters({...filters,title:e.target.value})
+        dispatch(setFilters({...filters,title:e.target.value}))
     }
     const handleSubmitSearch=()=>{
         const newPath=`/playlists?page=${1}&size=${10}&title=${filters.title}&firstShow=${filters.firstShow}&onlyMySaved=${filters.onlyMySaved}&onlyMyCreated=${filters.onlyMyCreated}`
@@ -114,7 +114,7 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
     useEffect(()=>{
         const url = new URLSearchParams(history.location.search)
         const page = url.get('page')
-        const title = url.get('title')
+        const titleUrl = url.get('title')
         const size = url.get('size')
         const onlyMySaved = url.get('onlyMySaved')
         const onlyMyCreated = url.get('onlyMyCreated')
@@ -128,7 +128,7 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
             const newFilter = {
                 page: (+page),
                 size: (+size),
-                title: title ? title : '',
+                title: titleUrl ? titleUrl : '',
                 onlyMySaved: onlyMySaved==='true' ? true : false,
                 onlyMyCreated: onlyMyCreated==='true' ? true : false,
                 firstShow: firstShow as 'new' | 'old' | 'most rated'

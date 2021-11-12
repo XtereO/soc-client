@@ -9,7 +9,7 @@ import { myProfileSelector } from "../../../BLL/Selectors/profileSelector";
 import { SettingButton } from "../../Bricks/SettingButton"
 import { RateMusicModal } from "./RateMusicModal"
 import { SettingsMusicModal } from "./SettingsMusicModal"
-import ReactTooltip from "react-tooltip";
+import { OverlayTrigger, Tooltip, Button } from "react-bootstrap"
 
 
 
@@ -66,17 +66,24 @@ export const MusicItem: React.FC<MusicItemType> = (props) => {
                 src={backendURL+props.imgSrc }
                 className="img-rounded" />
                 </NavLink>
+                <OverlayTrigger
+    placement="bottom"
+    overlay={<Tooltip id="button-tooltip-2">{<div>Count rated: {props.countRated}</div>}</Tooltip>}
+  >
+    {({ ref, ...triggerHandler }) => (
+      <Button
+        variant="light"
+        {...triggerHandler}
+        className="d-inline-flex align-items-center"
+        style={{maxWidth:250}}
+      >
+        <div ref={ref}>
+            Rating: {props.countRated!==0 ? props.summaryRating/props.countRated : '-' }
+        </div>
+      </Button>
+    )}
+  </OverlayTrigger>
                 
-                <a data-tip data-for='global'>
-                    Rating: {
-                    props.countRated!==0 ?
-                    props.summaryRating/props.countRated :
-                    '?'
-                    } 
-                </a>
-                <ReactTooltip effect='solid' id='global' place='bottom' type='dark'>
-                    Count rated: {props.countRated}
-                </ReactTooltip>
         </div>
         <div className="">
             <div className='row'>

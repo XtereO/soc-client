@@ -1,7 +1,7 @@
 import React, { useState } from "react"
+import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom"
-import ReactTooltip from "react-tooltip";
 import { myProfileSelector } from "../../../BLL/Selectors/profileSelector";
 import { backendURL } from "../../../Consts"
 //@ts-ignore
@@ -66,6 +66,10 @@ export const PlaylistItem: React.FC<PlaylistItemType> = ({
     const handleCloseRating = () => {
         setShowRating(false)
     }
+    const getCountRated = () =>{
+        const n = playlist.countRated
+        return <div>Count Rated: {playlist.countRated}</div>
+    }
 
     return <div 
     style={{
@@ -89,14 +93,35 @@ export const PlaylistItem: React.FC<PlaylistItemType> = ({
         className="">
             <div className=''>
                 <h4>{playlist.title}</h4>
-                <div style={{height:40, display:'flex', flexDirection:'column',
+                <div style={{display:'flex', flexDirection:'column',
                 justifyContent:'end'}}>
-                    <a data-tip data-for='global'>
-                    Rating: {playlist.countRated!==0 ? playlist.summaryRating/playlist.countRated : '-' }
-                    </a>
-                    <ReactTooltip   id='global' place='bottom' type='dark'>
-                        Count rated: {playlist.countRated}
-                    </ReactTooltip>
+                
+
+                <OverlayTrigger
+    placement="bottom"
+    overlay={<Tooltip id="button-tooltip-2">{<div>Count rated: {playlist.countRated}</div>}</Tooltip>}
+  >
+    {({ ref, ...triggerHandler }) => (
+      <Button
+        variant="light"
+        {...triggerHandler}
+        className="d-inline-flex align-items-center"
+        style={{maxWidth:250}}
+      >
+        <div ref={ref}>
+            Rating: {playlist.countRated!==0 ? playlist.summaryRating/playlist.countRated : '-' }
+        </div>
+      </Button>
+    )}
+  </OverlayTrigger>
+  <div className=''>
+      <Button variant='light'
+      className='d-inline-flex align-items-center'
+      style={{maxWidth:250}}
+      >
+      Count musics: {playlist.countMusics}
+        </Button>
+  </div>
                 </div>
             </div>
             <div style={{width:100}} className=''>

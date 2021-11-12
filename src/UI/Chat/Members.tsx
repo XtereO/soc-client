@@ -229,7 +229,7 @@ export const UserItem: React.FC<UserType> = ({ user, removePermission,
                     {unreadedMessages}
                 </div>}</a>
                 <ReactTooltip effect='solid' id='global' place='bottom' type='dark'>
-                    Count unreaded messages: {unreadedMessages}
+                    Count unreaded messages
                 </ReactTooltip>
                 </div>
                 <div>
