@@ -30,9 +30,9 @@ const Chat: React.FC<PropsType> = (props) => {
     const history = useHistory()
     const dispatch = useDispatch()
     const messages = useSelector(messagesSelector)
-    const messagesJSX = messages.map(m => <Message 
+    const messagesJSX = messages.map(m => m ? <div className='px-2'><Message 
         isMyMessage={myProfile.shortNickname===m.companion.shortNickname}
-        {...m} />)
+        {...m} /></div> : <div></div>)
     const chat = useSelector(chatSelector)
     const page = useSelector(pageSelector)
     const message = useSelector(messageSelector)
@@ -69,17 +69,28 @@ const Chat: React.FC<PropsType> = (props) => {
         setTextMessage(e.target.value)
     }
     const handleSendMessage=()=>{
-        if(chat && textMessage){
+        if(chat && textMessage && textMessage.trim()){
             setTextMessage(null)
             dispatch(sendMessage(chat.chatId,textMessage))
         }
     }
     const ref = useRef<HTMLDivElement>(null)
+    let [isAutoScroll,setAutoScroll] = useState(true)
     useEffect(()=>{
-        if(ref.current){
-            ref.current.scrollIntoView({behavior:'smooth'})
+        if (isAutoScroll){
+            ref.current?.scrollIntoView({behavior:'smooth'})
         }
-    },[ref.current])
+    },[messages])
+    const scrollHandler=(e:React.UIEvent<HTMLDivElement,UIEvent>)=>{
+        const element=e.currentTarget
+        let diff=Math.abs(element.scrollHeight - element.scrollTop-element.clientHeight)
+        if (diff<300){
+            setAutoScroll(true)
+        }
+        else{
+            setAutoScroll(false)
+        }
+    }
 
     let [showMainSettings, setShowMainSettings] = useState(false)
     const handleCloseMainSettings = ()=>{
@@ -159,8 +170,10 @@ const Chat: React.FC<PropsType> = (props) => {
                 height:500,
                 overflowY:'scroll'
             }}
+            onScroll={scrollHandler}
             className='mt-2'>
                 <Content
+                    size={30}
                     page={page}
                     count={count}
                     items={[[...messagesJSX].reverse(),
@@ -176,6 +189,8 @@ const Chat: React.FC<PropsType> = (props) => {
                 className='form-control'>
                 </textarea>
                 <button
+                    disabled={!(chat.companions.some(com=>com.user.shortNickname===myProfile.shortNickname) &&
+                        chat.companions.filter(com=>com.user.shortNickname===myProfile.shortNickname)[0].isHavePermission)}
                     onClick={handleSendMessage}
                     className="Center w-100 btn btn-success">
                     send

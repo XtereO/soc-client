@@ -4,9 +4,10 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 import './App.css';
-import { setLastMessage, setMessagesState } from './BLL/Reducers/chatReducer';
+import { setActiveChatState, setLastMessage, setMessagesState } from './BLL/Reducers/chatReducer';
 import { setActiveMusic, setPlayedMusicInterval, setPlayingMusic } from './BLL/Reducers/playerReducer';
 import { setNamesState, setProfile, setProfileAsync } from './BLL/Reducers/profileReducer';
+import { authSelector } from './BLL/Selectors/authSelector';
 import { chatSelector, messagesSelector } from './BLL/Selectors/chatSelector';
 import { activeMusicDetailsSelector, activeMusicSettingsSelector, modeSelector, musicsSelector } from './BLL/Selectors/playerSelector';
 import { backendURL } from './Consts';
@@ -27,22 +28,30 @@ function App() {
   const musicMode = useSelector(modeSelector)
   const musics = useSelector(musicsSelector)
   const activeMusicDetails = useSelector(activeMusicDetailsSelector)
-  const activeChat = useSelector(chatSelector)
-  const messages = useSelector(messagesSelector)
+  const isAuth = useSelector(authSelector)
 
   useEffect(()=>{
-    subscribe()
-  },[])
+    if(isAuth){
+      subscribe()
+    }
+  },[isAuth])
   const subscribe = async ()=>{
     try{
       const {data} = await streamMessage()
       //@ts-ignore
-      dispatch(setMessagesState([data.message],true,data.chat.chatId))
+      if(data.message && data.message.companion){
+        //@ts-ignore
+        dispatch(setMessagesState([data.message],true,data.chat.chatId))  
+      }
+      dispatch(setActiveChatState(data.chat))
+      debugger
       dispatch(setProfile(data.user,true))
       await subscribe()
     }catch(e){
       setTimeout(()=>{
-        subscribe()
+        if(isAuth){
+          subscribe()
+        }
       },5000)
     } 
   }

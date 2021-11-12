@@ -1,4 +1,5 @@
 import { call, fork, put, take, takeLatest } from "@redux-saga/core/effects";
+import { callbackify } from "util";
 import { addCompanionToDiscussionAPI, addPermissionAPI, ChangeChatType, getDetailChat, GetDetailChatType, joinGroupAPI, leaveChatAPI, removeCompanionFromChatAPI, removePermissionAPI, ResultCodeType, sendMessageAPI, setChatAvatar, setTitleAPI, streamMessage, StreamMessageType, WatchChatAPI } from "../../DAL/api";
 import { setShowToast } from "../Reducers/authReducer";
 import { AddCompanionToDiscussionType, AddPermissionType, ADD_COMPANION_TO_DISCUSSION, ADD_PERMISSION, JoinGroupType, JOIN_GROUP, LeaveChatType, LEAVE_CHAT, RemoveCompanionFromChatType, RemovePermissionType, REMOVE_COMPANION_FROM_CHAT, REMOVE_PERMISSION, SendMessageType, SEND_MESSAGE, SetActiveChatAsyncType, setActiveChatState, SetAvatarType, setCount, setInit, SetLastMessageType, setMessage, setMessagesState, setPage, SetTitleType, SET_ACTIVE_CHAT_ASYNC, SET_AVATAR, SET_LAST_MESSAGE, SET_TITLE, WatchChatType, WATCH_CHAT } from "../Reducers/chatReducer";
@@ -90,6 +91,7 @@ function* sendMessageWorker(action:SendMessageType){
             yield put(setActiveChatState(data.chat))
         }else if(data.message){
             yield put(setMessage(data.message))
+            yield put(setShowToast(true, data.message))
         }
     }catch(e){
         yield put(setMessage(e.message))
@@ -99,8 +101,9 @@ function* watchChatWorker(action:WatchChatType){
     try{
         yield put(setMessage(null))
         const data:ChangeChatType = yield call(WatchChatAPI,action.chatId)
-        if(data.success){
+        if(data.success && data.user){
             yield put(setActiveChatState(data.chat))
+            yield put(setProfile(data.user, true))
         }else if(data.message){
             yield put(setMessage(data.message))
         }
@@ -170,13 +173,17 @@ function* setLastMessageWorker(action:SetLastMessageType){
         const data:StreamMessageType = yield call(streamMessage)
         if(data.success){
             yield put(setActiveChatState(data.chat))
-            yield put(setMessagesState([data.message],true))
+            if(data.message){
+                yield put(setMessagesState([data.message],true))
+            }
             yield put(setProfile(data.user,true))
+            yield action.callback()
         }else if(data.message){
             yield put(setMessage(data.message))
         }
     }catch(e){
         yield put(setMessage(e.message))
+        yield setTimeout(action.callback, 5000)
     }
 }
 

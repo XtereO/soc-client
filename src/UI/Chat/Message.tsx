@@ -1,5 +1,7 @@
 import moment from "moment"
+import { NavLink } from "react-router-dom"
 import { backendURL } from "../../Consts"
+import HtmlParse from 'html-react-parser'
 import { MessageType } from "../../Types/chat"
 
 
@@ -18,9 +20,11 @@ export const Message: React.FC<PropsType> = (props) => {
             }}
             className="card my-2">
             <div className="">
-                <img
-                    className="RoundImage w-100"
-                    src={backendURL + props.companion.avatar} />
+                <NavLink to={`/home/${props.companion.userId}`}>
+                    <img
+                        className="RoundImage w-100"
+                        src={backendURL + props.companion.avatar} />
+                </NavLink>
             </div>
             <div className="">
                 <div style={{
@@ -37,8 +41,8 @@ export const Message: React.FC<PropsType> = (props) => {
                     `}
                     </div>
                 </div>
-                <div>
-                    {props.textMessage}
+                <div style={{ height: 50 }} className='d-flex'>
+                    {HtmlParse(props.textMessage)}
                 </div>
             </div>
         </div>
@@ -52,7 +56,7 @@ export const Message: React.FC<PropsType> = (props) => {
         <div className="">
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: '200px 1fr'
+                gridTemplateColumns: '150px 1fr'
             }}>
                 <div>
                     {`
@@ -64,8 +68,8 @@ export const Message: React.FC<PropsType> = (props) => {
                     {props.companion.firstName + ' ' + props.companion.secondName}
                 </div>
             </div>
-            <div className='w-100 d-flex justify-content-end'>
-                {props.textMessage}
+            <div style={{ height: 50 }} className='w-100 d-flex justify-content-end'>
+                {HtmlParse(props.textMessage)}
             </div>
         </div>
         <div className="">

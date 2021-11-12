@@ -373,6 +373,7 @@ export const getGroups=(page:number,title:string,size=10)=>{
 
 export type ChangeChatType = {
     chat:ChatType
+    user?:ProfileDetailType
 } & ResultCodeType
 export const createDialog=(companionId:string)=>{
     return instance.post<ChangeChatType>(`chat/createDialog`,
@@ -480,7 +481,7 @@ export const getDetailChat = (chatId:string,page:number,size=30)=>{
 }
 
 export type StreamMessageType = {
-    message: MessageType
+    message: MessageType | null
     user: ProfileDetailType
     chat: ChatType
 } & ResultCodeType

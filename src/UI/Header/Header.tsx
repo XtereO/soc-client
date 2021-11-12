@@ -7,6 +7,7 @@ import { authSelector } from "../../BLL/Selectors/authSelector"
 import { HeaderLink } from "./HeaderLink"
 import { HeaderRightSide } from "./HeaderRightSide"
 import { ModeContext } from '../../App'
+import { myProfileSelector } from "../../BLL/Selectors/profileSelector"
 
 type PropsType = {}
 
@@ -15,7 +16,8 @@ export const Header:React.FC<PropsType> = (props) => {
 
     const mode = useContext(ModeContext)
     const dispatch = useDispatch()
-    let auth = useSelector(authSelector)
+    const auth = useSelector(authSelector)
+    const myProfile = useSelector(myProfileSelector)
     useEffect(()=>{
         if(auth){
             dispatch(setProfileAsync('',true))
@@ -27,7 +29,7 @@ export const Header:React.FC<PropsType> = (props) => {
         {title: 'Musics', link:'/musics'},
         {title: 'Playlists', link:'/playlists'},
         {title: 'People', link: '/people'},
-        {title: 'Chats', link: '/chats'}
+        {title: 'Chats', link: '/chats', unreadedMessages: myProfile ? myProfile.unreadedMessages : 0 }
     ]
     return<Navbar className="sticky-top" bg="light" expand="lg">
         <Container>
@@ -37,7 +39,7 @@ export const Header:React.FC<PropsType> = (props) => {
             <Navbar.Toggle aria-controls="basic-navbar-nav"></Navbar.Toggle>
             <Navbar.Collapse id="basic-navbar-nav">
                 {
-                headerLinks.map(h=><HeaderLink link={h.link}>
+                headerLinks.map(h=><HeaderLink {...h} link={h.link}>
                     {h.title}
                 </HeaderLink>)
                 }

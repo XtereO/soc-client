@@ -28,7 +28,9 @@ export const PlayingMusic: React.FC<PropsType> = (props) => {
                     rating={
                         props.countRated!==0 ?
                         props.summaryRating/props.countRated :
-                        '?'} />
+                        '?'}
+                    countRated={props.countRated}
+                    />
             </div>
         </div>
     </div>

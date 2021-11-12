@@ -40,7 +40,7 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
     const musics = useSelector(musicsSelector)
     const activePlaylist = useSelector(activePlaylistSelector)
     const filtersForMusic = useSelector(filtersForSearchMusicsSelector)
-    const playlistsJSX = playlists.map(p=><PlaylistItem
+    const playlistsJSX = playlists.map(p=><div className='mt-1 mb-1'><PlaylistItem
         ratePlaylistAsync={(playlistId:string,rating:number,review:string | null,
             title:string,onClose:()=>void,
             )=>dispatch(ratePlaylistAsync(playlistId,
@@ -79,7 +79,7 @@ const Playlists: React.FC<PropsType> = ({ mode }) => {
         key={p.playlistId}
         onRemove={()=>dispatch(removeFromPlaylistAsync(p.playlistId))}
         onSave={()=>dispatch(savePlaylistAsync(p.playlistId))}
-        playlist={p}/>)
+        playlist={p}/></div>)
     let [path, setPath] = useState('')
     let [isSearchMode, setSearchMode] = useState(true)
     let [showAddPlaylist,setShowAddPlaylist] = useState(false)

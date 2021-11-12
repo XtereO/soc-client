@@ -14,6 +14,7 @@ import { setFollowersAsync } from "../../BLL/Reducers/followersReducer";
 import { MyInput } from "../Bricks/MyInput";
 import { SearchButton } from "../Bricks/SearchButton";
 import { Pagination } from "../Bricks/Pagination";
+import ReactTooltip from "react-tooltip";
 
 
 
@@ -43,7 +44,7 @@ export const Members: React.FC<PropsType> = ({ chat, myProfile,
             addPermission(c.user.userId)
         }} removePermission={() => {
             removePermission(c.user.userId)
-        }} unreadedMesssage={c.count}
+        }} unreadedMessages={c.count}
         {...c}
         user={c.user} />)
 
@@ -188,7 +189,7 @@ type UserType = {
         avatar: string | null
     }
     isHavePermission: boolean
-    unreadedMesssage: number
+    unreadedMessages: number
     isUserHavePermission: boolean
     addPermission: () => void
     removePermission: () => void
@@ -196,8 +197,8 @@ type UserType = {
 }
 export const UserItem: React.FC<UserType> = ({ user, removePermission,
     addPermission, isHavePermission, removeCompanionChat,
-    unreadedMesssage, isUserHavePermission }) => {
-    return <div style={{
+    unreadedMessages, isUserHavePermission }) => {
+        return <div style={{
         display: 'grid',
         gridTemplateColumns: '1fr 100px'
     }}
@@ -218,9 +219,18 @@ export const UserItem: React.FC<UserType> = ({ user, removePermission,
                         } />
                 </NavLink>
             </div>
-            <div className='CenterY px-2'>
-                <div>
-                    {`${user.firstName} ${user.secondName}`}
+            <div className='px-2'>
+                <div className='d-flex'>
+                    <div className='CenterY'>{`${user.firstName} ${user.secondName}`}</div>
+                    <a data-tip data-for='global'>{unreadedMessages!==0 && <div 
+                    className='mt-1 px-1 text-center CenterY'
+                    style={{borderRadius:20000, marginLeft:5, height:30, minWidth:30, color:'white',
+                    backgroundColor:'red'}}>
+                    {unreadedMessages}
+                </div>}</a>
+                <ReactTooltip effect='solid' id='global' place='bottom' type='dark'>
+                    Count unreaded messages: {unreadedMessages}
+                </ReactTooltip>
                 </div>
                 <div>
                     <NavLink to={`/home/${user.userId}`}>

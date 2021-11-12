@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom"
+import ReactTooltip from "react-tooltip";
 import { myProfileSelector } from "../../../BLL/Selectors/profileSelector";
 import { backendURL } from "../../../Consts"
 //@ts-ignore
@@ -66,27 +67,49 @@ export const PlaylistItem: React.FC<PlaylistItemType> = ({
         setShowRating(false)
     }
 
-    return <div className="row">
-        <div className="col-3">
+    return <div 
+    style={{
+        display:'grid',
+        gridTemplateColumns:'100px 1fr'
+    }}
+    className="">
+        <div className="">
             <NavLink to={`/playlist/${playlist.playlistId}`}>
                 <img
+                    style={{height:100,width:100}}
                     src={playlist.imgSrc ? backendURL + playlist.imgSrc : default_playlist}
                     className="w-100 img rounded" />
             </NavLink>
         </div>
-        <div className="col-9 row">
-            <div className='col-6'>
+        <div
+        style={{
+            display:'grid',
+            gridTemplateColumns:'1fr 100px'
+        }}
+        className="">
+            <div className=''>
                 <h4>{playlist.title}</h4>
+                <div style={{height:40, display:'flex', flexDirection:'column',
+                justifyContent:'end'}}>
+                    <a data-tip data-for='global'>
+                    Rating: {playlist.countRated!==0 ? playlist.summaryRating/playlist.countRated : '-' }
+                    </a>
+                    <ReactTooltip   id='global' place='bottom' type='dark'>
+                        Count rated: {playlist.countRated}
+                    </ReactTooltip>
+                </div>
             </div>
-            <div className='col-6 d-flex justify-content-end'>
+            <div style={{width:100}} className=''>
                 {playlist.owner.shortNickname === myProfile.shortNickname &&
                     <button
+                        style={{height:50,width:50}}
                         onClick={handleOpenSettings}
                         className='btn btn-light'>
                         <SettingButton />
                     </button>}
                 {playlist.owner.shortNickname === myProfile.shortNickname &&
                     <button
+                        style={{height:50,width:50}}
                         onClick={handleOpenAddMenu}
                         className='btn btn-outline-primary'>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-folder" viewBox="0 0 16 16">
@@ -95,6 +118,7 @@ export const PlaylistItem: React.FC<PlaylistItemType> = ({
                     </button>}
                 {playlist.myReview ?
                     <button
+                        style={{height:50,width:50}}
                         onClick={handleOpenRating}
                         className='btn btn-warning text-white'>
                         <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" className="bi bi-star" viewBox="0 0 16 16">
@@ -103,6 +127,7 @@ export const PlaylistItem: React.FC<PlaylistItemType> = ({
                     </button>
                     :
                     <button
+                        style={{height:50,width:50}}
                         onClick={handleOpenRating}
                         className='btn btn-outline-warning'>
                         <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" className="bi bi-star" viewBox="0 0 16 16">
@@ -112,6 +137,7 @@ export const PlaylistItem: React.FC<PlaylistItemType> = ({
                 }
                 {playlist.isSaved ?
                     <button
+                        style={{height:50,width:50}}
                         onClick={props.onRemove}
                         className='btn btn-outline-danger'
                     >
@@ -122,6 +148,7 @@ export const PlaylistItem: React.FC<PlaylistItemType> = ({
                     </button>
                     :
                     <button
+                        style={{height:50,width:50}}
                         onClick={props.onSave}
                         className='btn btn-outline-success'
                     >

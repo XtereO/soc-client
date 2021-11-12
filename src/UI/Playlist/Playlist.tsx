@@ -182,6 +182,11 @@ const Playlist: React.FC<PropsType> = (props) => {
                             '-'
                     }
                 </div>
+                <div className='Center'>
+                    Count rated: {
+                        playlist && playlist.countRated
+                    }
+                </div>
             </div>
         </div>
         <div>

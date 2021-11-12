@@ -70,10 +70,23 @@ export const chatReducer = (state = initialState, action: ActionType): InitialSt
                 return{...state}
             }
         case SET_ACTIVE_CHAT_STATE:
-            return {
-                ...state,
-                chat: action.chat
+            if(state.chat && action.chat && action.chat.chatId === state.chat.chatId){
+                return {
+                    ...state,
+                    chat: action.chat
+                }    
+            }else if(!state.chat){
+                return {
+                    ...state,
+                    chat: action.chat
+                }    
+            }else if(!action.chat){
+                return{
+                    ...state,
+                    chat: action.chat
+                }
             }
+            return state
         default:
             return state
     }
@@ -82,12 +95,12 @@ export const chatReducer = (state = initialState, action: ActionType): InitialSt
 
 export type SetLastMessageType = {
     type: typeof SET_LAST_MESSAGE
-    activeChatId: string | null
+    callback: ()=>void
 } 
-export const setLastMessage = (activeChatId:string|null):SetLastMessageType =>{
+export const setLastMessage = (callback:()=>void):SetLastMessageType =>{
     return{
         type: SET_LAST_MESSAGE,
-        activeChatId
+        callback
     }
 }
 
