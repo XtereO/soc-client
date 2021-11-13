@@ -73,9 +73,11 @@ export const Message: React.FC<PropsType> = (props) => {
             </div>
         </div>
         <div className="">
+            <NavLink to={`/home/${props.companion.userId}`}>
             <img
                 className="RoundImage w-100"
                 src={backendURL + props.companion.avatar} />
+            </NavLink>
         </div>
     </div>
 }
