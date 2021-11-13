@@ -22,7 +22,7 @@ function* loginWorker(action: (LoginType & LoginRequestType & ShowToastType)) {
             yield put(setInit(false))
             yield action.showToast()
             yield window.location.reload()
-        } else {
+        } else { 
             yield put(setInit(false))
             yield put(setMessage(data.message ? data.message : 'Some error occured'))
         }

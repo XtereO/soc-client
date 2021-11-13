@@ -41,6 +41,7 @@ export const authReducer=(state=initialState, action:ActionType ):InitialStateTy
             const code = Math.ceil(100+(Math.random()*899))
             return{...state,code}
         case SET_LOCAL_STORAGE:
+            localStorage.setItem('tokenStart',String(Math.round(Date.now()/1000)))
             localStorage.setItem('token',action.token ? action.token : '')
             return {...state}
         case SET_AUTH:

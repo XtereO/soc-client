@@ -7,9 +7,12 @@ type PropsType={
 }
 
 export const Plus:React.FC<PropsType>=(props)=>{
-    return<button 
-    className="Plus Plus_hover Plus_active"
-    {...props}>
+    return<button
+    onClick={props.onClick}
+    className="btn btn-outline-success" 
+    style={{
+        borderRadius:20000,
+    }}>
         +
     </button>
 }

@@ -23,11 +23,12 @@ export const PlayingMusic: React.FC<PropsType> = (props) => {
             </div>
             <div className="col-md-6" style={{paddingLeft:0}}>
                 <InfoMusic
+                    countSaves={props.countSaves}
                     title={props.title}
                     author={props.author}
                     rating={
                         props.countRated!==0 ?
-                        props.summaryRating/props.countRated :
+                        String(props.summaryRating/props.countRated).slice(0,3) :
                         '?'}
                     countRated={props.countRated}
                     />

@@ -5,8 +5,9 @@ type PropsType = {
     author: string | null
     rating: number | string
     countRated: number
+    countSaves: number
 }
-export const InfoMusic: React.FC<PropsType> = ({title,author,rating,countRated}) => {
+export const InfoMusic: React.FC<PropsType> = ({title,countSaves,author,rating,countRated}) => {
     
     return <div className="">
         <h4 className="Center">{title}</h4>
@@ -18,6 +19,9 @@ export const InfoMusic: React.FC<PropsType> = ({title,author,rating,countRated})
         </div>
         <div className='Center'>
             Count rated: {countRated}
+        </div>
+        <div className='Center'>
+            Count saves: {countSaves}
         </div>
     </div>
 }

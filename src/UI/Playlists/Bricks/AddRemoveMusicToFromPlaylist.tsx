@@ -40,7 +40,6 @@ export const AddRemoveMusicToFromPlaylist:React.FC<PropsType>=(props)=>{
         props.setMusicsSync(props.playlist.musics)
     }
     useEffect(()=>{
-        debugger
         if(mode==='remove'){
             props.setMusicsSync(props.playlist.musics)
         }
@@ -109,13 +108,13 @@ export const AddRemoveMusicToFromPlaylist:React.FC<PropsType>=(props)=>{
             <button 
             onClick={chooseRemoveMode}
             className='btn btn-outline-danger'>
-                Go remove musics
+                remove musics
             </button>}
             {mode==='remove' &&
             <button 
             onClick={chooseAddMode}
             className='btn btn-outline-success'>
-                Go add musics
+                add musics
             </button>}
         </Modal.Header>
         

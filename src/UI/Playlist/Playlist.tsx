@@ -173,18 +173,23 @@ const Playlist: React.FC<PropsType> = (props) => {
             <div >
                 <h4 className="Center">{playlist?.title}</h4>
                 <div className="Center">
-                    Author: {playlist?.owner.shortNickname}
+                    Owner: {playlist?.owner.shortNickname}
                 </div>
                 <div className="Center">
                     Rating: {
                         (playlist && playlist.countRated !== 0) ?
-                            playlist.summaryRating / playlist.countRated :
-                            '-'
+                            String(playlist.summaryRating / playlist.countRated).slice(0,3) :
+                            '?'
                     }
                 </div>
                 <div className='Center'>
                     Count rated: {
                         playlist && playlist.countRated
+                    }
+                </div>
+                <div className='Center'>
+                    Count saves: {
+                        playlist && playlist.countSaves
                     }
                 </div>
             </div>

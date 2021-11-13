@@ -91,18 +91,21 @@
     box-shadow: 3px 3px 3px 3px black;
 }
 .Plus{
-	color: white;
+	border-color: white;
 	font-size: 1.3em;
-	background-color: #00FF00;
+	color: #00FF00;
 	border-radius: 20000px;
 	transition: 1s all linear;
+    border: #00FF00 solid 1px;
 }
 .Plus_hover:hover{
+    color: white;
 	background-color: #00E800;
 	box-shadow: 1px 1px 1px black;
 	transition: 0.5s all linear;
 }
 .Plus_active:active{
+    color: white;
 	background-color: #00CA00;
 	box-shadow: 1px 1px 1px 1px black;
 	transition: 0.3s all linear;

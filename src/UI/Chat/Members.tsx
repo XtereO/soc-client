@@ -15,6 +15,7 @@ import { MyInput } from "../Bricks/MyInput";
 import { SearchButton } from "../Bricks/SearchButton";
 import { Pagination } from "../Bricks/Pagination";
 import ReactTooltip from "react-tooltip";
+import { myProfileSelector } from "../../BLL/Selectors/profileSelector";
 
 
 
@@ -38,6 +39,7 @@ export const Members: React.FC<PropsType> = ({ chat, myProfile,
 
     const isUserHavePermission = chat.companions.filter(c => c.user.shortNickname === myProfile.shortNickname).length > 0 ? chat.companions.filter(c => c.user.shortNickname === myProfile.shortNickname)[0].isHavePermission : false
     const membersJSX = chat.companions.map(c => <UserItem
+        myProfile={myProfile}
         removeCompanionChat={() => removeCompanionFromChat(c.user.userId)}
         isUserHavePermission={isUserHavePermission}
         addPermission={() => {
@@ -56,19 +58,19 @@ export const Members: React.FC<PropsType> = ({ chat, myProfile,
         <Modal.Header
             closeButton
         >
-            Members
-            {isUserHavePermission && chat.type === 'discussion'
+            {isUserHavePermission && chat.type === ('discussion' as 'discussion')
                 && mode === 'edit' && <button
                     className='btn btn-outline-primary'
-                    onClick={() => setMode('add')}>
+                    onClick={() => setMode('add')}> 
                     add members
                 </button>}
-            {isUserHavePermission && chat.type === 'discussion'
+            {isUserHavePermission && chat.type === ('discussion' as 'discussion')
                 && mode === 'add' && <button
                     className='btn btn-outline-primary'
                     onClick={() => setMode('edit')}>
-                    edit
+                    edit members
                 </button>}
+            
         </Modal.Header>
         <Modal.Body>
             {((chat.type === 'group') ||
@@ -115,7 +117,7 @@ export const SearchMember: React.FC<SearchMembersType> = ({
                 value={title}
                 onChange={handleChange}
             />
-            <SearchButton onClick={handleSubmit} />
+            <SearchButton style={{borderRadius:20000}} onClick={handleSubmit} />
         </div>
         <div className="">
             {followers.map((p: ProfileType) =>
@@ -188,6 +190,7 @@ type UserType = {
         shortNickname: string
         avatar: string | null
     }
+    myProfile: ProfileDetailType
     isHavePermission: boolean
     unreadedMessages: number
     isUserHavePermission: boolean
@@ -197,7 +200,7 @@ type UserType = {
 }
 export const UserItem: React.FC<UserType> = ({ user, removePermission,
     addPermission, isHavePermission, removeCompanionChat,
-    unreadedMessages, isUserHavePermission }) => {
+    unreadedMessages, isUserHavePermission, myProfile }) => {
         return <div style={{
         display: 'grid',
         gridTemplateColumns: '1fr 100px'
@@ -241,6 +244,7 @@ export const UserItem: React.FC<UserType> = ({ user, removePermission,
         </div>
         <div className='d-flex justify-content-end'>
             {isUserHavePermission && <button
+                disabled={myProfile.shortNickname===user.shortNickname}
                 onClick={removeCompanionChat}
                 className='btn btn-outline-danger'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16">

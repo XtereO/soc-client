@@ -87,10 +87,10 @@ export const PlaylistItem: React.FC<PlaylistItemType> = ({
         </div>
         <div
         style={{
+            marginLeft: 10,
             display:'grid',
             gridTemplateColumns:'1fr 100px'
-        }}
-        className="">
+        }}>
             <div className=''>
                 <h4>{playlist.title}</h4>
                 <div style={{display:'flex', flexDirection:'column',
@@ -106,10 +106,10 @@ export const PlaylistItem: React.FC<PlaylistItemType> = ({
         variant="light"
         {...triggerHandler}
         className="d-inline-flex align-items-center"
-        style={{maxWidth:250}}
+        style={{maxWidth:250,background:'transparent', border:'none'}}
       >
         <div ref={ref}>
-            Rating: {playlist.countRated!==0 ? playlist.summaryRating/playlist.countRated : '-' }
+            Rating: {playlist.countRated!==0 ? String(playlist.summaryRating/playlist.countRated).slice(0,3) : '?' }
         </div>
       </Button>
     )}
@@ -117,7 +117,7 @@ export const PlaylistItem: React.FC<PlaylistItemType> = ({
   <div className=''>
       <Button variant='light'
       className='d-inline-flex align-items-center'
-      style={{maxWidth:250}}
+      style={{maxWidth:250,background:'transparent',border:'none'}}
       >
       Count musics: {playlist.countMusics}
         </Button>

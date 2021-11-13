@@ -63,7 +63,7 @@ const Followers:React.FC<PropsType>=(props)=>{
             value={title}
             onChange={handleChange}
             />
-            <SearchButton onClick={handleSubmit} />
+            <SearchButton style={{borderRadius:20000}} onClick={handleSubmit} />
         </div>
         <div className="">
             {followers.map((p:ProfileType)=><div className="mt-2 px-2" >

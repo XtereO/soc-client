@@ -78,7 +78,7 @@ export const MusicItem: React.FC<MusicItemType> = (props) => {
         style={{maxWidth:250}}
       >
         <div ref={ref}>
-            Rating: {props.countRated!==0 ? props.summaryRating/props.countRated : '-' }
+            Rating: {props.countRated!==0 ? String(props.summaryRating/props.countRated).slice(0,3) : '?' }
         </div>
       </Button>
     )}

@@ -4,13 +4,14 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 import './App.css';
+import { setAuth } from './BLL/Reducers/authReducer';
 import { setActiveChatState, setLastMessage, setMessagesState } from './BLL/Reducers/chatReducer';
 import { setActiveMusic, setPlayedMusicInterval, setPlayingMusic } from './BLL/Reducers/playerReducer';
 import { setNamesState, setProfile, setProfileAsync } from './BLL/Reducers/profileReducer';
 import { authSelector } from './BLL/Selectors/authSelector';
 import { chatSelector, messagesSelector } from './BLL/Selectors/chatSelector';
 import { activeMusicDetailsSelector, activeMusicSettingsSelector, modeSelector, musicsSelector } from './BLL/Selectors/playerSelector';
-import { backendURL } from './Consts';
+import { backendURL, timeExistToken } from './Consts';
 import { streamMessage } from './DAL/api';
 import { ChatType } from './Types/chat';
 import { MusicType } from './Types/music';
@@ -119,6 +120,16 @@ function App() {
   }
 
 
+  useEffect(()=>{
+    const checkToken = () =>{
+      const tokenStart = Number(localStorage.getItem('tokenStart') ? localStorage.getItem('tokenStart') : 0)
+      const currentTime = Number(Math.round(Date.now()/1000))
+      if(currentTime-tokenStart>timeExistToken){
+        dispatch(setAuth(false))
+      }
+    }
+    setInterval(checkToken,1000)
+  },[])
   useEffect(() => {
     changeMode()
     window.addEventListener('resize', changeMode)
