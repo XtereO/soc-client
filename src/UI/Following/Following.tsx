@@ -69,6 +69,7 @@ const Following:React.FC<PropsType>=(props)=>{
             {following.map((p:ProfileType)=>
             <div className="mt-2 px-2" >
                 <PeopleItem {...p}
+                key={p.userId}
                 follow={(userId:string)=>dispatch(follow(userId))}
                 unfollow={(userId:string)=>dispatch(unfollow(userId))}
                 isInit={isInit} />

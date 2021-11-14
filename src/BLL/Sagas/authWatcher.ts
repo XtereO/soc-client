@@ -1,4 +1,3 @@
-import { debug } from "console";
 import { takeEvery, call, put } from "redux-saga/effects";
 import { confirmCode, login, registrate, ResultCodeType } from "../../DAL/api";
 import { LoginRequestType, RegistrateRequestType, ShowToastType } from "../../Types/auth";
