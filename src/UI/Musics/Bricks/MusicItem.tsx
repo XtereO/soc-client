@@ -10,7 +10,8 @@ import { SettingButton } from "../../Bricks/SettingButton"
 import { RateMusicModal } from "./RateMusicModal"
 import { SettingsMusicModal } from "./SettingsMusicModal"
 import { OverlayTrigger, Tooltip, Button } from "react-bootstrap"
-
+//@ts-ignore
+import default_music_image from '../../../Media/music.jpg'
 
 
 
@@ -63,7 +64,7 @@ export const MusicItem: React.FC<MusicItemType> = (props) => {
                 <NavLink to={`/music/${props.musicId}`}>
                 <img 
                 style={{height:100,width:100}}
-                src={backendURL+props.imgSrc }
+                src={props.imgSrc ? backendURL+props.imgSrc : default_music_image }
                 className="img-rounded" />
                 </NavLink>
                 <OverlayTrigger
@@ -231,7 +232,7 @@ export const MusicItem: React.FC<MusicItemType> = (props) => {
         </div>
         {showRating && <RateMusicModal
         show={showRating}
-        onClose={handleCloseRating} 
+        onClose={handleCloseRating}
         {...props}/>}
         {showSettings && <SettingsMusicModal
         show={showSettings}
