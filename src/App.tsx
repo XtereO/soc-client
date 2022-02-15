@@ -5,25 +5,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 import './App.css';
 import { setAuth } from './BLL/Reducers/authReducer';
-import { setActiveChatState, setLastMessage, setMessagesState } from './BLL/Reducers/chatReducer';
+import { setActiveChatState, setMessagesState } from './BLL/Reducers/chatReducer';
 import { setActiveMusic, setPlayedMusicInterval, setPlayingMusic } from './BLL/Reducers/playerReducer';
-import { setNamesState, setProfile, setProfileAsync } from './BLL/Reducers/profileReducer';
+import { setProfile } from './BLL/Reducers/profileReducer';
 import { authSelector } from './BLL/Selectors/authSelector';
-import { chatSelector, messagesSelector } from './BLL/Selectors/chatSelector';
 import { activeMusicDetailsSelector, activeMusicSettingsSelector, modeSelector, musicsSelector } from './BLL/Selectors/playerSelector';
 import { backendURL, timeExistToken } from './Consts';
 import { streamMessage } from './DAL/api';
-import { ChatType } from './Types/chat';
 import { MusicType } from './Types/music';
 import { Body } from './UI/Body/Body';
 import { Footer } from './UI/Footer/Footer';
 import { Header } from './UI/Header/Header';
-import { getLastItem } from './utils';
 
 export const ModeContext = React.createContext(true)
 
 function App() {
-
   const dispatch = useDispatch()
   const { isMusicPlay, playedInterval, duration } = useSelector(activeMusicSettingsSelector)
   const musicMode = useSelector(modeSelector)

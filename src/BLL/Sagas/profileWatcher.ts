@@ -1,6 +1,5 @@
-import { call, put, takeEvery, takeLatest } from "@redux-saga/core/effects";
+import { call, put, takeLatest } from "@redux-saga/core/effects";
 import { getProfile, GetProfileType, getReviews, GetReviewType, ResultCodeType, sendMessageProfile, setAvatar, SetAvatarType, setNames, setPasswords } from "../../DAL/api";
-import { ProfileType, ReviewType } from "../../Types/profile";
 import { setAboutMeState, SetAboutMeAsyncType, setCount, setInit, setPage, setProfile, SetProfileAsyncType, setReviews, SetReviewsAsyncType, SET_PROFILE_ASYNC, SET_REVIEWS_ASYNC, SET_ABOUT_ME_ASYNC, SetNamesAsyncType, SET_NAMES_ASYNC, setNamesState, setMessage, SetAvatarAsyncType, SET_AVATAR_ASYNC, setAvatarState, SetPasswordsAsyncType, SET_PASSWORDS_ASYNC, SendMessageType, SEND_MESSAGE } from "../Reducers/profileReducer";
 import { setAboutMe } from '../../DAL/api'
 import { setAuth, setShowToast } from "../Reducers/authReducer";
