@@ -13,18 +13,18 @@ type PropsType=MusicType & {
     rateMusicAsync: (title:string,rating:number,onClose:()=>void,review:string)=>void
 }
 
-export const RateMusicModal:React.FC<PropsType>=(props)=>{
+export const RateMusicModal:React.FC<PropsType>=({show,onClose,message,rateMusicAsync,title,author})=>{
 
 
     return<Modal
-        onHide={props.onClose}
-        show={props.show}
+        onHide={onClose}
+        show={show}
     >
         <Modal.Header
         closeButton={true}
         >
             <Modal.Title>
-                Rate {props.title} - {props.author}
+                Rate {title} - {author}
             </Modal.Title>
         </Modal.Header>
 
@@ -37,9 +37,9 @@ export const RateMusicModal:React.FC<PropsType>=(props)=>{
                 }
             }}
             onSubmit={(values)=>{
-                props.rateMusicAsync(
-                    props.title,(+values.rating),
-                    props.onClose,values.review) 
+                rateMusicAsync(
+                    title,(+values.rating),
+                    onClose,values.review) 
             }}
             >
                 {({
@@ -89,7 +89,7 @@ export const RateMusicModal:React.FC<PropsType>=(props)=>{
                             </button>
                         </div>
                         <div className="Center text-danger">
-                            {props.message && props.message}
+                            {message && message}
                         </div>
                     </form>
                 }}

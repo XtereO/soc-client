@@ -5,7 +5,7 @@ import { setActiveMusic, setMusics, setPlayedMusicInterval, setPlayingMusic } fr
 import { activeMusicDetailsSelector, activeMusicSettingsSelector } from "../../../BLL/Selectors/playerSelector"
 import { backendURL } from "../../../Consts"
 //@ts-ignore
-import default_avatar from '../../../Media/music2.jpg'
+import default_music_image from '../../../Media/music2.jpg'
 import { MusicDetailType } from "../../../Types/music"
 
 
@@ -27,7 +27,7 @@ export const MusicPlayer: React.FC<PropsType> = (props) => {
         style={{
             paddingTop: mode ? 350 : 150,
             height: mode ? 500 : 250,
-            background: `url(${url}) no-repeat center center`,
+            background: `url(${props.imgSrc ? url : default_music_image}) no-repeat center center`,
         }}
     >
         <div className="Center">

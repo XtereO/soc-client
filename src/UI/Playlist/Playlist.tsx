@@ -18,6 +18,8 @@ import { SettingsPlaylistModal } from "../Playlists/Bricks/SettingsPlaylistModal
 import { RatePlaylistModal } from "../Playlists/Bricks/RatePlaylistModal";
 import { AddRemoveMusicToFromPlaylist } from "../Playlists/Bricks/AddRemoveMusicToFromPlaylist";
 import { FilterGetMusicType, MusicType } from "../../Types/music";
+//@ts-ignore
+import defaultPlaylistImage from '../../Media/default_playlist.jpg'
 
 type PropsType = {
 }
@@ -162,7 +164,7 @@ const Playlist: React.FC<PropsType> = (props) => {
                         style={{
                             height: mode ? 500 : 300
                         }}
-                        src={backendURL + playlist?.imgSrc}
+                        src={(playlist?.imgSrc) ? backendURL + playlist?.imgSrc : defaultPlaylistImage}
                         className="w-100 img" />
                 </div>
                 <div
